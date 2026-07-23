@@ -3,6 +3,12 @@ import type { Locale } from "./site";
 
 export interface AppDict {
   common: { dashboard: string; signOut: string; planSuffix: string; upgrade: string; save: string; back: string };
+  nav: { chatbots: string; analytics: string; billing: string; settings: string };
+  settings: {
+    title: string; account: string; emailLabel: string; planLabel: string; managePlan: string; languageLabel: string;
+    security: string; newPassword: string; updatePassword: string; updating: string; passwordUpdated: string; passwordTooShort: string; passwordPh: string;
+  };
+  ganalytics: { title: string; subtitle: string; perBot: string; noBots: string; totalMessages: string };
   auth: {
     loginTitle: string; loginSubtitle: string;
     signupTitle: string; signupSubtitle: string;
@@ -65,6 +71,12 @@ export interface AppDict {
 
 const en: AppDict = {
   common: { dashboard: "Dashboard", signOut: "Sign out", planSuffix: "plan", upgrade: "Upgrade", save: "Save", back: "Back" },
+  nav: { chatbots: "Chatbots", analytics: "Analytics", billing: "Billing", settings: "Settings" },
+  settings: {
+    title: "Settings", account: "Account", emailLabel: "Email", planLabel: "Plan", managePlan: "Manage plan", languageLabel: "Language",
+    security: "Password", newPassword: "New password", updatePassword: "Update password", updating: "Updating…", passwordUpdated: "Password updated.", passwordTooShort: "Password must be at least 6 characters.", passwordPh: "At least 6 characters",
+  },
+  ganalytics: { title: "Analytics", subtitle: "An overview across all your chatbots.", perBot: "By chatbot", noBots: "Create a chatbot to see analytics.", totalMessages: "Questions this month" },
   auth: {
     loginTitle: "Welcome back", loginSubtitle: "Sign in to manage your store assistant.",
     signupTitle: "Create your account", signupSubtitle: "Start building your store's AI support agent.",
@@ -127,6 +139,12 @@ const en: AppDict = {
 
 const ru: AppDict = {
   common: { dashboard: "Кабинет", signOut: "Выйти", planSuffix: "тариф", upgrade: "Повысить", save: "Сохранить", back: "Назад" },
+  nav: { chatbots: "Боты", analytics: "Аналитика", billing: "Оплата", settings: "Настройки" },
+  settings: {
+    title: "Настройки", account: "Аккаунт", emailLabel: "Email", planLabel: "Тариф", managePlan: "Управлять тарифом", languageLabel: "Язык",
+    security: "Пароль", newPassword: "Новый пароль", updatePassword: "Обновить пароль", updating: "Обновляем…", passwordUpdated: "Пароль обновлён.", passwordTooShort: "Пароль должен быть не короче 6 символов.", passwordPh: "Минимум 6 символов",
+  },
+  ganalytics: { title: "Аналитика", subtitle: "Сводка по всем вашим ботам.", perBot: "По ботам", noBots: "Создайте бота, чтобы увидеть аналитику.", totalMessages: "Вопросов за месяц" },
   auth: {
     loginTitle: "С возвращением", loginSubtitle: "Войдите, чтобы управлять ассистентом магазина.",
     signupTitle: "Создайте аккаунт", signupSubtitle: "Начните собирать ИИ-поддержку для своего магазина.",
@@ -189,6 +207,12 @@ const ru: AppDict = {
 
 const fr: AppDict = {
   common: { dashboard: "Tableau de bord", signOut: "Déconnexion", planSuffix: "offre", upgrade: "Améliorer", save: "Enregistrer", back: "Retour" },
+  nav: { chatbots: "Chatbots", analytics: "Statistiques", billing: "Facturation", settings: "Paramètres" },
+  settings: {
+    title: "Paramètres", account: "Compte", emailLabel: "E-mail", planLabel: "Offre", managePlan: "Gérer l'offre", languageLabel: "Langue",
+    security: "Mot de passe", newPassword: "Nouveau mot de passe", updatePassword: "Mettre à jour", updating: "Mise à jour…", passwordUpdated: "Mot de passe mis à jour.", passwordTooShort: "Le mot de passe doit contenir au moins 6 caractères.", passwordPh: "Au moins 6 caractères",
+  },
+  ganalytics: { title: "Statistiques", subtitle: "Vue d'ensemble de tous vos chatbots.", perBot: "Par chatbot", noBots: "Créez un chatbot pour voir les statistiques.", totalMessages: "Questions ce mois-ci" },
   auth: {
     loginTitle: "Bon retour", loginSubtitle: "Connectez-vous pour gérer votre assistant.",
     signupTitle: "Créez votre compte", signupSubtitle: "Commencez à créer le support IA de votre boutique.",
@@ -251,6 +275,12 @@ const fr: AppDict = {
 
 const es: AppDict = {
   common: { dashboard: "Panel", signOut: "Cerrar sesión", planSuffix: "plan", upgrade: "Mejorar", save: "Guardar", back: "Atrás" },
+  nav: { chatbots: "Chatbots", analytics: "Analíticas", billing: "Facturación", settings: "Ajustes" },
+  settings: {
+    title: "Ajustes", account: "Cuenta", emailLabel: "Email", planLabel: "Plan", managePlan: "Gestionar plan", languageLabel: "Idioma",
+    security: "Contraseña", newPassword: "Nueva contraseña", updatePassword: "Actualizar contraseña", updating: "Actualizando…", passwordUpdated: "Contraseña actualizada.", passwordTooShort: "La contraseña debe tener al menos 6 caracteres.", passwordPh: "Al menos 6 caracteres",
+  },
+  ganalytics: { title: "Analíticas", subtitle: "Un resumen de todos tus chatbots.", perBot: "Por chatbot", noBots: "Crea un chatbot para ver analíticas.", totalMessages: "Preguntas este mes" },
   auth: {
     loginTitle: "Bienvenido de nuevo", loginSubtitle: "Inicia sesión para gestionar tu asistente.",
     signupTitle: "Crea tu cuenta", signupSubtitle: "Empieza a crear el soporte con IA de tu tienda.",
@@ -313,6 +343,12 @@ const es: AppDict = {
 
 const de: AppDict = {
   common: { dashboard: "Dashboard", signOut: "Abmelden", planSuffix: "Plan", upgrade: "Upgraden", save: "Speichern", back: "Zurück" },
+  nav: { chatbots: "Chatbots", analytics: "Statistiken", billing: "Abrechnung", settings: "Einstellungen" },
+  settings: {
+    title: "Einstellungen", account: "Konto", emailLabel: "E-Mail", planLabel: "Plan", managePlan: "Plan verwalten", languageLabel: "Sprache",
+    security: "Passwort", newPassword: "Neues Passwort", updatePassword: "Passwort aktualisieren", updating: "Wird aktualisiert…", passwordUpdated: "Passwort aktualisiert.", passwordTooShort: "Das Passwort muss mindestens 6 Zeichen haben.", passwordPh: "Mindestens 6 Zeichen",
+  },
+  ganalytics: { title: "Statistiken", subtitle: "Ein Überblick über alle Ihre Chatbots.", perBot: "Nach Chatbot", noBots: "Erstellen Sie einen Chatbot, um Statistiken zu sehen.", totalMessages: "Fragen diesen Monat" },
   auth: {
     loginTitle: "Willkommen zurück", loginSubtitle: "Melden Sie sich an, um Ihren Assistenten zu verwalten.",
     signupTitle: "Konto erstellen", signupSubtitle: "Erstellen Sie den KI-Support für Ihren Shop.",
