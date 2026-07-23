@@ -174,6 +174,13 @@ export default async function BillingPage({
             switchToAnnual: b.switchToAnnual,
             switchToMonthly: b.switchToMonthly,
             downgradeVia: b.downgradeVia,
+            confirmTitle: b.confirmTitle,
+            confirmLine: b.confirmLine,
+            confirmNote: b.confirmNote,
+            confirmCta: b.confirmCta,
+            cancelBtn: b.cancelBtn,
+            billedMonthlyWord: b.billedMonthly,
+            billedYearlyWord: b.billedYearly,
           }}
           plans={PLAN_ORDER.map<BillingPlanView>((id) => {
             const plan = PLANS[id];

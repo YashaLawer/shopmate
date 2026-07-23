@@ -60,6 +60,7 @@ export interface AppDict {
     topupTitle: string; buyTpl: string; hitLimit: string; plans: string;
     current: string; yourPlan: string; downgradeVia: string; upgradeTo: string; switchTo: string;
     switchToAnnual: string; switchToMonthly: string;
+    confirmTitle: string; confirmLine: string; confirmNote: string; confirmCta: string; cancelBtn: string;
     testCardNote: string;
   };
   analytics: {
@@ -130,6 +131,7 @@ const en: AppDict = {
     topupTitle: "Need more messages this month?", buyTpl: "Buy {n} messages · ${price}", hitLimit: "You've hit your limit — buy a top-up above or upgrade your plan to keep answering customers.", plans: "Plans",
     current: "Current", yourPlan: "Your current plan", downgradeVia: "Downgrade via “Manage subscription”", upgradeTo: "Upgrade to", switchTo: "Switch to",
     switchToAnnual: "Switch to annual billing", switchToMonthly: "Switch to monthly billing",
+    confirmTitle: "Confirm your change", confirmLine: "You're switching to {plan}: {price}, {billed}.", confirmNote: "We'll charge your saved card and prorate the difference — you won't be charged twice. You can switch or cancel anytime.", confirmCta: "Confirm change", cancelBtn: "Cancel",
     testCardNote: "Test mode — use card 4242 4242 4242 4242, any future date, any CVC.",
   },
   analytics: {
@@ -200,6 +202,7 @@ const ru: AppDict = {
     topupTitle: "Нужно больше сообщений в этом месяце?", buyTpl: "Купить {n} сообщений · ${price}", hitLimit: "Лимит исчерпан — докупите пакет выше или повысьте тариф, чтобы продолжать отвечать покупателям.", plans: "Тарифы",
     current: "Текущий", yourPlan: "Ваш тариф", downgradeVia: "Понизить через «Управление подпиской»", upgradeTo: "Перейти на", switchTo: "Сменить на",
     switchToAnnual: "Перейти на годовую оплату", switchToMonthly: "Перейти на помесячную оплату",
+    confirmTitle: "Подтвердите смену тарифа", confirmLine: "Вы переходите на {plan}: {price}, {billed}.", confirmNote: "Спишем с привязанной карты и учтём разницу пропорционально — дважды не спишется. Сменить или отменить можно в любой момент.", confirmCta: "Подтвердить", cancelBtn: "Отмена",
     testCardNote: "Тестовый режим — карта 4242 4242 4242 4242, любая будущая дата, любой CVC.",
   },
   analytics: {
@@ -270,6 +273,7 @@ const fr: AppDict = {
     topupTitle: "Besoin de plus de messages ce mois-ci ?", buyTpl: "Acheter {n} messages · ${price}", hitLimit: "Limite atteinte — achetez une recharge ci-dessus ou améliorez votre offre pour continuer à répondre.", plans: "Offres",
     current: "Actuel", yourPlan: "Votre offre actuelle", downgradeVia: "Rétrograder via « Gérer l'abonnement »", upgradeTo: "Passer à", switchTo: "Basculer vers",
     switchToAnnual: "Passer à la facturation annuelle", switchToMonthly: "Passer à la facturation mensuelle",
+    confirmTitle: "Confirmez le changement", confirmLine: "Vous passez à {plan} : {price}, {billed}.", confirmNote: "Nous débiterons votre carte enregistrée et calculerons la différence au prorata — pas de double débit. Vous pouvez changer ou annuler à tout moment.", confirmCta: "Confirmer", cancelBtn: "Annuler",
     testCardNote: "Mode test — carte 4242 4242 4242 4242, date future, CVC au choix.",
   },
   analytics: {
@@ -340,6 +344,7 @@ const es: AppDict = {
     topupTitle: "¿Necesitas más mensajes este mes?", buyTpl: "Comprar {n} mensajes · ${price}", hitLimit: "Has llegado a tu límite — compra una recarga arriba o mejora tu plan para seguir atendiendo.", plans: "Planes",
     current: "Actual", yourPlan: "Tu plan actual", downgradeVia: "Bajar vía «Gestionar suscripción»", upgradeTo: "Subir a", switchTo: "Cambiar a",
     switchToAnnual: "Cambiar a facturación anual", switchToMonthly: "Cambiar a facturación mensual",
+    confirmTitle: "Confirma el cambio", confirmLine: "Vas a cambiar a {plan}: {price}, {billed}.", confirmNote: "Cobraremos tu tarjeta guardada y prorratearemos la diferencia — sin cobro doble. Puedes cambiar o cancelar cuando quieras.", confirmCta: "Confirmar cambio", cancelBtn: "Cancelar",
     testCardNote: "Modo de prueba — tarjeta 4242 4242 4242 4242, cualquier fecha futura, cualquier CVC.",
   },
   analytics: {
@@ -410,6 +415,7 @@ const de: AppDict = {
     topupTitle: "Diesen Monat mehr Nachrichten nötig?", buyTpl: "{n} Nachrichten kaufen · ${price}", hitLimit: "Limit erreicht — kaufen Sie oben eine Aufladung oder upgraden Sie, um weiter zu antworten.", plans: "Pläne",
     current: "Aktuell", yourPlan: "Ihr aktueller Plan", downgradeVia: "Herabstufen über „Abo verwalten“", upgradeTo: "Upgrade auf", switchTo: "Wechseln zu",
     switchToAnnual: "Auf jährliche Abrechnung wechseln", switchToMonthly: "Auf monatliche Abrechnung wechseln",
+    confirmTitle: "Änderung bestätigen", confirmLine: "Sie wechseln zu {plan}: {price}, {billed}.", confirmNote: "Wir belasten Ihre hinterlegte Karte und rechnen die Differenz anteilig ab — keine Doppelbelastung. Sie können jederzeit wechseln oder kündigen.", confirmCta: "Bestätigen", cancelBtn: "Abbrechen",
     testCardNote: "Testmodus — Karte 4242 4242 4242 4242, beliebiges künftiges Datum, beliebiger CVC.",
   },
   analytics: {

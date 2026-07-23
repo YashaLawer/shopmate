@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { SubmitButton } from "@/components/SubmitButton";
 import { CycleToggle } from "@/components/PricingPlans";
 
@@ -19,7 +19,7 @@ export interface BillingLabels {
   monthly: string;
   yearly: string;
   save: string;
-  billedYearly: string; // contains "{price}"
+  billedYearly: string; // contains "{price}" (card sub-line)
   perMonth: string;
   current: string;
   yourPlan: string;
@@ -28,7 +28,17 @@ export interface BillingLabels {
   switchToAnnual: string;
   switchToMonthly: string;
   downgradeVia: string;
+  // confirmation dialog
+  confirmTitle: string;
+  confirmLine: string; // "{plan} {price} {billed}"
+  confirmNote: string;
+  confirmCta: string;
+  cancelBtn: string;
+  billedMonthlyWord: string; // "billed monthly"
+  billedYearlyWord: string; // "billed yearly"
 }
+
+type Pending = { plan: BillingPlanView; cycle: "month" | "year"; label: string };
 
 export function BillingPlans({
   plans,
@@ -45,11 +55,10 @@ export function BillingPlans({
   currentInterval: "month" | "year" | null;
   changePlan: (formData: FormData) => Promise<void>;
 }) {
-  // Open on the cycle the customer is already on, so their current plan reads
-  // as "your plan" right away instead of hiding behind the other tab.
   const [cycle, setCycle] = useState<"month" | "year">(
     currentInterval ?? "month",
   );
+  const [pending, setPending] = useState<Pending | null>(null);
 
   return (
     <div>
@@ -65,12 +74,8 @@ export function BillingPlans({
             : plan.priceMonth;
 
           const isSamePlan = plan.id === currentPlanId;
-          // Exact match = same plan AND same billing cycle currently shown.
-          // Free has no cycle, so "same plan" is enough for the free card.
           const isExact = isSamePlan && (!plan.isPaid || cycle === currentInterval);
 
-          // Button label: same plan but different cycle -> offer the cycle switch;
-          // different plan -> upgrade/switch to it.
           let switchLabel: string;
           if (isSamePlan) {
             switchLabel =
@@ -121,13 +126,13 @@ export function BillingPlans({
                     {labels.downgradeVia}
                   </p>
                 ) : (
-                  <form action={changePlan}>
-                    <input type="hidden" name="plan" value={plan.id} />
-                    <input type="hidden" name="cycle" value={cycle} />
-                    <SubmitButton className="w-full" pendingText="…">
-                      {switchLabel}
-                    </SubmitButton>
-                  </form>
+                  <button
+                    type="button"
+                    onClick={() => setPending({ plan, cycle, label: switchLabel })}
+                    className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                  >
+                    {switchLabel}
+                  </button>
                 )}
               </div>
 
@@ -142,6 +147,77 @@ export function BillingPlans({
             </div>
           );
         })}
+      </div>
+
+      {pending && (
+        <ConfirmDialog
+          pending={pending}
+          labels={labels}
+          changePlan={changePlan}
+          onCancel={() => setPending(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function ConfirmDialog({
+  pending,
+  labels,
+  changePlan,
+  onCancel,
+}: {
+  pending: Pending;
+  labels: BillingLabels;
+  changePlan: (formData: FormData) => Promise<void>;
+  onCancel: () => void;
+}) {
+  const { plan, cycle } = pending;
+  const amount = cycle === "year" ? plan.priceYear ?? plan.priceMonth : plan.priceMonth;
+  const priceStr = `$${amount}`;
+  const billed = cycle === "year" ? labels.billedYearlyWord : labels.billedMonthlyWord;
+  const line = labels.confirmLine
+    .replace("{plan}", plan.name)
+    .replace("{price}", priceStr)
+    .replace("{billed}", billed);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4"
+      onClick={onCancel}
+    >
+      <div
+        className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between">
+          <h3 className="text-lg font-bold text-slate-900">{labels.confirmTitle}</h3>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+            aria-label={labels.cancelBtn}
+          >
+            <X size={18} />
+          </button>
+        </div>
+        <p className="mt-3 text-sm font-medium text-slate-800">{line}</p>
+        <p className="mt-2 text-xs leading-relaxed text-slate-500">{labels.confirmNote}</p>
+
+        <div className="mt-6 flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            {labels.cancelBtn}
+          </button>
+          <form action={changePlan}>
+            <input type="hidden" name="plan" value={plan.id} />
+            <input type="hidden" name="cycle" value={cycle} />
+            <SubmitButton pendingText="…">{labels.confirmCta}</SubmitButton>
+          </form>
+        </div>
       </div>
     </div>
   );
