@@ -1,6 +1,13 @@
 (function () {
   "use strict";
+  // Find our own <script> tag. document.currentScript works for a normal
+  // synchronous tag; fall back to matching by src for async / tag-manager
+  // injection (Google Tag Manager, site builders, dynamic insertion).
   var script = document.currentScript;
+  if (!script) {
+    var tags = document.querySelectorAll('script[src*="widget.js"]');
+    script = tags[tags.length - 1];
+  }
   if (!script) return;
 
   var key = script.getAttribute("data-key");
