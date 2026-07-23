@@ -12,11 +12,17 @@ import {
   Check,
 } from "lucide-react";
 import { PLANS, PLAN_ORDER } from "@/lib/plans";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <div className="bg-white text-slate-900">
-      <Nav />
+      <Nav isAuthed={!!user} />
       <Hero />
       <TrustBar />
       <HowItWorks />
@@ -31,7 +37,7 @@ export default function Home() {
 }
 
 /* ---------------- Nav ---------------- */
-function Nav() {
+function Nav({ isAuthed }: { isAuthed: boolean }) {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
@@ -47,18 +53,29 @@ function Nav() {
           <a href="#pricing" className="hover:text-slate-900">Pricing</a>
         </nav>
         <div className="flex items-center gap-2 text-sm">
-          <Link
-            href="/login"
-            className="rounded-lg px-3 py-2 font-medium text-slate-600 hover:text-slate-900"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
-            className="rounded-lg bg-brand px-4 py-2 font-semibold text-white transition hover:bg-indigo-700"
-          >
-            Get started free
-          </Link>
+          {isAuthed ? (
+            <Link
+              href="/dashboard"
+              className="rounded-lg bg-brand px-4 py-2 font-semibold text-white transition hover:bg-indigo-700"
+            >
+              Go to dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-lg px-3 py-2 font-medium text-slate-600 hover:text-slate-900"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-lg bg-brand px-4 py-2 font-semibold text-white transition hover:bg-indigo-700"
+              >
+                Get started free
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

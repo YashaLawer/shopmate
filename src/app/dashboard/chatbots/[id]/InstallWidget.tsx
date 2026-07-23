@@ -5,7 +5,12 @@ import { Copy, Check, ExternalLink, Search, Loader2 } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { verifyInstallation, type VerifyState } from "./actions";
 
-type Platform = { id: string; name: string; steps: string[] };
+type Platform = {
+  id: string;
+  name: string;
+  steps: string[];
+  link?: { url: string; label: string };
+};
 
 const PLATFORMS: Platform[] = [
   {
@@ -25,6 +30,7 @@ const PLATFORMS: Platform[] = [
       "Open Layout → theme.liquid.",
       "Paste the snippet right before </body>, then Save.",
     ],
+    link: { url: "https://admin.shopify.com/", label: "Open Shopify admin" },
   },
   {
     id: "wordpress",
@@ -34,6 +40,10 @@ const PLATFORMS: Platform[] = [
       "Open its settings and find the Footer / Body section.",
       "Paste the snippet and save.",
     ],
+    link: {
+      url: "https://wordpress.org/plugins/insert-headers-and-footers/",
+      label: "Get the plugin",
+    },
   },
   {
     id: "wix",
@@ -43,6 +53,7 @@ const PLATFORMS: Platform[] = [
       "Paste the snippet.",
       "Set “Place code in” to Body – end, apply to All pages, then Apply.",
     ],
+    link: { url: "https://manage.wix.com/", label: "Open Wix dashboard" },
   },
   {
     id: "squarespace",
@@ -52,6 +63,7 @@ const PLATFORMS: Platform[] = [
       "Paste the snippet into the Footer box.",
       "Save.",
     ],
+    link: { url: "https://account.squarespace.com/", label: "Open Squarespace" },
   },
   {
     id: "webflow",
@@ -61,6 +73,7 @@ const PLATFORMS: Platform[] = [
       "Paste the snippet into Footer Code.",
       "Save, then Publish your site.",
     ],
+    link: { url: "https://webflow.com/dashboard", label: "Open Webflow" },
   },
   {
     id: "tilda",
@@ -70,6 +83,7 @@ const PLATFORMS: Platform[] = [
       "Paste the snippet.",
       "Publish the page.",
     ],
+    link: { url: "https://tilda.cc/projects/", label: "Open Tilda projects" },
   },
   {
     id: "gtm",
@@ -79,6 +93,7 @@ const PLATFORMS: Platform[] = [
       "Paste the snippet.",
       "Set trigger to All Pages, then Save and Submit.",
     ],
+    link: { url: "https://tagmanager.google.com/", label: "Open Tag Manager" },
   },
 ];
 
@@ -118,12 +133,12 @@ export function InstallWidget({
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold text-slate-700">Install on your site</h2>
         <a
-          href={`${appUrl}/widget/${publicKey}`}
+          href={`${appUrl}/preview/${publicKey}`}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:underline"
         >
-          Preview widget <ExternalLink size={12} />
+          Preview on a site <ExternalLink size={12} />
         </a>
       </div>
       <p className="mt-1 text-xs text-slate-400">
@@ -158,6 +173,17 @@ export function InstallWidget({
           </li>
         ))}
       </ol>
+
+      {platform.link && (
+        <a
+          href={platform.link.url}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+        >
+          {platform.link.label} <ExternalLink size={12} />
+        </a>
+      )}
 
       {/* Snippet */}
       <div className="mt-4 flex items-start gap-2">
