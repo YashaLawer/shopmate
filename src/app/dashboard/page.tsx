@@ -3,6 +3,8 @@ import { MessageSquare, Plus, Trash2 } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getPlan } from "@/lib/plans";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { getAppDict, tpl } from "@/lib/i18n/app";
 import { SubmitButton } from "@/components/SubmitButton";
 import { createChatbot, deleteChatbot } from "./actions";
 import type { Chatbot } from "@/lib/types";
@@ -15,6 +17,8 @@ export default async function DashboardPage({
   const sp = await searchParams;
   const { userId, profile } = await requireUser();
   const plan = getPlan(profile.plan);
+  const dict = getAppDict(await getLocale());
+  const t = dict.dash;
 
   const supabase = await createClient();
   const { data } = await supabase
@@ -30,21 +34,23 @@ export default async function DashboardPage({
     <div>
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Your chatbots</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t.title}</h1>
           <p className="mt-1 text-sm text-slate-500">
-            {chatbots.length} of {plan.limits.chatbots} chatbots used on the{" "}
-            {plan.name} plan
+            {tpl(t.usageTpl, {
+              used: chatbots.length,
+              total: plan.limits.chatbots,
+              plan: plan.name,
+            })}
           </p>
         </div>
       </div>
 
       {sp.limit === "chatbots" && (
         <p className="mt-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-700">
-          You&apos;ve reached the chatbot limit of your {plan.name} plan.{" "}
+          {tpl(t.limitBanner, { plan: plan.name })}{" "}
           <Link href="/dashboard/billing" className="font-semibold underline">
-            Upgrade
-          </Link>{" "}
-          to add more.
+            {dict.common.upgrade}
+          </Link>
         </p>
       )}
       {sp.error && (
@@ -70,7 +76,9 @@ export default async function DashboardPage({
                 <div>
                   <h3 className="font-semibold text-slate-900">{bot.name}</h3>
                   <p className="text-xs text-slate-400">
-                    Created {new Date(bot.created_at).toLocaleDateString()}
+                    {tpl(t.createdTpl, {
+                      date: new Date(bot.created_at).toLocaleDateString(),
+                    })}
                   </p>
                 </div>
               </div>
@@ -79,8 +87,8 @@ export default async function DashboardPage({
               <input type="hidden" name="id" value={bot.id} />
               <button
                 className="rounded-lg p-1.5 text-slate-300 opacity-0 transition hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
-                title="Delete chatbot"
-                aria-label="Delete chatbot"
+                title={t.deleteChatbot}
+                aria-label={t.deleteChatbot}
               >
                 <Trash2 size={16} />
               </button>
@@ -93,22 +101,21 @@ export default async function DashboardPage({
       <div className="mt-6 rounded-xl border border-dashed border-slate-300 bg-white p-5">
         {atLimit ? (
           <p className="text-sm text-slate-500">
-            Chatbot limit reached.{" "}
+            {t.limitReached}{" "}
             <Link href="/dashboard/billing" className="font-semibold text-brand">
-              Upgrade your plan
-            </Link>{" "}
-            to create more.
+              {t.upgradeToCreate}
+            </Link>
           </p>
         ) : (
           <form action={createChatbot} className="flex flex-col gap-3 sm:flex-row">
             <input
               name="name"
-              placeholder="Name your assistant (e.g. Acme Store Support)"
+              placeholder={t.namePh}
               className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
             />
-            <SubmitButton pendingText="Creating…">
+            <SubmitButton pendingText={t.creating}>
               <Plus size={16} className="mr-1" />
-              New chatbot
+              {t.newChatbot}
             </SubmitButton>
           </form>
         )}

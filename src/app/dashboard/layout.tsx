@@ -2,6 +2,9 @@ import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { getPlan } from "@/lib/plans";
 import { signout } from "@/app/(auth)/actions";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { getAppDict } from "@/lib/i18n/app";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default async function DashboardLayout({
   children,
@@ -10,6 +13,8 @@ export default async function DashboardLayout({
 }) {
   const { email, profile } = await requireUser();
   const plan = getPlan(profile.plan);
+  const locale = await getLocale();
+  const c = getAppDict(locale).common;
 
   return (
     <div className="min-h-screen">
@@ -30,7 +35,7 @@ export default async function DashboardLayout({
               href="/dashboard"
               className="hidden text-sm font-medium text-slate-500 hover:text-slate-900 sm:inline"
             >
-              Dashboard
+              {c.dashboard}
             </Link>
           </div>
 
@@ -39,12 +44,13 @@ export default async function DashboardLayout({
               href="/dashboard/billing"
               className="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-700 hover:bg-slate-200"
             >
-              {plan.name} plan
+              {plan.name} {c.planSuffix}
             </Link>
-            <span className="hidden text-slate-500 sm:inline">{email}</span>
+            <span className="hidden text-slate-500 lg:inline">{email}</span>
+            <LanguageSwitcher current={locale} />
             <form action={signout}>
               <button className="rounded-lg px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-100">
-                Sign out
+                {c.signOut}
               </button>
             </form>
           </div>

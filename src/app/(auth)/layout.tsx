@@ -1,12 +1,20 @@
 import Link from "next/link";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
+    <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12">
+      <div className="absolute right-4 top-4">
+        <LanguageSwitcher current={locale} />
+      </div>
+
       <Link
         href="/"
         className="mb-8 flex items-center gap-2 text-xl font-bold text-slate-900"

@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { SubmitButton } from "@/components/SubmitButton";
+import type { AppDict } from "@/lib/i18n/app";
 import type { AuthState } from "./actions";
 
 const inputClass =
@@ -11,10 +12,12 @@ const inputClass =
 export function AuthForm({
   mode,
   action,
+  a,
   notice,
 }: {
   mode: "login" | "signup";
   action: (prev: AuthState, formData: FormData) => Promise<AuthState>;
+  a: AppDict["auth"];
   notice?: string;
 }) {
   const [state, formAction] = useActionState(action, {});
@@ -23,12 +26,10 @@ export function AuthForm({
   return (
     <div>
       <h1 className="text-xl font-bold text-slate-900">
-        {isLogin ? "Welcome back" : "Create your account"}
+        {isLogin ? a.loginTitle : a.signupTitle}
       </h1>
       <p className="mt-1 text-sm text-slate-500">
-        {isLogin
-          ? "Sign in to manage your store assistant."
-          : "Start building your store's AI support agent."}
+        {isLogin ? a.loginSubtitle : a.signupSubtitle}
       </p>
 
       {notice && (
@@ -40,20 +41,20 @@ export function AuthForm({
       <form action={formAction} className="mt-6 space-y-4">
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700">
-            Email
+            {a.email}
           </label>
           <input
             name="email"
             type="email"
             autoComplete="email"
             required
-            placeholder="you@store.com"
+            placeholder={a.emailPh}
             className={inputClass}
           />
         </div>
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700">
-            Password
+            {a.password}
           </label>
           <input
             name="password"
@@ -71,24 +72,24 @@ export function AuthForm({
           </p>
         )}
 
-        <SubmitButton className="w-full" pendingText="Please wait…">
-          {isLogin ? "Sign in" : "Sign up"}
+        <SubmitButton className="w-full" pendingText={a.pleaseWait}>
+          {isLogin ? a.signIn : a.signUp}
         </SubmitButton>
       </form>
 
       <p className="mt-6 text-center text-sm text-slate-500">
         {isLogin ? (
           <>
-            No account yet?{" "}
+            {a.noAccount}{" "}
             <Link href="/signup" className="font-semibold text-brand">
-              Sign up
+              {a.signUp}
             </Link>
           </>
         ) : (
           <>
-            Already have an account?{" "}
+            {a.haveAccount}{" "}
             <Link href="/login" className="font-semibold text-brand">
-              Sign in
+              {a.signIn}
             </Link>
           </>
         )}

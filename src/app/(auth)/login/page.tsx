@@ -1,5 +1,7 @@
 import { AuthForm } from "../AuthForm";
 import { login } from "../actions";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { getAppDict } from "@/lib/i18n/app";
 
 export default async function LoginPage({
   searchParams,
@@ -7,9 +9,8 @@ export default async function LoginPage({
   searchParams: Promise<{ checkEmail?: string }>;
 }) {
   const sp = await searchParams;
-  const notice = sp.checkEmail
-    ? "Check your email to confirm your account, then sign in."
-    : undefined;
+  const a = getAppDict(await getLocale()).auth;
+  const notice = sp.checkEmail ? a.checkEmail : undefined;
 
-  return <AuthForm mode="login" action={login} notice={notice} />;
+  return <AuthForm mode="login" action={login} a={a} notice={notice} />;
 }
