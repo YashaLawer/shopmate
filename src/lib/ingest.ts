@@ -44,6 +44,33 @@ export async function fetchUrlText(
   return { title, text: extractTextFromHtml(html) };
 }
 
+// Extract plain text from an uploaded file (PDF, DOCX, TXT, MD).
+// Heavy parsers are dynamically imported so they only load when needed.
+export async function extractFileText(file: File): Promise<string> {
+  const lower = file.name.toLowerCase();
+  const buf = await file.arrayBuffer();
+
+  if (lower.endsWith(".pdf") || file.type === "application/pdf") {
+    const { extractText, getDocumentProxy } = await import("unpdf");
+    const pdf = await getDocumentProxy(new Uint8Array(buf));
+    const { text } = await extractText(pdf, { mergePages: true });
+    return Array.isArray(text) ? text.join("\n\n") : text;
+  }
+
+  if (
+    lower.endsWith(".docx") ||
+    file.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ) {
+    const mammoth = (await import("mammoth")).default;
+    const { value } = await mammoth.extractRawText({ buffer: Buffer.from(buf) });
+    return value;
+  }
+
+  // txt / md / plain text
+  return new TextDecoder().decode(buf);
+}
+
 // Core ingestion: chunk -> embed -> store. Uses the admin client (server-only).
 export async function ingestDocument(opts: {
   chatbotId: string;

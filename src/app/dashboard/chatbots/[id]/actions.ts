@@ -6,7 +6,7 @@ import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getPlan } from "@/lib/plans";
 import { countPages } from "@/lib/usage";
-import { ingestDocument, fetchUrlText } from "@/lib/ingest";
+import { ingestDocument, fetchUrlText, extractFileText } from "@/lib/ingest";
 import { parseDomains } from "@/lib/security";
 
 export type KnowledgeState = { error?: string; ok?: string };
@@ -60,9 +60,24 @@ export async function addKnowledge(
 
     if (mode === "file") {
       const file = formData.get("file") as File | null;
-      if (!file || file.size === 0) return { error: "Choose a .txt or .md file." };
-      const content = await file.text();
-      if (content.length < 20) return { error: "That file looks empty." };
+      if (!file || file.size === 0) {
+        return { error: "Choose a PDF, DOCX, TXT or MD file." };
+      }
+      let content: string;
+      try {
+        content = await extractFileText(file);
+      } catch {
+        return {
+          error:
+            "Couldn't read that file. Make sure it's a valid PDF, DOCX, TXT or MD.",
+        };
+      }
+      if (content.trim().length < 20) {
+        return {
+          error:
+            "We couldn't find readable text in that file — a scanned PDF (image only) won't work.",
+        };
+      }
       const { chunks } = await ingestDocument({
         chatbotId,
         ownerId: userId,

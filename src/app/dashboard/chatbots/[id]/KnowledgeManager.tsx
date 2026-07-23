@@ -113,12 +113,15 @@ export function KnowledgeManager({
             )}
 
             {mode === "file" && (
-              <input
-                name="file"
-                type="file"
-                accept=".txt,.md,.markdown,text/plain"
-                className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
-              />
+              <div>
+                <input
+                  name="file"
+                  type="file"
+                  accept=".pdf,.docx,.txt,.md,.markdown,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+                  className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
+                />
+                <p className="mt-1.5 text-xs text-slate-400">{s.fileHint}</p>
+              </div>
             )}
 
             {state.error && (
