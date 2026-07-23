@@ -10,9 +10,11 @@ import { LOCALES, type Locale } from "@/lib/i18n/site";
 export function LanguageSwitcher({
   current,
   up = false,
+  align = "right",
 }: {
   current: Locale;
   up?: boolean;
+  align?: "left" | "right";
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -61,10 +63,14 @@ export function LanguageSwitcher({
         <div
           role="listbox"
           className={
-            "absolute right-0 z-50 w-44 rounded-xl border border-slate-200 bg-white p-1 shadow-xl " +
-            (up
-              ? "bottom-full mb-2 origin-bottom-right animate-dropdown-up"
-              : "mt-2 origin-top-right animate-dropdown")
+            "absolute z-50 w-44 rounded-xl border border-slate-200 bg-white p-1 shadow-xl " +
+            (align === "left"
+              ? up
+                ? "left-0 bottom-full mb-2 origin-bottom-left animate-dropdown-up"
+                : "left-0 mt-2 origin-top-left animate-dropdown"
+              : up
+                ? "right-0 bottom-full mb-2 origin-bottom-right animate-dropdown-up"
+                : "right-0 mt-2 origin-top-right animate-dropdown")
           }
         >
           {LOCALES.map((l) => {

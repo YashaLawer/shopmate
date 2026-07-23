@@ -56,7 +56,7 @@ export default async function DashboardLayout({
         <div className="space-y-2 border-t border-slate-100 p-3">
           {planBadge}
           <div className="flex items-center justify-between gap-2">
-            <LanguageSwitcher current={locale} up />
+            <LanguageSwitcher current={locale} up align="left" />
             {signOutBtn}
           </div>
           <p className="truncate px-1 text-xs text-slate-400">{email}</p>

@@ -1,10 +1,12 @@
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPlan } from "@/lib/plans";
 import type { Profile } from "@/lib/types";
 
 // Returns the signed-in user + their profile, or redirects to /login.
-export async function requireUser(): Promise<{
+// Wrapped in cache() so layout + page share one auth + profile lookup per request.
+export const requireUser = cache(async function requireUser(): Promise<{
   userId: string;
   email: string | null;
   profile: Profile;
@@ -39,4 +41,4 @@ export async function requireUser(): Promise<{
   resolved.plan = getPlan(resolved.plan).id;
 
   return { userId: user.id, email: user.email ?? null, profile: resolved };
-}
+});
