@@ -44,6 +44,46 @@ export async function fetchUrlText(
   return { title, text: extractTextFromHtml(html) };
 }
 
+// Heuristic: does the text contain table-like rows worth normalizing?
+function looksTabular(text: string): boolean {
+  let n = 0;
+  for (const l of text.split("\n")) {
+    if (
+      /(\d[\d.,]*[\s|]{1,}){3,}/.test(l) ||
+      l.includes("\t") ||
+      /\S {2,}\S {2,}\S/.test(l)
+    )
+      n++;
+  }
+  return n >= 4;
+}
+
+// Convert tables into self-contained "one sentence per row" text so RAG can
+// retrieve precise cell facts. Only runs when the text looks tabular.
+async function normalizeTables(text: string): Promise<string> {
+  if (text.length > 24000 || !looksTabular(text)) return text;
+  try {
+    const res = await openai().chat.completions.create({
+      model: CHAT_MODEL,
+      temperature: 0,
+      messages: [
+        {
+          role: "system",
+          content:
+            "Reformat the document for a knowledge base. For any TABLE, write ONE line per data row that restates every cell together with its column name (e.g. 'Marking 61: Height 2070 mm, Width 307 mm, Quantity 3') so each row is self-contained. Keep ALL other text and ALL information verbatim — do not summarize, omit, translate, or invent anything. Return only the reformatted text.",
+        },
+        { role: "user", content: text },
+      ],
+    });
+    const out = res.choices[0]?.message?.content?.trim();
+    // Guard: if the model returned much less than the input, it likely dropped
+    // information — fall back to the raw text.
+    return out && out.length > text.length * 0.6 ? out : text;
+  } catch {
+    return text;
+  }
+}
+
 // Extract plain text from an uploaded file (PDF, DOCX, TXT, MD).
 // Heavy parsers are dynamically imported so they only load when needed.
 export async function extractFileText(file: File): Promise<string> {
@@ -54,7 +94,7 @@ export async function extractFileText(file: File): Promise<string> {
     const { extractText, getDocumentProxy } = await import("unpdf");
     const pdf = await getDocumentProxy(new Uint8Array(buf));
     const { text } = await extractText(pdf, { mergePages: true });
-    return Array.isArray(text) ? text.join("\n\n") : text;
+    return normalizeTables(Array.isArray(text) ? text.join("\n\n") : text);
   }
 
   if (
@@ -64,7 +104,7 @@ export async function extractFileText(file: File): Promise<string> {
   ) {
     const mammoth = (await import("mammoth")).default;
     const { value } = await mammoth.extractRawText({ buffer: Buffer.from(buf) });
-    return value;
+    return normalizeTables(value);
   }
 
   // Images (photos, screenshots, scans): transcribe text with a vision model.
@@ -80,7 +120,7 @@ export async function extractFileText(file: File): Promise<string> {
           content: [
             {
               type: "text",
-              text: "Transcribe ALL text and information visible in this image, verbatim, keeping the original language and any tables as readable text. If there is no readable text, reply with exactly: NO_TEXT",
+              text: "Transcribe ALL text visible in this image, keeping the original language. For any TABLE, do NOT output a grid — instead write ONE line per data row that restates every cell together with its column name, e.g. 'Marking 61: Height 2070 mm, Width 307 mm, Quantity 3'. This makes each row self-contained. Keep all other (non-table) text verbatim. If there is no readable text, reply with exactly: NO_TEXT",
             },
             { type: "image_url", image_url: { url: `data:${mime};base64,${b64}` } },
           ],
@@ -92,7 +132,7 @@ export async function extractFileText(file: File): Promise<string> {
   }
 
   // txt / md / plain text
-  return new TextDecoder().decode(buf);
+  return normalizeTables(new TextDecoder().decode(buf));
 }
 
 // Core ingestion: chunk -> embed -> store. Uses the admin client (server-only).
