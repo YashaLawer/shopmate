@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { planIdFromPriceId } from "@/lib/plans";
+import { currentPeriod } from "@/lib/limits";
 
 export const runtime = "nodejs";
 
@@ -27,6 +28,25 @@ export async function GET(req: NextRequest) {
     const planId = planIdFromPriceId(priceId);
     const paid =
       session.payment_status === "paid" || session.status === "complete";
+
+    // One-time message top-up
+    if (userId && paid && session.metadata?.type === "topup") {
+      const add = parseInt(session.metadata.messages || "0", 10) || 0;
+      const period = currentPeriod();
+      const admin = createAdminClient();
+      const { data: prof } = await admin
+        .from("profiles")
+        .select("topup_messages, topup_period")
+        .eq("id", userId)
+        .single();
+      const existing =
+        prof?.topup_period === period ? (prof?.topup_messages ?? 0) : 0;
+      await admin
+        .from("profiles")
+        .update({ topup_messages: existing + add, topup_period: period })
+        .eq("id", userId);
+      return NextResponse.redirect(`${appUrl}/dashboard/billing?topup=1`);
+    }
 
     if (userId && planId && paid) {
       const subId =

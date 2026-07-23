@@ -20,6 +20,16 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let currentPlan: string | null = null;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("plan")
+      .eq("id", user.id)
+      .single();
+    currentPlan = profile?.plan ?? "free";
+  }
+
   return (
     <div className="bg-white text-slate-900">
       <Nav isAuthed={!!user} />
@@ -28,7 +38,7 @@ export default async function Home() {
       <HowItWorks />
       <Features />
       <Showcase />
-      <Pricing />
+      <Pricing currentPlan={currentPlan} />
       <Faq />
       <FinalCta />
       <Footer />
@@ -353,7 +363,12 @@ function Showcase() {
 }
 
 /* ---------------- Pricing ---------------- */
-function Pricing() {
+function Pricing({ currentPlan }: { currentPlan: string | null }) {
+  const curPrice =
+    currentPlan && currentPlan in PLANS
+      ? PLANS[currentPlan as keyof typeof PLANS].price
+      : -1;
+
   return (
     <section id="pricing" className="border-y border-slate-100 bg-slate-50">
       <div className="mx-auto max-w-6xl px-5 py-20">
@@ -365,21 +380,48 @@ function Pricing() {
           {PLAN_ORDER.map((id) => {
             const plan = PLANS[id];
             const featured = id === "starter";
+            const isCurrent = currentPlan === id;
+
+            // CTA depends on auth + current plan
+            let label: string;
+            let href: string;
+            if (!currentPlan) {
+              label = plan.price === 0 ? "Get started free" : `Choose ${plan.name}`;
+              href = "/signup";
+            } else if (isCurrent) {
+              label = "Your current plan";
+              href = "/dashboard/billing";
+            } else {
+              href = "/dashboard/billing";
+              label =
+                plan.price > curPrice
+                  ? `Upgrade to ${plan.name}`
+                  : plan.price === 0
+                    ? "Downgrade"
+                    : `Switch to ${plan.name}`;
+            }
+
             return (
               <div
                 key={id}
                 className={
                   "rounded-2xl border bg-white p-7 " +
-                  (featured
-                    ? "border-brand shadow-lg ring-1 ring-brand/20"
-                    : "border-slate-200")
+                  (isCurrent
+                    ? "border-emerald-400 ring-1 ring-emerald-200"
+                    : featured
+                      ? "border-brand shadow-lg ring-1 ring-brand/20"
+                      : "border-slate-200")
                 }
               >
-                {featured && (
+                {isCurrent ? (
+                  <span className="mb-3 inline-block rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white">
+                    Current plan
+                  </span>
+                ) : featured ? (
                   <span className="mb-3 inline-block rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
                     Most popular
                   </span>
-                )}
+                ) : null}
                 <h3 className="text-lg font-bold">{plan.name}</h3>
                 <p className="mt-1 text-sm text-slate-500">{plan.tagline}</p>
                 <div className="mt-4 flex items-end gap-1">
@@ -387,15 +429,18 @@ function Pricing() {
                   <span className="mb-1 text-sm text-slate-400">/month</span>
                 </div>
                 <Link
-                  href="/signup"
+                  href={href}
+                  aria-disabled={isCurrent}
                   className={
                     "mt-6 block rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition " +
-                    (featured
-                      ? "bg-brand text-white hover:bg-indigo-700"
-                      : "border border-slate-300 text-slate-700 hover:bg-slate-50")
+                    (isCurrent
+                      ? "cursor-default border border-emerald-200 bg-emerald-50 text-emerald-700"
+                      : featured
+                        ? "bg-brand text-white hover:bg-indigo-700"
+                        : "border border-slate-300 text-slate-700 hover:bg-slate-50")
                   }
                 >
-                  {plan.price === 0 ? "Get started free" : `Choose ${plan.name}`}
+                  {label}
                 </Link>
                 <ul className="mt-6 space-y-2.5">
                   {plan.highlights.map((h) => (

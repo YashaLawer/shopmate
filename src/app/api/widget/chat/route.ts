@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { retrieveContext, buildMessages, streamChat } from "@/lib/rag";
 import { getPlan } from "@/lib/plans";
+import { activeTopup } from "@/lib/limits";
 import { corsHeaders, startOfMonthISO } from "@/lib/cors";
 import type { Chatbot, ChatMessage } from "@/lib/types";
 
@@ -42,10 +43,12 @@ export async function POST(req: NextRequest) {
   // Monthly message gating (based on the owner's plan).
   const { data: profile } = await admin
     .from("profiles")
-    .select("plan")
+    .select("plan, topup_messages, topup_period")
     .eq("id", bot.user_id)
     .single();
   const plan = getPlan(profile?.plan);
+  const effectiveLimit =
+    plan.limits.messagesPerMonth + activeTopup(profile ?? {});
 
   const { count } = await admin
     .from("messages")
@@ -54,7 +57,7 @@ export async function POST(req: NextRequest) {
     .eq("role", "user")
     .gte("created_at", startOfMonthISO());
 
-  if ((count ?? 0) >= plan.limits.messagesPerMonth) {
+  if ((count ?? 0) >= effectiveLimit) {
     return new Response(
       "Sorry, this assistant is temporarily unavailable. Please contact the store directly.",
       {

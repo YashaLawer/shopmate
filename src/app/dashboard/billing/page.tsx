@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, Zap } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { getPlan, PLANS, PLAN_ORDER } from "@/lib/plans";
+import { countMessagesThisMonth } from "@/lib/usage";
+import { activeTopup, TOPUP } from "@/lib/limits";
 import { SubmitButton } from "@/components/SubmitButton";
-import { startCheckout, openPortal } from "./actions";
+import { startCheckout, openPortal, buyTopup } from "./actions";
 
 export default async function BillingPage({
   searchParams,
@@ -12,13 +14,20 @@ export default async function BillingPage({
     success?: string;
     canceled?: string;
     error?: string;
+    topup?: string;
   }>;
 }) {
   const sp = await searchParams;
-  const { profile } = await requireUser();
+  const { userId, profile } = await requireUser();
   const current = getPlan(profile.plan);
   const isFree = current.id === "free";
   const hasCustomer = Boolean(profile.stripe_customer_id);
+
+  // Message usage this month
+  const used = await countMessagesThisMonth(userId);
+  const topup = activeTopup(profile);
+  const effectiveLimit = current.limits.messagesPerMonth + topup;
+  const pct = Math.min(100, Math.round((used / effectiveLimit) * 100));
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -61,8 +70,57 @@ export default async function BillingPage({
           {sp.error}
         </p>
       )}
+      {sp.topup && (
+        <p className="mt-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          🎉 Messages added — your assistant is back to full speed.
+        </p>
+      )}
 
-      <div className="mt-6 grid items-start gap-5 lg:grid-cols-3">
+      {/* Message usage + top-up */}
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-700">
+              Messages this month
+            </h2>
+            <p className="mt-0.5 text-sm text-slate-500">
+              {used.toLocaleString()} of {effectiveLimit.toLocaleString()} used
+              {topup > 0 && (
+                <span className="text-emerald-600">
+                  {" "}
+                  · includes {topup.toLocaleString()} from top-ups
+                </span>
+              )}
+            </p>
+          </div>
+          <form action={buyTopup}>
+            <button className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">
+              <Zap size={15} /> Buy {TOPUP.messages.toLocaleString()} messages · $
+              {(TOPUP.priceCents / 100).toFixed(0)}
+            </button>
+          </form>
+        </div>
+        <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
+          <div
+            className={
+              "h-full rounded-full " +
+              (pct >= 100 ? "bg-red-500" : pct >= 80 ? "bg-amber-500" : "bg-brand")
+            }
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+        {used >= effectiveLimit && (
+          <p className="mt-3 text-sm text-amber-700">
+            You&apos;ve hit your limit — buy a top-up above or upgrade your plan to
+            keep answering customers.
+          </p>
+        )}
+      </div>
+
+      <h2 className="mt-8 text-sm font-semibold uppercase tracking-wide text-slate-400">
+        Plans
+      </h2>
+      <div className="mt-3 grid items-start gap-5 lg:grid-cols-3">
         {PLAN_ORDER.map((id) => {
           const plan = PLANS[id];
           const isCurrent = id === current.id;

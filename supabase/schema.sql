@@ -159,5 +159,10 @@ drop policy if exists "own messages" on public.messages;
 create policy "own messages" on public.messages
   for select using (owner_id = auth.uid());
 
+-- === Message top-ups (add-on credits, one-time purchase) ===
+-- Run these two lines if you already created the tables above earlier.
+alter table public.profiles add column if not exists topup_messages int not null default 0;
+alter table public.profiles add column if not exists topup_period text; -- 'YYYY-MM' the credits apply to
+
 -- NOTE: all public/widget writes (chunks during ingestion, conversations & messages
 -- during chat) go through the server using the service-role key, which bypasses RLS.
