@@ -8,7 +8,7 @@ import { getLocale } from "@/lib/i18n/getLocale";
 import { getAppDict, tpl } from "@/lib/i18n/app";
 import { getDict } from "@/lib/i18n/site";
 import { BillingPlans, type BillingPlanView } from "@/components/BillingPlans";
-import { startCheckout, openPortal, buyTopup } from "./actions";
+import { changePlan, openPortal, buyTopup } from "./actions";
 
 export default async function BillingPage({
   searchParams,
@@ -136,8 +136,7 @@ export default async function BillingPage({
       <div className="mt-4">
         <BillingPlans
           isFreeUser={isFree}
-          startCheckout={startCheckout}
-          openPortal={openPortal}
+          changePlan={changePlan}
           labels={{
             monthly: site.monthly,
             yearly: site.yearly,

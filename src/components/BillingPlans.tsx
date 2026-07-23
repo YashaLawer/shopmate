@@ -33,14 +33,12 @@ export function BillingPlans({
   plans,
   labels,
   isFreeUser,
-  startCheckout,
-  openPortal,
+  changePlan,
 }: {
   plans: BillingPlanView[];
   labels: BillingLabels;
   isFreeUser: boolean;
-  startCheckout: (formData: FormData) => Promise<void>;
-  openPortal: () => Promise<void>;
+  changePlan: (formData: FormData) => Promise<void>;
 }) {
   const [cycle, setCycle] = useState<"month" | "year">("month");
 
@@ -98,26 +96,13 @@ export function BillingPlans({
                   <p className="py-2.5 text-center text-xs text-slate-400">
                     {labels.downgradeVia}
                   </p>
-                ) : isFreeUser ? (
-                  <form action={startCheckout}>
+                ) : (
+                  <form action={changePlan}>
                     <input type="hidden" name="plan" value={plan.id} />
                     <input type="hidden" name="cycle" value={cycle} />
                     <SubmitButton className="w-full" pendingText="…">
-                      {labels.upgradeTo} {plan.name}
+                      {isFreeUser ? labels.upgradeTo : labels.switchTo} {plan.name}
                     </SubmitButton>
-                  </form>
-                ) : (
-                  <form action={openPortal}>
-                    <button
-                      className={
-                        "w-full rounded-lg px-4 py-2.5 text-sm font-semibold " +
-                        (plan.featured
-                          ? "bg-brand text-white hover:bg-indigo-700"
-                          : "border border-slate-300 text-slate-700 hover:bg-slate-50")
-                      }
-                    >
-                      {labels.switchTo} {plan.name}
-                    </button>
                   </form>
                 )}
               </div>

@@ -3,19 +3,32 @@
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getStripe } from "@/lib/stripe";
 import { getBaseUrl } from "@/lib/baseUrl";
 import { priceIdForPlan } from "@/lib/plans";
 import { getTopup, TOPUPS } from "@/lib/limits";
 import type { PlanId, BillingCycle } from "@/lib/plans";
 
-export async function startCheckout(formData: FormData) {
+// Statuses that mean "there is a live subscription we can modify in place".
+const LIVE_SUB_STATUSES = ["active", "trialing", "past_due", "unpaid"];
+
+// Single entry point for every paid-plan change:
+//  - no live subscription (free / cancelled) -> Stripe Checkout (new subscription)
+//  - live subscription (Starter/Pro)          -> update it in place, with proration,
+//    switching plan and/or billing cycle and un-cancelling if it was set to cancel.
+// This replaces the old "send existing customers to the Customer Portal to switch"
+// path, which only let them cancel and ignored the Month/Year choice.
+export async function changePlan(formData: FormData) {
   const planId = String(formData.get("plan")) as PlanId;
   const cycle: BillingCycle =
     String(formData.get("cycle")) === "year" ? "year" : "month";
   const priceId = priceIdForPlan(planId, cycle);
   if (!priceId) {
-    redirect("/dashboard/billing?error=" + encodeURIComponent("This plan isn't configured."));
+    redirect(
+      "/dashboard/billing?error=" +
+        encodeURIComponent("This plan isn't configured yet."),
+    );
   }
 
   const { userId, email, profile } = await requireUser();
@@ -37,6 +50,39 @@ export async function startCheckout(formData: FormData) {
       .eq("id", userId);
   }
 
+  // Is there a live subscription we can switch in place?
+  let liveSub: import("stripe").Stripe.Subscription | null = null;
+  if (profile.stripe_subscription_id) {
+    try {
+      const sub = await stripe.subscriptions.retrieve(
+        profile.stripe_subscription_id,
+      );
+      if (LIVE_SUB_STATUSES.includes(sub.status)) liveSub = sub;
+    } catch {
+      // Subscription no longer exists in Stripe — fall through to Checkout.
+    }
+  }
+
+  if (liveSub) {
+    const itemId = liveSub.items.data[0]?.id;
+    if (itemId) {
+      await stripe.subscriptions.update(liveSub.id, {
+        items: [{ id: itemId, price: priceId! }],
+        proration_behavior: "create_prorations",
+        cancel_at_period_end: false,
+        metadata: { userId, planId, cycle },
+      });
+      // Reflect the change immediately (webhook is the eventual source of truth).
+      const admin = createAdminClient();
+      await admin
+        .from("profiles")
+        .update({ plan: planId, subscription_status: "active" })
+        .eq("id", userId);
+      redirect("/dashboard/billing?success=1");
+    }
+  }
+
+  // No live subscription → start a fresh Checkout.
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     customer: customerId,
@@ -53,6 +99,9 @@ export async function startCheckout(formData: FormData) {
   }
   redirect(session.url);
 }
+
+// Back-compat alias (the free-plan upgrade path uses the same logic).
+export const startCheckout = changePlan;
 
 // One-time purchase of a message top-up pack for the current month.
 export async function buyTopup(formData: FormData) {
