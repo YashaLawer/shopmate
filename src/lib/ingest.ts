@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { embed, chunkText } from "@/lib/openai";
+import { embed, chunkText, openai, CHAT_MODEL } from "@/lib/openai";
 
 // Strip HTML down to readable plain text (good enough for store help pages).
 export function extractTextFromHtml(html: string): string {
@@ -65,6 +65,30 @@ export async function extractFileText(file: File): Promise<string> {
     const mammoth = (await import("mammoth")).default;
     const { value } = await mammoth.extractRawText({ buffer: Buffer.from(buf) });
     return value;
+  }
+
+  // Images (photos, screenshots, scans): transcribe text with a vision model.
+  if (/\.(png|jpe?g|webp|gif)$/i.test(lower) || file.type.startsWith("image/")) {
+    const b64 = Buffer.from(buf).toString("base64");
+    const mime = file.type || "image/png";
+    const res = await openai().chat.completions.create({
+      model: CHAT_MODEL,
+      temperature: 0,
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "Transcribe ALL text and information visible in this image, verbatim, keeping the original language and any tables as readable text. If there is no readable text, reply with exactly: NO_TEXT",
+            },
+            { type: "image_url", image_url: { url: `data:${mime};base64,${b64}` } },
+          ],
+        },
+      ],
+    });
+    const text = res.choices[0]?.message?.content ?? "";
+    return text.trim() === "NO_TEXT" ? "" : text;
   }
 
   // txt / md / plain text
