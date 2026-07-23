@@ -42,6 +42,7 @@ export function KnowledgeManager({
   const statusLabel = (st: string) =>
     st === "error" ? s.statusFailed : st === "processing" ? s.statusProcessing : s.statusReady;
   const [mode, setMode] = useState<Mode>("text");
+  const [fileError, setFileError] = useState("");
   const [state, formAction] = useActionState<KnowledgeState, FormData>(
     addKnowledge,
     {},
@@ -118,9 +119,22 @@ export function KnowledgeManager({
                   name="file"
                   type="file"
                   accept=".pdf,.docx,.txt,.md,.markdown,.png,.jpg,.jpeg,.webp,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,image/*"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f && f.size > 4 * 1024 * 1024) {
+                      setFileError(s.fileTooBig);
+                      e.target.value = "";
+                    } else {
+                      setFileError("");
+                    }
+                  }}
                   className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
                 />
-                <p className="mt-1.5 text-xs text-slate-400">{s.fileHint}</p>
+                {fileError ? (
+                  <p className="mt-1.5 text-xs text-red-600">{fileError}</p>
+                ) : (
+                  <p className="mt-1.5 text-xs text-slate-400">{s.fileHint}</p>
+                )}
               </div>
             )}
 
