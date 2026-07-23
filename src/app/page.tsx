@@ -13,6 +13,12 @@ import {
 } from "lucide-react";
 import { PLANS, PLAN_ORDER } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { getDict, type Dict, type Locale } from "@/lib/i18n/site";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+
+const STEP_ICONS = [Upload, Sparkles, Code2];
+const FEATURE_ICONS = [ShieldCheck, Code2, Globe, Zap, Palette, BarChart3];
 
 export default async function Home() {
   const supabase = await createClient();
@@ -30,24 +36,35 @@ export default async function Home() {
     currentPlan = profile?.plan ?? "free";
   }
 
+  const locale = await getLocale();
+  const d = getDict(locale);
+
   return (
     <div className="bg-white text-slate-900">
-      <Nav isAuthed={!!user} />
-      <Hero />
-      <TrustBar />
-      <HowItWorks />
-      <Features />
-      <Showcase />
-      <Pricing currentPlan={currentPlan} />
-      <Faq />
-      <FinalCta />
-      <Footer />
+      <Nav isAuthed={!!user} d={d} locale={locale} />
+      <Hero d={d} />
+      <TrustBar d={d} />
+      <HowItWorks d={d} />
+      <Features d={d} />
+      <Showcase d={d} />
+      <Pricing currentPlan={currentPlan} d={d} />
+      <Faq d={d} />
+      <FinalCta d={d} />
+      <Footer d={d} />
     </div>
   );
 }
 
 /* ---------------- Nav ---------------- */
-function Nav({ isAuthed }: { isAuthed: boolean }) {
+function Nav({
+  isAuthed,
+  d,
+  locale,
+}: {
+  isAuthed: boolean;
+  d: Dict;
+  locale: Locale;
+}) {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
@@ -58,31 +75,32 @@ function Nav({ isAuthed }: { isAuthed: boolean }) {
           Shopmate
         </Link>
         <nav className="hidden items-center gap-7 text-sm font-medium text-slate-600 md:flex">
-          <a href="#how" className="hover:text-slate-900">How it works</a>
-          <a href="#features" className="hover:text-slate-900">Features</a>
-          <a href="#pricing" className="hover:text-slate-900">Pricing</a>
+          <a href="#how" className="hover:text-slate-900">{d.nav.how}</a>
+          <a href="#features" className="hover:text-slate-900">{d.nav.features}</a>
+          <a href="#pricing" className="hover:text-slate-900">{d.nav.pricing}</a>
         </nav>
         <div className="flex items-center gap-2 text-sm">
+          <LanguageSwitcher current={locale} />
           {isAuthed ? (
             <Link
               href="/dashboard"
               className="rounded-lg bg-brand px-4 py-2 font-semibold text-white transition hover:bg-indigo-700"
             >
-              Go to dashboard
+              {d.nav.dashboard}
             </Link>
           ) : (
             <>
               <Link
                 href="/login"
-                className="rounded-lg px-3 py-2 font-medium text-slate-600 hover:text-slate-900"
+                className="hidden rounded-lg px-3 py-2 font-medium text-slate-600 hover:text-slate-900 sm:block"
               >
-                Sign in
+                {d.nav.signin}
               </Link>
               <Link
                 href="/signup"
                 className="rounded-lg bg-brand px-4 py-2 font-semibold text-white transition hover:bg-indigo-700"
               >
-                Get started free
+                {d.nav.getStarted}
               </Link>
             </>
           )}
@@ -93,53 +111,44 @@ function Nav({ isAuthed }: { isAuthed: boolean }) {
 }
 
 /* ---------------- Hero ---------------- */
-function Hero() {
+function Hero({ d }: { d: Dict }) {
   return (
     <section className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_50%_0%,rgba(79,70,229,0.10),transparent)]" />
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 lg:grid-cols-2 lg:py-24">
         <div>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-medium text-brand">
-            <Sparkles size={13} /> AI support for online stores
+            <Sparkles size={13} /> {d.hero.badge}
           </span>
           <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl lg:text-[3.4rem] lg:leading-[1.05]">
-            Turn your help docs into a support agent that never sleeps
+            {d.hero.title}
           </h1>
-          <p className="mt-5 max-w-lg text-lg text-slate-600">
-            Shopmate turns your store&apos;s FAQs, policies and product info into
-            an AI assistant that answers customers instantly — in a chat widget
-            right on your website.
-          </p>
+          <p className="mt-5 max-w-lg text-lg text-slate-600">{d.hero.subtitle}</p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href="/signup"
               className="inline-flex items-center gap-2 rounded-lg bg-brand px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
             >
-              Get started free <ArrowRight size={16} />
+              {d.hero.cta} <ArrowRight size={16} />
             </Link>
             <a
               href="#how"
               className="rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
             >
-              See how it works
+              {d.hero.see}
             </a>
           </div>
-          <p className="mt-4 text-sm text-slate-400">
-            Free plan • No credit card required • Set up in 5 minutes
-          </p>
+          <p className="mt-4 text-sm text-slate-400">{d.hero.trustline}</p>
         </div>
-
         <ChatMockup />
       </div>
     </section>
   );
 }
 
-/* A static, realistic mockup of the widget running on a store. */
 function ChatMockup() {
   return (
     <div className="relative mx-auto w-full max-w-md">
-      {/* Browser frame */}
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-center gap-1.5 border-b border-slate-100 bg-slate-50 px-4 py-2.5">
           <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
@@ -149,7 +158,6 @@ function ChatMockup() {
             acme-store.com
           </span>
         </div>
-        {/* Faux store content */}
         <div className="relative h-72 bg-gradient-to-br from-slate-50 to-slate-100 p-5">
           <div className="h-3 w-24 rounded bg-slate-200" />
           <div className="mt-3 h-6 w-40 rounded bg-slate-300" />
@@ -162,8 +170,6 @@ function ChatMockup() {
               </div>
             ))}
           </div>
-
-          {/* Chat widget */}
           <div className="absolute bottom-4 right-4 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl">
             <div className="flex items-center gap-2 bg-brand px-3 py-2 text-white">
               <span className="grid h-6 w-6 place-items-center rounded-full bg-white/20 text-xs font-bold">
@@ -203,17 +209,11 @@ function Msg({ who, children }: { who: "bot" | "user"; children: React.ReactNode
 }
 
 /* ---------------- Trust bar ---------------- */
-function TrustBar() {
-  const items = [
-    "Answers only from your content",
-    "No code required",
-    "Works with PDF, URLs & text",
-    "Live in minutes",
-  ];
+function TrustBar({ d }: { d: Dict }) {
   return (
     <section className="border-y border-slate-100 bg-slate-50">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-8 gap-y-2 px-5 py-4 text-sm text-slate-500">
-        {items.map((t) => (
+        {d.trust.map((t) => (
           <span key={t} className="inline-flex items-center gap-1.5">
             <Check size={15} className="text-emerald-500" /> {t}
           </span>
@@ -224,105 +224,56 @@ function TrustBar() {
 }
 
 /* ---------------- How it works ---------------- */
-function HowItWorks() {
-  const steps = [
-    {
-      icon: Upload,
-      title: "Add your knowledge",
-      text: "Paste your FAQ, upload a policy doc, or point us at your help pages. Shopmate reads and indexes it in seconds.",
-    },
-    {
-      icon: Sparkles,
-      title: "Preview your assistant",
-      text: "Test it right in your dashboard. It answers strictly from your content — no made-up policies or prices.",
-    },
-    {
-      icon: Code2,
-      title: "Embed on your store",
-      text: "Copy one line of code into your site. A chat bubble appears, ready to answer customers 24/7.",
-    },
-  ];
+function HowItWorks({ d }: { d: Dict }) {
   return (
     <section id="how" className="mx-auto max-w-6xl px-5 py-20">
-      <SectionHeading
-        eyebrow="How it works"
-        title="From docs to live support in three steps"
-      />
+      <SectionHeading eyebrow={d.how.eyebrow} title={d.how.title} />
       <div className="mt-12 grid gap-6 md:grid-cols-3">
-        {steps.map((s, i) => (
-          <div
-            key={s.title}
-            className="relative rounded-2xl border border-slate-200 bg-white p-6"
-          >
-            <span className="absolute right-5 top-5 text-4xl font-bold text-slate-100">
-              {i + 1}
-            </span>
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-indigo-50 text-brand">
-              <s.icon size={20} />
-            </span>
-            <h3 className="mt-4 font-semibold">{s.title}</h3>
-            <p className="mt-2 text-sm text-slate-600">{s.text}</p>
-          </div>
-        ))}
+        {d.how.steps.map((s, i) => {
+          const Icon = STEP_ICONS[i];
+          return (
+            <div
+              key={s.title}
+              className="relative rounded-2xl border border-slate-200 bg-white p-6"
+            >
+              <span className="absolute right-5 top-5 text-4xl font-bold text-slate-100">
+                {i + 1}
+              </span>
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-indigo-50 text-brand">
+                <Icon size={20} />
+              </span>
+              <h3 className="mt-4 font-semibold">{s.title}</h3>
+              <p className="mt-2 text-sm text-slate-600">{s.text}</p>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
 }
 
 /* ---------------- Features ---------------- */
-function Features() {
-  const features = [
-    {
-      icon: ShieldCheck,
-      title: "Grounded, not guessing",
-      text: "Answers come only from your knowledge base. If it doesn't know, it says so and points to support — never invents.",
-    },
-    {
-      icon: Code2,
-      title: "One-line embed",
-      text: "A single script tag adds a polished chat widget to any store — Shopify, WooCommerce, custom, anything.",
-    },
-    {
-      icon: Globe,
-      title: "Feed it anything",
-      text: "Pasted text, .txt/.md files, or a URL to your help pages. Update anytime and the assistant stays current.",
-    },
-    {
-      icon: Zap,
-      title: "Instant streaming replies",
-      text: "Customers get fast, word-by-word answers — the same experience they expect from modern chat.",
-    },
-    {
-      icon: Palette,
-      title: "Match your brand",
-      text: "Set the widget color and welcome message so it feels like a native part of your store.",
-    },
-    {
-      icon: BarChart3,
-      title: "See what customers ask",
-      text: "Every conversation is saved, so you learn the real questions and the gaps in your help content.",
-    },
-  ];
+function Features({ d }: { d: Dict }) {
   return (
     <section id="features" className="border-y border-slate-100 bg-slate-50">
       <div className="mx-auto max-w-6xl px-5 py-20">
-        <SectionHeading
-          eyebrow="Features"
-          title="Everything you need to deflect support tickets"
-        />
+        <SectionHeading eyebrow={d.features.eyebrow} title={d.features.title} />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f) => (
-            <div
-              key={f.title}
-              className="rounded-2xl border border-slate-200 bg-white p-6"
-            >
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-indigo-50 text-brand">
-                <f.icon size={20} />
-              </span>
-              <h3 className="mt-4 font-semibold">{f.title}</h3>
-              <p className="mt-2 text-sm text-slate-600">{f.text}</p>
-            </div>
-          ))}
+          {d.features.items.map((f, i) => {
+            const Icon = FEATURE_ICONS[i];
+            return (
+              <div
+                key={f.title}
+                className="rounded-2xl border border-slate-200 bg-white p-6"
+              >
+                <span className="grid h-11 w-11 place-items-center rounded-xl bg-indigo-50 text-brand">
+                  <Icon size={20} />
+                </span>
+                <h3 className="mt-4 font-semibold">{f.title}</h3>
+                <p className="mt-2 text-sm text-slate-600">{f.text}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -330,20 +281,12 @@ function Features() {
 }
 
 /* ---------------- Showcase ---------------- */
-function Showcase() {
-  const qa = [
-    { q: "Can I return something after 3 weeks?", a: "Yes! You can return any unused item within 30 days for a full refund. Just email support@acme.com with your order number." },
-    { q: "Do you ship to Canada?", a: "We ship worldwide 🌍 International orders usually arrive in 7–14 business days." },
-    { q: "What payment methods do you take?", a: "Visa, Mastercard, Amex, Apple Pay and Google Pay — all processed securely via Stripe." },
-  ];
+function Showcase({ d }: { d: Dict }) {
   return (
     <section className="mx-auto max-w-6xl px-5 py-20">
-      <SectionHeading
-        eyebrow="In action"
-        title="Real answers, straight from your store's own content"
-      />
+      <SectionHeading eyebrow={d.showcase.eyebrow} title={d.showcase.title} />
       <div className="mx-auto mt-12 max-w-2xl space-y-4">
-        {qa.map((item) => (
+        {d.showcase.qa.map((item) => (
           <div key={item.q} className="space-y-2">
             <div className="flex justify-end">
               <div className="max-w-[80%] rounded-2xl bg-brand px-4 py-2.5 text-sm text-white">
@@ -363,7 +306,7 @@ function Showcase() {
 }
 
 /* ---------------- Pricing ---------------- */
-function Pricing({ currentPlan }: { currentPlan: string | null }) {
+function Pricing({ currentPlan, d }: { currentPlan: string | null; d: Dict }) {
   const curPrice =
     currentPlan && currentPlan in PLANS
       ? PLANS[currentPlan as keyof typeof PLANS].price
@@ -372,33 +315,29 @@ function Pricing({ currentPlan }: { currentPlan: string | null }) {
   return (
     <section id="pricing" className="border-y border-slate-100 bg-slate-50">
       <div className="mx-auto max-w-6xl px-5 py-20">
-        <SectionHeading
-          eyebrow="Pricing"
-          title="Start free. Upgrade when your store grows."
-        />
+        <SectionHeading eyebrow={d.pricing.eyebrow} title={d.pricing.title} />
         <div className="mt-12 grid items-start gap-6 lg:grid-cols-3">
           {PLAN_ORDER.map((id) => {
             const plan = PLANS[id];
             const featured = id === "starter";
             const isCurrent = currentPlan === id;
 
-            // CTA depends on auth + current plan
             let label: string;
             let href: string;
             if (!currentPlan) {
-              label = plan.price === 0 ? "Get started free" : `Choose ${plan.name}`;
+              label = plan.price === 0 ? d.pricing.getFree : `${d.pricing.choose} ${plan.name}`;
               href = "/signup";
             } else if (isCurrent) {
-              label = "Your current plan";
+              label = d.pricing.current;
               href = "/dashboard/billing";
             } else {
               href = "/dashboard/billing";
               label =
                 plan.price > curPrice
-                  ? `Upgrade to ${plan.name}`
+                  ? `${d.pricing.upgrade} ${plan.name}`
                   : plan.price === 0
-                    ? "Downgrade"
-                    : `Switch to ${plan.name}`;
+                    ? d.pricing.downgrade
+                    : `${d.pricing.switchTo} ${plan.name}`;
             }
 
             return (
@@ -415,18 +354,18 @@ function Pricing({ currentPlan }: { currentPlan: string | null }) {
               >
                 {isCurrent ? (
                   <span className="mb-3 inline-block rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white">
-                    Current plan
+                    {d.pricing.current}
                   </span>
                 ) : featured ? (
                   <span className="mb-3 inline-block rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
-                    Most popular
+                    {d.pricing.popular}
                   </span>
                 ) : null}
                 <h3 className="text-lg font-bold">{plan.name}</h3>
                 <p className="mt-1 text-sm text-slate-500">{plan.tagline}</p>
                 <div className="mt-4 flex items-end gap-1">
                   <span className="text-4xl font-bold">${plan.price}</span>
-                  <span className="mb-1 text-sm text-slate-400">/month</span>
+                  <span className="mb-1 text-sm text-slate-400">{d.pricing.perMonth}</span>
                 </div>
                 <Link
                   href={href}
@@ -460,30 +399,12 @@ function Pricing({ currentPlan }: { currentPlan: string | null }) {
 }
 
 /* ---------------- FAQ ---------------- */
-function Faq() {
-  const faqs = [
-    {
-      q: "How does Shopmate know the answers?",
-      a: "You give it your store's own content — FAQs, shipping & return policies, product details. It only answers from that. If something isn't covered, it tells the customer to contact support instead of guessing.",
-    },
-    {
-      q: "Do I need to write any code?",
-      a: "No. You add knowledge and customize the assistant in the dashboard, then paste one line of code into your site. If you use Shopify or WooCommerce, that's a single copy-paste.",
-    },
-    {
-      q: "Which website builders does it work with?",
-      a: "Any website where you can add an HTML snippet — Shopify, WooCommerce, Wix, Squarespace, Webflow, or a fully custom site.",
-    },
-    {
-      q: "What happens if I hit my message limit?",
-      a: "The assistant pauses new answers until the next month or until you upgrade. Your knowledge and settings are always kept.",
-    },
-  ];
+function Faq({ d }: { d: Dict }) {
   return (
     <section className="mx-auto max-w-3xl px-5 py-20">
-      <SectionHeading eyebrow="FAQ" title="Questions, answered" />
+      <SectionHeading eyebrow={d.faq.eyebrow} title={d.faq.title} />
       <div className="mt-10 divide-y divide-slate-200 border-y border-slate-200">
-        {faqs.map((f) => (
+        {d.faq.items.map((f) => (
           <details key={f.q} className="group py-4">
             <summary className="flex cursor-pointer list-none items-center justify-between font-medium">
               {f.q}
@@ -498,22 +419,19 @@ function Faq() {
 }
 
 /* ---------------- Final CTA ---------------- */
-function FinalCta() {
+function FinalCta({ d }: { d: Dict }) {
   return (
     <section className="mx-auto max-w-6xl px-5 pb-20">
       <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-600 px-8 py-14 text-center text-white">
         <h2 className="mx-auto max-w-xl text-3xl font-bold sm:text-4xl">
-          Stop answering the same questions over and over
+          {d.cta.title}
         </h2>
-        <p className="mx-auto mt-4 max-w-lg text-indigo-100">
-          Give your customers instant answers and give yourself back your time.
-          Set up your assistant in minutes — free.
-        </p>
+        <p className="mx-auto mt-4 max-w-lg text-indigo-100">{d.cta.text}</p>
         <Link
           href="/signup"
           className="mt-8 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand transition hover:bg-indigo-50"
         >
-          Get started free <ArrowRight size={16} />
+          {d.cta.button} <ArrowRight size={16} />
         </Link>
       </div>
     </section>
@@ -521,7 +439,7 @@ function FinalCta() {
 }
 
 /* ---------------- Footer ---------------- */
-function Footer() {
+function Footer({ d }: { d: Dict }) {
   return (
     <footer className="border-t border-slate-100">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-sm text-slate-400 sm:flex-row">
@@ -531,7 +449,7 @@ function Footer() {
           </span>
           Shopmate
         </div>
-        <p>© 2026 Shopmate. AI support for online stores.</p>
+        <p>© 2026 Shopmate. {d.footer}</p>
       </div>
     </footer>
   );
