@@ -1,9 +1,19 @@
-// Message top-up pack (one-time add-on purchased on top of the monthly plan).
-export const TOPUP = {
-  messages: 1000,
-  priceCents: 900, // $9.00
-  label: "1,000 extra messages",
-};
+// Message top-up packs (one-time add-ons purchased on top of the monthly plan).
+export interface TopupPack {
+  id: string;
+  messages: number;
+  priceCents: number;
+}
+
+export const TOPUPS: TopupPack[] = [
+  { id: "s", messages: 1000, priceCents: 900 }, // $9   → $0.0090/msg
+  { id: "m", messages: 5000, priceCents: 3900 }, // $39  → $0.0078/msg
+  { id: "l", messages: 15000, priceCents: 9900 }, // $99 → $0.0066/msg
+];
+
+export function getTopup(id: string | null | undefined): TopupPack | undefined {
+  return TOPUPS.find((t) => t.id === id);
+}
 
 // Current UTC month as 'YYYY-MM'. Top-up credits are scoped to the month bought.
 export function currentPeriod(): string {

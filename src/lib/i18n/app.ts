@@ -57,7 +57,7 @@ export interface AppDict {
     title: string; onPlanTpl: string; manage: string;
     success: string; canceled: string; topup: string;
     messagesThisMonth: string; usageTpl: string; includesTopupTpl: string;
-    buyTpl: string; hitLimit: string; plans: string;
+    topupTitle: string; buyTpl: string; hitLimit: string; plans: string;
     current: string; yourPlan: string; downgradeVia: string; upgradeTo: string; switchTo: string;
     testCardNote: string;
   };
@@ -125,7 +125,7 @@ const en: AppDict = {
     title: "Billing & plans", onPlanTpl: "You're on the {plan} plan.", manage: "Manage subscription",
     success: "🎉 Payment successful — your plan is now active.", canceled: "Checkout canceled. No charge was made.", topup: "🎉 Messages added — your assistant is back to full speed.",
     messagesThisMonth: "Messages this month", usageTpl: "{used} of {total} used", includesTopupTpl: " · includes {n} from top-ups",
-    buyTpl: "Buy {n} messages · ${price}", hitLimit: "You've hit your limit — buy a top-up above or upgrade your plan to keep answering customers.", plans: "Plans",
+    topupTitle: "Need more messages this month?", buyTpl: "Buy {n} messages · ${price}", hitLimit: "You've hit your limit — buy a top-up above or upgrade your plan to keep answering customers.", plans: "Plans",
     current: "Current", yourPlan: "Your current plan", downgradeVia: "Downgrade via “Manage subscription”", upgradeTo: "Upgrade to", switchTo: "Switch to",
     testCardNote: "Test mode — use card 4242 4242 4242 4242, any future date, any CVC.",
   },
@@ -193,7 +193,7 @@ const ru: AppDict = {
     title: "Оплата и тарифы", onPlanTpl: "Вы на тарифе {plan}.", manage: "Управление подпиской",
     success: "🎉 Оплата прошла — тариф активирован.", canceled: "Оплата отменена. Списаний не было.", topup: "🎉 Сообщения добавлены — ассистент снова в строю.",
     messagesThisMonth: "Сообщения в этом месяце", usageTpl: "{used} из {total} использовано", includesTopupTpl: " · включая {n} из докупки",
-    buyTpl: "Купить {n} сообщений · ${price}", hitLimit: "Лимит исчерпан — докупите пакет выше или повысьте тариф, чтобы продолжать отвечать покупателям.", plans: "Тарифы",
+    topupTitle: "Нужно больше сообщений в этом месяце?", buyTpl: "Купить {n} сообщений · ${price}", hitLimit: "Лимит исчерпан — докупите пакет выше или повысьте тариф, чтобы продолжать отвечать покупателям.", plans: "Тарифы",
     current: "Текущий", yourPlan: "Ваш тариф", downgradeVia: "Понизить через «Управление подпиской»", upgradeTo: "Перейти на", switchTo: "Сменить на",
     testCardNote: "Тестовый режим — карта 4242 4242 4242 4242, любая будущая дата, любой CVC.",
   },
@@ -261,7 +261,7 @@ const fr: AppDict = {
     title: "Facturation et offres", onPlanTpl: "Vous êtes sur l'offre {plan}.", manage: "Gérer l'abonnement",
     success: "🎉 Paiement réussi — votre offre est active.", canceled: "Paiement annulé. Aucun débit.", topup: "🎉 Messages ajoutés — votre assistant est de nouveau à pleine vitesse.",
     messagesThisMonth: "Messages ce mois-ci", usageTpl: "{used} sur {total} utilisés", includesTopupTpl: " · dont {n} en recharge",
-    buyTpl: "Acheter {n} messages · ${price}", hitLimit: "Limite atteinte — achetez une recharge ci-dessus ou améliorez votre offre pour continuer à répondre.", plans: "Offres",
+    topupTitle: "Besoin de plus de messages ce mois-ci ?", buyTpl: "Acheter {n} messages · ${price}", hitLimit: "Limite atteinte — achetez une recharge ci-dessus ou améliorez votre offre pour continuer à répondre.", plans: "Offres",
     current: "Actuel", yourPlan: "Votre offre actuelle", downgradeVia: "Rétrograder via « Gérer l'abonnement »", upgradeTo: "Passer à", switchTo: "Basculer vers",
     testCardNote: "Mode test — carte 4242 4242 4242 4242, date future, CVC au choix.",
   },
@@ -329,7 +329,7 @@ const es: AppDict = {
     title: "Facturación y planes", onPlanTpl: "Estás en el plan {plan}.", manage: "Gestionar suscripción",
     success: "🎉 Pago correcto — tu plan está activo.", canceled: "Pago cancelado. No se hizo ningún cargo.", topup: "🎉 Mensajes añadidos — tu asistente vuelve a plena marcha.",
     messagesThisMonth: "Mensajes este mes", usageTpl: "{used} de {total} usados", includesTopupTpl: " · incluye {n} de recargas",
-    buyTpl: "Comprar {n} mensajes · ${price}", hitLimit: "Has llegado a tu límite — compra una recarga arriba o mejora tu plan para seguir atendiendo.", plans: "Planes",
+    topupTitle: "¿Necesitas más mensajes este mes?", buyTpl: "Comprar {n} mensajes · ${price}", hitLimit: "Has llegado a tu límite — compra una recarga arriba o mejora tu plan para seguir atendiendo.", plans: "Planes",
     current: "Actual", yourPlan: "Tu plan actual", downgradeVia: "Bajar vía «Gestionar suscripción»", upgradeTo: "Subir a", switchTo: "Cambiar a",
     testCardNote: "Modo de prueba — tarjeta 4242 4242 4242 4242, cualquier fecha futura, cualquier CVC.",
   },
@@ -397,7 +397,7 @@ const de: AppDict = {
     title: "Abrechnung & Pläne", onPlanTpl: "Sie nutzen den {plan}-Plan.", manage: "Abo verwalten",
     success: "🎉 Zahlung erfolgreich — Ihr Plan ist aktiv.", canceled: "Bezahlung abgebrochen. Es wurde nichts berechnet.", topup: "🎉 Nachrichten hinzugefügt — Ihr Assistent ist wieder voll einsatzbereit.",
     messagesThisMonth: "Nachrichten diesen Monat", usageTpl: "{used} von {total} genutzt", includesTopupTpl: " · inkl. {n} aus Aufladungen",
-    buyTpl: "{n} Nachrichten kaufen · ${price}", hitLimit: "Limit erreicht — kaufen Sie oben eine Aufladung oder upgraden Sie, um weiter zu antworten.", plans: "Pläne",
+    topupTitle: "Diesen Monat mehr Nachrichten nötig?", buyTpl: "{n} Nachrichten kaufen · ${price}", hitLimit: "Limit erreicht — kaufen Sie oben eine Aufladung oder upgraden Sie, um weiter zu antworten.", plans: "Pläne",
     current: "Aktuell", yourPlan: "Ihr aktueller Plan", downgradeVia: "Herabstufen über „Abo verwalten“", upgradeTo: "Upgrade auf", switchTo: "Wechseln zu",
     testCardNote: "Testmodus — Karte 4242 4242 4242 4242, beliebiges künftiges Datum, beliebiger CVC.",
   },

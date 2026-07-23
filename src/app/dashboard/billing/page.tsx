@@ -3,7 +3,7 @@ import { ArrowLeft, Check, Zap } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { getPlan, PLANS, PLAN_ORDER } from "@/lib/plans";
 import { countMessagesThisMonth } from "@/lib/usage";
-import { activeTopup, TOPUP } from "@/lib/limits";
+import { activeTopup, TOPUPS } from "@/lib/limits";
 import { getLocale } from "@/lib/i18n/getLocale";
 import { getAppDict, tpl } from "@/lib/i18n/app";
 import { getDict } from "@/lib/i18n/site";
@@ -83,33 +83,20 @@ export default async function BillingPage({
 
       {/* Message usage + top-up */}
       <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="text-sm font-semibold text-slate-700">
-              {b.messagesThisMonth}
-            </h2>
-            <p className="mt-0.5 text-sm text-slate-500">
-              {tpl(b.usageTpl, {
-                used: used.toLocaleString(),
-                total: effectiveLimit.toLocaleString(),
-              })}
-              {topup > 0 && (
-                <span className="text-emerald-600">
-                  {tpl(b.includesTopupTpl, { n: topup.toLocaleString() })}
-                </span>
-              )}
-            </p>
-          </div>
-          <form action={buyTopup}>
-            <button className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">
-              <Zap size={15} />{" "}
-              {tpl(b.buyTpl, {
-                n: TOPUP.messages.toLocaleString(),
-                price: (TOPUP.priceCents / 100).toFixed(0),
-              })}
-            </button>
-          </form>
-        </div>
+        <h2 className="text-sm font-semibold text-slate-700">
+          {b.messagesThisMonth}
+        </h2>
+        <p className="mt-0.5 text-sm text-slate-500">
+          {tpl(b.usageTpl, {
+            used: used.toLocaleString(),
+            total: effectiveLimit.toLocaleString(),
+          })}
+          {topup > 0 && (
+            <span className="text-emerald-600">
+              {tpl(b.includesTopupTpl, { n: topup.toLocaleString() })}
+            </span>
+          )}
+        </p>
         <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
           <div
             className={
@@ -122,6 +109,25 @@ export default async function BillingPage({
         {used >= effectiveLimit && (
           <p className="mt-3 text-sm text-amber-700">{b.hitLimit}</p>
         )}
+
+        {/* Top-up packs */}
+        <div className="mt-5 border-t border-slate-100 pt-4">
+          <h3 className="text-sm font-medium text-slate-700">{b.topupTitle}</h3>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {TOPUPS.map((pack) => (
+              <form key={pack.id} action={buyTopup}>
+                <input type="hidden" name="pack" value={pack.id} />
+                <button className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-brand hover:text-brand">
+                  <Zap size={14} />
+                  {tpl(b.buyTpl, {
+                    n: pack.messages.toLocaleString("en-US"),
+                    price: (pack.priceCents / 100).toFixed(0),
+                  })}
+                </button>
+              </form>
+            ))}
+          </div>
+        </div>
       </div>
 
       <h2 className="mt-8 text-sm font-semibold uppercase tracking-wide text-slate-400">

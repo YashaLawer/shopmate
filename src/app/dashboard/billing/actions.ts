@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe";
 import { getBaseUrl } from "@/lib/baseUrl";
 import { priceIdForPlan } from "@/lib/plans";
-import { TOPUP } from "@/lib/limits";
+import { getTopup, TOPUPS } from "@/lib/limits";
 import type { PlanId } from "@/lib/plans";
 
 export async function startCheckout(formData: FormData) {
@@ -52,8 +52,9 @@ export async function startCheckout(formData: FormData) {
   redirect(session.url);
 }
 
-// One-time purchase of extra messages for the current month.
-export async function buyTopup() {
+// One-time purchase of a message top-up pack for the current month.
+export async function buyTopup(formData: FormData) {
+  const pack = getTopup(String(formData.get("pack"))) ?? TOPUPS[0];
   const { userId, email, profile } = await requireUser();
   const stripe = getStripe();
   const base = await getBaseUrl();
@@ -79,14 +80,16 @@ export async function buyTopup() {
       {
         price_data: {
           currency: "usd",
-          product_data: { name: TOPUP.label },
-          unit_amount: TOPUP.priceCents,
+          product_data: {
+            name: `${pack.messages.toLocaleString("en-US")} extra messages`,
+          },
+          unit_amount: pack.priceCents,
         },
         quantity: 1,
       },
     ],
     client_reference_id: userId,
-    metadata: { userId, type: "topup", messages: String(TOPUP.messages) },
+    metadata: { userId, type: "topup", messages: String(pack.messages) },
     success_url: `${base}/api/stripe/confirm?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${base}/dashboard/billing?canceled=1`,
   });
