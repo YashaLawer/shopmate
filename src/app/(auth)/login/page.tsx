@@ -10,7 +10,12 @@ export default async function LoginPage({
 }) {
   const sp = await searchParams;
   const a = getAppDict(await getLocale()).auth;
-  const notice = sp.checkEmail ? a.checkEmail : undefined;
+  const notice =
+    sp.checkEmail === "expired"
+      ? a.linkExpired
+      : sp.checkEmail
+        ? a.checkEmail
+        : undefined;
 
   return <AuthForm mode="login" action={login} a={a} notice={notice} />;
 }

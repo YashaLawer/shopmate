@@ -15,7 +15,7 @@ export interface AppDict {
     email: string; password: string;
     signIn: string; signUp: string; pleaseWait: string;
     noAccount: string; haveAccount: string;
-    checkEmail: string;
+    checkEmail: string; linkExpired: string;
     emailPh: string;
   };
   dash: {
@@ -84,6 +84,7 @@ const en: AppDict = {
     signIn: "Sign in", signUp: "Sign up", pleaseWait: "Please wait…",
     noAccount: "No account yet?", haveAccount: "Already have an account?",
     checkEmail: "Check your email to confirm your account, then sign in.",
+    linkExpired: "That confirmation link has expired. Please sign in, or sign up again.",
     emailPh: "you@store.com",
   },
   dash: {
@@ -152,6 +153,7 @@ const ru: AppDict = {
     signIn: "Войти", signUp: "Зарегистрироваться", pleaseWait: "Подождите…",
     noAccount: "Ещё нет аккаунта?", haveAccount: "Уже есть аккаунт?",
     checkEmail: "Подтвердите аккаунт по письму на почте, затем войдите.",
+    linkExpired: "Ссылка подтверждения истекла. Войдите или зарегистрируйтесь снова.",
     emailPh: "you@store.com",
   },
   dash: {
@@ -220,6 +222,7 @@ const fr: AppDict = {
     signIn: "Se connecter", signUp: "S'inscrire", pleaseWait: "Un instant…",
     noAccount: "Pas encore de compte ?", haveAccount: "Vous avez déjà un compte ?",
     checkEmail: "Confirmez votre compte via l'e-mail reçu, puis connectez-vous.",
+    linkExpired: "Ce lien de confirmation a expiré. Connectez-vous ou réinscrivez-vous.",
     emailPh: "vous@boutique.com",
   },
   dash: {
@@ -288,6 +291,7 @@ const es: AppDict = {
     signIn: "Iniciar sesión", signUp: "Registrarse", pleaseWait: "Un momento…",
     noAccount: "¿Aún no tienes cuenta?", haveAccount: "¿Ya tienes cuenta?",
     checkEmail: "Confirma tu cuenta con el email recibido y luego inicia sesión.",
+    linkExpired: "Ese enlace de confirmación ha caducado. Inicia sesión o regístrate de nuevo.",
     emailPh: "tu@tienda.com",
   },
   dash: {
@@ -356,6 +360,7 @@ const de: AppDict = {
     signIn: "Anmelden", signUp: "Registrieren", pleaseWait: "Bitte warten…",
     noAccount: "Noch kein Konto?", haveAccount: "Schon ein Konto?",
     checkEmail: "Bestätigen Sie Ihr Konto über die E-Mail und melden Sie sich an.",
+    linkExpired: "Dieser Bestätigungslink ist abgelaufen. Melden Sie sich an oder registrieren Sie sich erneut.",
     emailPh: "sie@shop.com",
   },
   dash: {

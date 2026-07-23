@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getBaseUrl } from "@/lib/baseUrl";
 
 export type AuthState = { error?: string };
 
@@ -31,7 +32,12 @@ export async function signup(
     return { error: "Password must be at least 6 characters." };
 
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  const base = await getBaseUrl();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: `${base}/auth/callback` },
+  });
   if (error) return { error: error.message };
 
   // If email confirmation is enabled in Supabase, there is no session yet.
