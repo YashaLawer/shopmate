@@ -9,7 +9,7 @@ import { updateChatbot } from "@/app/dashboard/actions";
 import { SubmitButton } from "@/components/SubmitButton";
 import { KnowledgeManager } from "./KnowledgeManager";
 import { TestChat } from "./TestChat";
-import { EmbedSnippet } from "./EmbedSnippet";
+import { InstallWidget } from "./InstallWidget";
 import type { Chatbot, KnowledgeDocument } from "@/lib/types";
 
 const inputClass =
@@ -153,7 +153,8 @@ export default async function ChatbotDetailPage({
 
       {/* Install / embed */}
       <div className="mt-4">
-        <EmbedSnippet
+        <InstallWidget
+          chatbotId={bot.id}
           appUrl={appUrl}
           publicKey={bot.public_key}
           color={bot.widget_color}

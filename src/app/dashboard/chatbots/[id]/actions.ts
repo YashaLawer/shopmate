@@ -92,6 +92,70 @@ export async function addKnowledge(
   }
 }
 
+export type VerifyState = { ok?: boolean; message?: string };
+
+// Fetches the owner's site and checks whether the widget snippet (their bot's
+// public key) is present in the page source.
+export async function verifyInstallation(
+  _prev: VerifyState,
+  formData: FormData,
+): Promise<VerifyState> {
+  const { userId } = await requireUser();
+  const chatbotId = String(formData.get("chatbot_id"));
+  let url = String(formData.get("url") || "").trim();
+
+  const supabase = await createClient();
+  const { data: bot } = await supabase
+    .from("chatbots")
+    .select("public_key")
+    .eq("id", chatbotId)
+    .eq("user_id", userId)
+    .single();
+  if (!bot) return { ok: false, message: "Chatbot not found." };
+
+  if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+  try {
+    const u = new URL(url);
+    if (u.protocol !== "http:" && u.protocol !== "https:") {
+      return { ok: false, message: "Enter a valid website URL." };
+    }
+  } catch {
+    return { ok: false, message: "Enter a valid website URL." };
+  }
+
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; ShopmateInstallCheck/1.0)" },
+      redirect: "follow",
+    });
+    if (!res.ok) {
+      return { ok: false, message: `Couldn't open the page (HTTP ${res.status}).` };
+    }
+    const html = await res.text();
+
+    if (html.includes(bot.public_key)) {
+      return { ok: true, message: "Found your assistant on this page — you're live! 🎉" };
+    }
+    if (html.includes("widget.js")) {
+      return {
+        ok: false,
+        message:
+          "Found a Shopmate snippet, but not this bot's key. Double-check you copied the snippet above.",
+      };
+    }
+    return {
+      ok: false,
+      message:
+        "We couldn't find the widget on that page yet. Make sure you pasted the snippet and published your site. (If you added it via a tag manager, it may not appear in the page source.)",
+    };
+  } catch {
+    return {
+      ok: false,
+      message: "Couldn't reach that URL. Check the address and that the site is public.",
+    };
+  }
+}
+
 export async function deleteDocument(formData: FormData) {
   const { userId } = await requireUser();
   const chatbotId = String(formData.get("chatbot_id"));
