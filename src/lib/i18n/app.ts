@@ -54,7 +54,7 @@ export interface AppDict {
     keyText: string; regenerate: string; regenConfirm: string;
   };
   billing: {
-    title: string; onPlanTpl: string; manage: string;
+    title: string; onPlanTpl: string; manage: string; billedMonthly: string; billedYearly: string;
     success: string; canceled: string; topup: string;
     messagesThisMonth: string; usageTpl: string; includesTopupTpl: string;
     topupTitle: string; buyTpl: string; hitLimit: string; plans: string;
@@ -124,7 +124,7 @@ const en: AppDict = {
     keyText: "Compromised key? Rotate it and re-paste the snippet.", regenerate: "Regenerate key", regenConfirm: "Generate a new key? Your current embed snippet will stop working until you replace it on your site.",
   },
   billing: {
-    title: "Billing & plans", onPlanTpl: "You're on the {plan} plan.", manage: "Manage subscription",
+    title: "Billing & plans", onPlanTpl: "You're on the {plan} plan.", manage: "Manage subscription", billedMonthly: "billed monthly", billedYearly: "billed yearly",
     success: "🎉 Payment successful — your plan is now active.", canceled: "Checkout canceled. No charge was made.", topup: "🎉 Messages added — your assistant is back to full speed.",
     messagesThisMonth: "Messages this month", usageTpl: "{used} of {total} used", includesTopupTpl: " · includes {n} from top-ups",
     topupTitle: "Need more messages this month?", buyTpl: "Buy {n} messages · ${price}", hitLimit: "You've hit your limit — buy a top-up above or upgrade your plan to keep answering customers.", plans: "Plans",
@@ -194,7 +194,7 @@ const ru: AppDict = {
     keyText: "Ключ скомпрометирован? Смените его и вставьте сниппет заново.", regenerate: "Перегенерировать ключ", regenConfirm: "Сгенерировать новый ключ? Текущий сниппет перестанет работать, пока вы не замените его на сайте.",
   },
   billing: {
-    title: "Оплата и тарифы", onPlanTpl: "Вы на тарифе {plan}.", manage: "Управление подпиской",
+    title: "Оплата и тарифы", onPlanTpl: "Вы на тарифе {plan}.", manage: "Управление подпиской", billedMonthly: "оплата ежемесячно", billedYearly: "оплата ежегодно",
     success: "🎉 Оплата прошла — тариф активирован.", canceled: "Оплата отменена. Списаний не было.", topup: "🎉 Сообщения добавлены — ассистент снова в строю.",
     messagesThisMonth: "Сообщения в этом месяце", usageTpl: "{used} из {total} использовано", includesTopupTpl: " · включая {n} из докупки",
     topupTitle: "Нужно больше сообщений в этом месяце?", buyTpl: "Купить {n} сообщений · ${price}", hitLimit: "Лимит исчерпан — докупите пакет выше или повысьте тариф, чтобы продолжать отвечать покупателям.", plans: "Тарифы",
@@ -264,7 +264,7 @@ const fr: AppDict = {
     keyText: "Clé compromise ? Régénérez-la et recollez le snippet.", regenerate: "Régénérer la clé", regenConfirm: "Générer une nouvelle clé ? Votre snippet actuel cessera de fonctionner jusqu'à ce que vous le remplaciez sur votre site.",
   },
   billing: {
-    title: "Facturation et offres", onPlanTpl: "Vous êtes sur l'offre {plan}.", manage: "Gérer l'abonnement",
+    title: "Facturation et offres", onPlanTpl: "Vous êtes sur l'offre {plan}.", manage: "Gérer l'abonnement", billedMonthly: "facturé mensuellement", billedYearly: "facturé annuellement",
     success: "🎉 Paiement réussi — votre offre est active.", canceled: "Paiement annulé. Aucun débit.", topup: "🎉 Messages ajoutés — votre assistant est de nouveau à pleine vitesse.",
     messagesThisMonth: "Messages ce mois-ci", usageTpl: "{used} sur {total} utilisés", includesTopupTpl: " · dont {n} en recharge",
     topupTitle: "Besoin de plus de messages ce mois-ci ?", buyTpl: "Acheter {n} messages · ${price}", hitLimit: "Limite atteinte — achetez une recharge ci-dessus ou améliorez votre offre pour continuer à répondre.", plans: "Offres",
@@ -334,7 +334,7 @@ const es: AppDict = {
     keyText: "¿Clave comprometida? Rótala y vuelve a pegar el snippet.", regenerate: "Regenerar clave", regenConfirm: "¿Generar una clave nueva? Tu snippet actual dejará de funcionar hasta que lo reemplaces en tu sitio.",
   },
   billing: {
-    title: "Facturación y planes", onPlanTpl: "Estás en el plan {plan}.", manage: "Gestionar suscripción",
+    title: "Facturación y planes", onPlanTpl: "Estás en el plan {plan}.", manage: "Gestionar suscripción", billedMonthly: "facturación mensual", billedYearly: "facturación anual",
     success: "🎉 Pago correcto — tu plan está activo.", canceled: "Pago cancelado. No se hizo ningún cargo.", topup: "🎉 Mensajes añadidos — tu asistente vuelve a plena marcha.",
     messagesThisMonth: "Mensajes este mes", usageTpl: "{used} de {total} usados", includesTopupTpl: " · incluye {n} de recargas",
     topupTitle: "¿Necesitas más mensajes este mes?", buyTpl: "Comprar {n} mensajes · ${price}", hitLimit: "Has llegado a tu límite — compra una recarga arriba o mejora tu plan para seguir atendiendo.", plans: "Planes",
@@ -404,7 +404,7 @@ const de: AppDict = {
     keyText: "Schlüssel kompromittiert? Erneuern Sie ihn und fügen Sie das Snippet neu ein.", regenerate: "Schlüssel neu erzeugen", regenConfirm: "Neuen Schlüssel erzeugen? Ihr aktuelles Snippet funktioniert nicht mehr, bis Sie es auf Ihrer Website ersetzen.",
   },
   billing: {
-    title: "Abrechnung & Pläne", onPlanTpl: "Sie nutzen den {plan}-Plan.", manage: "Abo verwalten",
+    title: "Abrechnung & Pläne", onPlanTpl: "Sie nutzen den {plan}-Plan.", manage: "Abo verwalten", billedMonthly: "monatliche Abrechnung", billedYearly: "jährliche Abrechnung",
     success: "🎉 Zahlung erfolgreich — Ihr Plan ist aktiv.", canceled: "Bezahlung abgebrochen. Es wurde nichts berechnet.", topup: "🎉 Nachrichten hinzugefügt — Ihr Assistent ist wieder voll einsatzbereit.",
     messagesThisMonth: "Nachrichten diesen Monat", usageTpl: "{used} von {total} genutzt", includesTopupTpl: " · inkl. {n} aus Aufladungen",
     topupTitle: "Diesen Monat mehr Nachrichten nötig?", buyTpl: "{n} Nachrichten kaufen · ${price}", hitLimit: "Limit erreicht — kaufen Sie oben eine Aufladung oder upgraden Sie, um weiter zu antworten.", plans: "Pläne",

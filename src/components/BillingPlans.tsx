@@ -45,7 +45,11 @@ export function BillingPlans({
   currentInterval: "month" | "year" | null;
   changePlan: (formData: FormData) => Promise<void>;
 }) {
-  const [cycle, setCycle] = useState<"month" | "year">("month");
+  // Open on the cycle the customer is already on, so their current plan reads
+  // as "your plan" right away instead of hiding behind the other tab.
+  const [cycle, setCycle] = useState<"month" | "year">(
+    currentInterval ?? "month",
+  );
 
   return (
     <div>

@@ -65,6 +65,12 @@ export default async function BillingPage({
           <h1 className="text-2xl font-bold text-slate-900">{b.title}</h1>
           <p className="mt-1 text-sm text-slate-500">
             {tpl(b.onPlanTpl, { plan: current.name })}
+            {!isFree && currentInterval && (
+              <span className="text-slate-400">
+                {" · "}
+                {currentInterval === "year" ? b.billedYearly : b.billedMonthly}
+              </span>
+            )}
           </p>
         </div>
         {hasCustomer && (
