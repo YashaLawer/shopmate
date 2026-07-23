@@ -4,10 +4,9 @@ import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe";
+import { getBaseUrl } from "@/lib/baseUrl";
 import { priceIdForPlan } from "@/lib/plans";
 import type { PlanId } from "@/lib/plans";
-
-const appUrl = () => process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 export async function startCheckout(formData: FormData) {
   const planId = String(formData.get("plan")) as PlanId;
@@ -18,6 +17,7 @@ export async function startCheckout(formData: FormData) {
 
   const { userId, email, profile } = await requireUser();
   const stripe = getStripe();
+  const base = await getBaseUrl();
 
   // Ensure the user has a Stripe customer.
   let customerId = profile.stripe_customer_id;
@@ -41,8 +41,8 @@ export async function startCheckout(formData: FormData) {
     client_reference_id: userId,
     metadata: { userId, planId },
     allow_promotion_codes: true,
-    success_url: `${appUrl()}/api/stripe/confirm?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${appUrl()}/dashboard/billing?canceled=1`,
+    success_url: `${base}/api/stripe/confirm?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${base}/dashboard/billing?canceled=1`,
   });
 
   if (!session.url) {
@@ -58,11 +58,12 @@ export async function openPortal() {
   }
 
   const stripe = getStripe();
+  const base = await getBaseUrl();
   let url: string | null = null;
   try {
     const session = await stripe.billingPortal.sessions.create({
       customer: profile.stripe_customer_id!,
-      return_url: `${appUrl()}/dashboard/billing`,
+      return_url: `${base}/dashboard/billing`,
     });
     url = session.url;
   } catch {

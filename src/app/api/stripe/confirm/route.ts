@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 // the user's plan. This makes upgrades work even before the webhook is wired up
 // (the webhook remains the production source of truth).
 export async function GET(req: NextRequest) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = req.nextUrl.origin;
   const sessionId = req.nextUrl.searchParams.get("session_id");
   if (!sessionId) {
     return NextResponse.redirect(`${appUrl}/dashboard/billing`);

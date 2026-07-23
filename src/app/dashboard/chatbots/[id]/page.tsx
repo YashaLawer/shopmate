@@ -4,6 +4,7 @@ import { ArrowLeft, BarChart3 } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getPlan } from "@/lib/plans";
+import { getBaseUrl } from "@/lib/baseUrl";
 import { updateChatbot } from "@/app/dashboard/actions";
 import { SubmitButton } from "@/components/SubmitButton";
 import { KnowledgeManager } from "./KnowledgeManager";
@@ -25,7 +26,7 @@ export default async function ChatbotDetailPage({
   const sp = await searchParams;
   const { userId, profile } = await requireUser();
   const plan = getPlan(profile.plan);
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = await getBaseUrl();
 
   const supabase = await createClient();
   const { data } = await supabase
