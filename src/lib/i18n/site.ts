@@ -36,6 +36,7 @@ export interface Dict {
   pricing: {
     eyebrow: string; title: string; perMonth: string; current: string; popular: string;
     choose: string; getFree: string; upgrade: string; switchTo: string; downgrade: string;
+    monthly: string; yearly: string; save: string; billedYearly: string;
     plans: { free: PlanCopy; starter: PlanCopy; pro: PlanCopy };
   };
   faq: { eyebrow: string; title: string; items: { q: string; a: string }[] };
@@ -89,6 +90,7 @@ const en: Dict = {
     eyebrow: "Pricing", title: "Start free. Upgrade when your store grows.", perMonth: "/month",
     current: "Current plan", popular: "Most popular", choose: "Choose", getFree: "Get started free",
     upgrade: "Upgrade to", switchTo: "Switch to", downgrade: "Downgrade",
+    monthly: "Monthly", yearly: "Yearly", save: "2 months free", billedYearly: "{price} billed yearly",
     plans: {
       free: { tagline: "Try it on one store", highlights: ["1 chatbot", "50 messages / month", "20 knowledge pages", "“Powered by Shopmate” badge"] },
       starter: { tagline: "For a growing store", highlights: ["1 chatbot", "2,000 messages / month", "200 knowledge pages", "Remove Shopmate badge", "Custom widget color"] },
@@ -155,6 +157,7 @@ const ru: Dict = {
     eyebrow: "Цены", title: "Начните бесплатно. Растёте — переходите на платный.", perMonth: "/мес",
     current: "Ваш тариф", popular: "Популярный", choose: "Выбрать", getFree: "Начать бесплатно",
     upgrade: "Перейти на", switchTo: "Сменить на", downgrade: "Понизить",
+    monthly: "Помесячно", yearly: "Ежегодно", save: "2 месяца бесплатно", billedYearly: "{price} при оплате за год",
     plans: {
       free: { tagline: "Попробуйте на одном магазине", highlights: ["1 бот", "50 сообщений / мес", "20 страниц знаний", "Бейдж «Powered by Shopmate»"] },
       starter: { tagline: "Для растущего магазина", highlights: ["1 бот", "2 000 сообщений / мес", "200 страниц знаний", "Убрать бейдж Shopmate", "Свой цвет виджета"] },
@@ -221,6 +224,7 @@ const fr: Dict = {
     eyebrow: "Tarifs", title: "Commencez gratuitement. Évoluez avec votre boutique.", perMonth: "/mois",
     current: "Votre offre", popular: "Le plus populaire", choose: "Choisir", getFree: "Commencer gratuitement",
     upgrade: "Passer à", switchTo: "Basculer vers", downgrade: "Rétrograder",
+    monthly: "Mensuel", yearly: "Annuel", save: "2 mois offerts", billedYearly: "{price} facturé par an",
     plans: {
       free: { tagline: "Essayez sur une boutique", highlights: ["1 chatbot", "50 messages / mois", "20 pages de connaissances", "Badge « Powered by Shopmate »"] },
       starter: { tagline: "Pour une boutique en croissance", highlights: ["1 chatbot", "2 000 messages / mois", "200 pages de connaissances", "Retirer le badge Shopmate", "Couleur du widget personnalisée"] },
@@ -287,6 +291,7 @@ const es: Dict = {
     eyebrow: "Precios", title: "Empieza gratis. Sube de plan cuando crezcas.", perMonth: "/mes",
     current: "Tu plan", popular: "Más popular", choose: "Elegir", getFree: "Empezar gratis",
     upgrade: "Subir a", switchTo: "Cambiar a", downgrade: "Bajar",
+    monthly: "Mensual", yearly: "Anual", save: "2 meses gratis", billedYearly: "{price} facturado al año",
     plans: {
       free: { tagline: "Pruébalo en una tienda", highlights: ["1 chatbot", "50 mensajes / mes", "20 páginas de conocimiento", "Insignia «Powered by Shopmate»"] },
       starter: { tagline: "Para una tienda en crecimiento", highlights: ["1 chatbot", "2.000 mensajes / mes", "200 páginas de conocimiento", "Quitar la insignia de Shopmate", "Color del widget personalizado"] },
@@ -353,6 +358,7 @@ const de: Dict = {
     eyebrow: "Preise", title: "Kostenlos starten. Upgraden, wenn Ihr Shop wächst.", perMonth: "/Monat",
     current: "Ihr Plan", popular: "Beliebt", choose: "Wählen", getFree: "Kostenlos starten",
     upgrade: "Upgrade auf", switchTo: "Wechseln zu", downgrade: "Herabstufen",
+    monthly: "Monatlich", yearly: "Jährlich", save: "2 Monate gratis", billedYearly: "{price} jährlich abgerechnet",
     plans: {
       free: { tagline: "Auf einem Shop ausprobieren", highlights: ["1 Chatbot", "50 Nachrichten / Monat", "20 Wissensseiten", "„Powered by Shopmate“-Badge"] },
       starter: { tagline: "Für einen wachsenden Shop", highlights: ["1 Chatbot", "2.000 Nachrichten / Monat", "200 Wissensseiten", "Shopmate-Badge entfernen", "Eigene Widget-Farbe"] },

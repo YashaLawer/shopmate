@@ -7,11 +7,13 @@ import { getStripe } from "@/lib/stripe";
 import { getBaseUrl } from "@/lib/baseUrl";
 import { priceIdForPlan } from "@/lib/plans";
 import { getTopup, TOPUPS } from "@/lib/limits";
-import type { PlanId } from "@/lib/plans";
+import type { PlanId, BillingCycle } from "@/lib/plans";
 
 export async function startCheckout(formData: FormData) {
   const planId = String(formData.get("plan")) as PlanId;
-  const priceId = priceIdForPlan(planId);
+  const cycle: BillingCycle =
+    String(formData.get("cycle")) === "year" ? "year" : "month";
+  const priceId = priceIdForPlan(planId, cycle);
   if (!priceId) {
     redirect("/dashboard/billing?error=" + encodeURIComponent("This plan isn't configured."));
   }
@@ -40,7 +42,7 @@ export async function startCheckout(formData: FormData) {
     customer: customerId,
     line_items: [{ price: priceId!, quantity: 1 }],
     client_reference_id: userId,
-    metadata: { userId, planId },
+    metadata: { userId, planId, cycle },
     allow_promotion_codes: true,
     success_url: `${base}/api/stripe/confirm?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${base}/dashboard/billing?canceled=1`,

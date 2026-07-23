@@ -2,8 +2,9 @@ import { NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { retrieveContext, buildMessages, streamChat } from "@/lib/rag";
 import { getPlan } from "@/lib/plans";
-import { activeTopup } from "@/lib/limits";
+import { activeTopup, currentPeriod } from "@/lib/limits";
 import { hashIp, getClientIp } from "@/lib/security";
+import { sendUsageWarningEmail } from "@/lib/email";
 import { corsHeaders, startOfMonthISO } from "@/lib/cors";
 
 const RATE_LIMIT_PER_MINUTE = 15;
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
   // Monthly message gating (based on the owner's plan).
   const { data: profile } = await admin
     .from("profiles")
-    .select("plan, topup_messages, topup_period")
+    .select("plan, topup_messages, topup_period, email, warned_period, locale")
     .eq("id", bot.user_id)
     .single();
   const plan = getPlan(profile?.plan);
@@ -93,6 +94,30 @@ export async function POST(req: NextRequest) {
           "X-Limit-Reached": "1",
         },
       },
+    );
+  }
+
+  // Warn the owner by email once they cross 80% of their monthly allowance.
+  // Gated by warned_period so it fires at most once per calendar month.
+  const projectedUsage = (count ?? 0) + 1;
+  const period = currentPeriod();
+  if (
+    effectiveLimit > 0 &&
+    projectedUsage >= Math.ceil(effectiveLimit * 0.8) &&
+    profile?.email &&
+    profile?.warned_period !== period
+  ) {
+    // Claim the slot first, so concurrent requests don't double-send.
+    await admin
+      .from("profiles")
+      .update({ warned_period: period })
+      .eq("id", bot.user_id);
+    await sendUsageWarningEmail(
+      profile.email,
+      req.nextUrl.origin,
+      projectedUsage,
+      effectiveLimit,
+      profile.locale ?? undefined,
     );
   }
 

@@ -169,5 +169,9 @@ alter table public.chatbots add column if not exists allowed_domains text[] not 
 alter table public.messages  add column if not exists ip text; -- hashed requester IP (for rate limiting)
 create index if not exists messages_chatbot_ip_created_idx on public.messages(chatbot_id, ip, created_at);
 
+-- === Email notifications (Resend) ===
+alter table public.profiles add column if not exists warned_period text; -- 'YYYY-MM' we sent the 80%-usage email for
+alter table public.profiles add column if not exists locale text;        -- owner UI language, for localized emails
+
 -- NOTE: all public/widget writes (chunks during ingestion, conversations & messages
 -- during chat) go through the server using the service-role key, which bypasses RLS.

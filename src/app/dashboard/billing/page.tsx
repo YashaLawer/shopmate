@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Check, Zap } from "lucide-react";
+import { ArrowLeft, Zap } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { getPlan, PLANS, PLAN_ORDER } from "@/lib/plans";
 import { countMessagesThisMonth } from "@/lib/usage";
@@ -7,7 +7,7 @@ import { activeTopup, TOPUPS } from "@/lib/limits";
 import { getLocale } from "@/lib/i18n/getLocale";
 import { getAppDict, tpl } from "@/lib/i18n/app";
 import { getDict } from "@/lib/i18n/site";
-import { SubmitButton } from "@/components/SubmitButton";
+import { BillingPlans, type BillingPlanView } from "@/components/BillingPlans";
 import { startCheckout, openPortal, buyTopup } from "./actions";
 
 export default async function BillingPage({
@@ -133,79 +133,37 @@ export default async function BillingPage({
       <h2 className="mt-8 text-sm font-semibold uppercase tracking-wide text-slate-400">
         {b.plans}
       </h2>
-      <div className="mt-3 grid items-start gap-5 lg:grid-cols-3">
-        {PLAN_ORDER.map((id) => {
-          const plan = PLANS[id];
-          const isCurrent = id === current.id;
-          const featured = id === "starter";
-
-          return (
-            <div
-              key={id}
-              className={
-                "rounded-2xl border bg-white p-6 " +
-                (isCurrent ? "border-brand ring-1 ring-brand/20" : "border-slate-200")
-              }
-            >
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold">{plan.name}</h3>
-                {isCurrent && (
-                  <span className="rounded-full bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand">
-                    {b.current}
-                  </span>
-                )}
-              </div>
-              <div className="mt-3 flex items-end gap-1">
-                <span className="text-3xl font-bold">${plan.price}</span>
-                <span className="mb-1 text-sm text-slate-400">{site.perMonth}</span>
-              </div>
-
-              <div className="mt-5">
-                {isCurrent ? (
-                  <button
-                    disabled
-                    className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-400"
-                  >
-                    {b.yourPlan}
-                  </button>
-                ) : plan.price === 0 ? (
-                  <p className="py-2.5 text-center text-xs text-slate-400">
-                    {b.downgradeVia}
-                  </p>
-                ) : isFree ? (
-                  <form action={startCheckout}>
-                    <input type="hidden" name="plan" value={id} />
-                    <SubmitButton className="w-full" pendingText="…">
-                      {b.upgradeTo} {plan.name}
-                    </SubmitButton>
-                  </form>
-                ) : (
-                  <form action={openPortal}>
-                    <button
-                      className={
-                        "w-full rounded-lg px-4 py-2.5 text-sm font-semibold " +
-                        (featured
-                          ? "bg-brand text-white hover:bg-indigo-700"
-                          : "border border-slate-300 text-slate-700 hover:bg-slate-50")
-                      }
-                    >
-                      {b.switchTo} {plan.name}
-                    </button>
-                  </form>
-                )}
-              </div>
-
-              <ul className="mt-6 space-y-2.5">
-                {site.plans[id].highlights.map((h) => (
-                  <li key={h} className="flex items-start gap-2 text-sm text-slate-600">
-                    <Check size={16} className="mt-0.5 shrink-0 text-emerald-500" />
-                    {h}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
+      <div className="mt-4">
+        <BillingPlans
+          isFreeUser={isFree}
+          startCheckout={startCheckout}
+          openPortal={openPortal}
+          labels={{
+            monthly: site.monthly,
+            yearly: site.yearly,
+            save: site.save,
+            billedYearly: site.billedYearly,
+            perMonth: site.perMonth,
+            current: b.current,
+            yourPlan: b.yourPlan,
+            upgradeTo: b.upgradeTo,
+            switchTo: b.switchTo,
+            downgradeVia: b.downgradeVia,
+          }}
+          plans={PLAN_ORDER.map<BillingPlanView>((id) => {
+            const plan = PLANS[id];
+            return {
+              id,
+              name: plan.name,
+              priceMonth: plan.price,
+              priceYear: plan.priceYear ?? null,
+              highlights: site.plans[id].highlights,
+              isCurrent: id === current.id,
+              featured: id === "starter",
+              isPaid: plan.price > 0,
+            };
+          })}
+        />
       </div>
 
       <p className="mt-6 text-center text-xs text-slate-400">{b.testCardNote}</p>

@@ -2,7 +2,10 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getBaseUrl } from "@/lib/baseUrl";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export type AuthState = { error?: string };
 
@@ -39,6 +42,15 @@ export async function signup(
     options: { emailRedirectTo: `${base}/auth/callback` },
   });
   if (error) return { error: error.message };
+
+  const locale = await getLocale();
+  // Remember the owner's language so their notification emails are localized.
+  if (data.user) {
+    const admin = createAdminClient();
+    await admin.from("profiles").update({ locale }).eq("id", data.user.id);
+  }
+  // Welcome email (best-effort — never blocks signup if Resend is down).
+  await sendWelcomeEmail(email, base, locale);
 
   // If email confirmation is enabled in Supabase, there is no session yet.
   if (!data.session) redirect("/login?checkEmail=1");
