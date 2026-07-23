@@ -69,13 +69,13 @@ export async function addKnowledge(
       } catch {
         return {
           error:
-            "Couldn't read that file. Make sure it's a valid PDF, DOCX, TXT or MD.",
+            "Couldn't read that file. Supported: PDF, Word (DOCX), image (PNG/JPG), TXT or MD.",
         };
       }
       if (content.trim().length < 20) {
         return {
           error:
-            "We couldn't find readable text in that file — a scanned PDF (image only) won't work.",
+            "We couldn't find readable text in that file (e.g. a blank or very low-quality image).",
         };
       }
       const { chunks } = await ingestDocument({
