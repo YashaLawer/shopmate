@@ -158,6 +158,7 @@ export default async function ChatbotDetailPage({
           appUrl={appUrl}
           publicKey={bot.public_key}
           color={bot.widget_color}
+          allowedDomains={bot.allowed_domains ?? []}
         />
       </div>
     </div>

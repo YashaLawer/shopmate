@@ -3,7 +3,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { retrieveContext, buildMessages, streamChat } from "@/lib/rag";
 import { getPlan } from "@/lib/plans";
 import { activeTopup } from "@/lib/limits";
+import { hashIp, getClientIp } from "@/lib/security";
 import { corsHeaders, startOfMonthISO } from "@/lib/cors";
+
+const RATE_LIMIT_PER_MINUTE = 15;
 import type { Chatbot, ChatMessage } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -39,6 +42,28 @@ export async function POST(req: NextRequest) {
     return new Response("Unknown chatbot", { status: 404, headers: corsHeaders });
   }
   const bot = botData as Chatbot;
+
+  // Per-IP rate limit: cap burst abuse before doing any expensive work.
+  const ipHash = hashIp(getClientIp(req.headers));
+  const { count: recentHits } = await admin
+    .from("messages")
+    .select("id", { count: "exact", head: true })
+    .eq("chatbot_id", bot.id)
+    .eq("ip", ipHash)
+    .gte("created_at", new Date(Date.now() - 60_000).toISOString());
+  if ((recentHits ?? 0) >= RATE_LIMIT_PER_MINUTE) {
+    return new Response(
+      "You're sending messages too quickly. Please wait a moment and try again.",
+      {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "text/plain; charset=utf-8",
+          "X-Rate-Limited": "1",
+        },
+      },
+    );
+  }
 
   // Monthly message gating (based on the owner's plan).
   const { data: profile } = await admin
@@ -102,6 +127,7 @@ export async function POST(req: NextRequest) {
       owner_id: bot.user_id,
       role: "user",
       content: lastUser.content.slice(0, 4000),
+      ip: ipHash,
     });
   }
 

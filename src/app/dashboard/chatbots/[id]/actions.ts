@@ -1,11 +1,13 @@
 "use server";
 
+import crypto from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getPlan } from "@/lib/plans";
 import { countPages } from "@/lib/usage";
 import { ingestDocument, fetchUrlText } from "@/lib/ingest";
+import { parseDomains } from "@/lib/security";
 
 export type KnowledgeState = { error?: string; ok?: string };
 
@@ -154,6 +156,38 @@ export async function verifyInstallation(
       message: "Couldn't reach that URL. Check the address and that the site is public.",
     };
   }
+}
+
+// Rotate the widget's public key. The old embed snippet stops working.
+export async function regenerateKey(formData: FormData) {
+  const { userId } = await requireUser();
+  const chatbotId = String(formData.get("chatbot_id"));
+  const newKey = crypto.randomBytes(16).toString("hex");
+
+  const supabase = await createClient();
+  await supabase
+    .from("chatbots")
+    .update({ public_key: newKey })
+    .eq("id", chatbotId)
+    .eq("user_id", userId);
+
+  revalidatePath(`/dashboard/chatbots/${chatbotId}`);
+}
+
+// Restrict the widget to specific domains (empty = any domain).
+export async function updateDomains(formData: FormData) {
+  const { userId } = await requireUser();
+  const chatbotId = String(formData.get("chatbot_id"));
+  const domains = parseDomains(String(formData.get("domains") || ""));
+
+  const supabase = await createClient();
+  await supabase
+    .from("chatbots")
+    .update({ allowed_domains: domains })
+    .eq("id", chatbotId)
+    .eq("user_id", userId);
+
+  revalidatePath(`/dashboard/chatbots/${chatbotId}?saved_domains=1`);
 }
 
 export async function deleteDocument(formData: FormData) {

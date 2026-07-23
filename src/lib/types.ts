@@ -21,6 +21,7 @@ export interface Chatbot {
   welcome_message: string;
   widget_color: string;
   show_branding: boolean;
+  allowed_domains?: string[];
   created_at: string;
 }
 

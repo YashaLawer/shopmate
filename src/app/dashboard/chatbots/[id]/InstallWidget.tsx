@@ -1,9 +1,22 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { Copy, Check, ExternalLink, Search, Loader2 } from "lucide-react";
+import {
+  Copy,
+  Check,
+  ExternalLink,
+  Search,
+  Loader2,
+  ShieldCheck,
+  KeyRound,
+} from "lucide-react";
 import { useFormStatus } from "react-dom";
-import { verifyInstallation, type VerifyState } from "./actions";
+import {
+  verifyInstallation,
+  regenerateKey,
+  updateDomains,
+  type VerifyState,
+} from "./actions";
 
 type Platform = {
   id: string;
@@ -102,11 +115,13 @@ export function InstallWidget({
   appUrl,
   publicKey,
   color,
+  allowedDomains,
 }: {
   chatbotId: string;
   appUrl: string;
   publicKey: string;
   color: string;
+  allowedDomains: string[];
 }) {
   const snippet = `<script src="${appUrl}/widget.js" data-key="${publicKey}" data-color="${color}" async></script>`;
   const [platformId, setPlatformId] = useState("html");
@@ -235,7 +250,80 @@ export function InstallWidget({
           </p>
         )}
       </div>
+
+      {/* Security */}
+      <div className="mt-5 border-t border-slate-100 pt-5">
+        <h3 className="flex items-center gap-1.5 text-sm font-medium text-slate-700">
+          <ShieldCheck size={15} className="text-emerald-500" /> Security
+        </h3>
+
+        {/* Domain lock */}
+        <form action={updateDomains} className="mt-3">
+          <input type="hidden" name="chatbot_id" value={chatbotId} />
+          <label className="text-xs font-medium text-slate-600">
+            Allowed domains{" "}
+            <span className="font-normal text-slate-400">
+              (one per line — leave empty to allow any site)
+            </span>
+          </label>
+          <textarea
+            name="domains"
+            rows={2}
+            defaultValue={allowedDomains.join("\n")}
+            placeholder={"mystore.com\nshop.mystore.com"}
+            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+          />
+          <p className="mt-1 text-xs text-slate-400">
+            The widget will only load on these domains — a stolen key is useless
+            elsewhere.
+          </p>
+          <div className="mt-2 flex justify-end">
+            <SmallSubmit pending="Saving…">Save domains</SmallSubmit>
+          </div>
+        </form>
+
+        {/* Key rotation */}
+        <form
+          action={regenerateKey}
+          onSubmit={(e) => {
+            if (
+              !confirm(
+                "Generate a new key? Your current embed snippet will stop working until you replace it on your site.",
+              )
+            )
+              e.preventDefault();
+          }}
+          className="mt-3 flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2.5"
+        >
+          <input type="hidden" name="chatbot_id" value={chatbotId} />
+          <span className="text-xs text-slate-500">
+            Compromised key? Rotate it and re-paste the snippet.
+          </span>
+          <button className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50">
+            <KeyRound size={13} /> Regenerate key
+          </button>
+        </form>
+      </div>
     </div>
+  );
+}
+
+function SmallSubmit({
+  children,
+  pending,
+}: {
+  children: React.ReactNode;
+  pending: string;
+}) {
+  const { pending: isPending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={isPending}
+      className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+    >
+      {isPending ? pending : children}
+    </button>
   );
 }
 
