@@ -140,13 +140,14 @@ function Hero({ d }: { d: Dict }) {
           </div>
           <p className="mt-4 text-sm text-slate-400">{d.hero.trustline}</p>
         </div>
-        <ChatMockup />
+        <ChatMockup d={d} />
       </div>
     </section>
   );
 }
 
-function ChatMockup() {
+function ChatMockup({ d }: { d: Dict }) {
+  const m = d.hero.mockup;
   return (
     <div className="relative mx-auto w-full max-w-md">
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
@@ -175,15 +176,12 @@ function ChatMockup() {
               <span className="grid h-6 w-6 place-items-center rounded-full bg-white/20 text-xs font-bold">
                 A
               </span>
-              <span className="text-xs font-semibold">Acme Store Support</span>
+              <span className="text-xs font-semibold">{m.title}</span>
             </div>
             <div className="space-y-2 bg-slate-50 p-3">
-              <Msg who="bot">Hi! How can I help you with your order today?</Msg>
-              <Msg who="user">How long does shipping take?</Msg>
-              <Msg who="bot">
-                US orders arrive in 3–5 business days, and shipping is free over
-                $50 🚚
-              </Msg>
+              <Msg who="bot">{m.welcome}</Msg>
+              <Msg who="user">{m.q}</Msg>
+              <Msg who="bot">{m.a}</Msg>
             </div>
           </div>
         </div>
@@ -362,7 +360,7 @@ function Pricing({ currentPlan, d }: { currentPlan: string | null; d: Dict }) {
                   </span>
                 ) : null}
                 <h3 className="text-lg font-bold">{plan.name}</h3>
-                <p className="mt-1 text-sm text-slate-500">{plan.tagline}</p>
+                <p className="mt-1 text-sm text-slate-500">{d.pricing.plans[id].tagline}</p>
                 <div className="mt-4 flex items-end gap-1">
                   <span className="text-4xl font-bold">${plan.price}</span>
                   <span className="mb-1 text-sm text-slate-400">{d.pricing.perMonth}</span>
@@ -382,7 +380,7 @@ function Pricing({ currentPlan, d }: { currentPlan: string | null; d: Dict }) {
                   {label}
                 </Link>
                 <ul className="mt-6 space-y-2.5">
-                  {plan.highlights.map((h) => (
+                  {d.pricing.plans[id].highlights.map((h) => (
                     <li key={h} className="flex items-start gap-2 text-sm text-slate-600">
                       <Check size={16} className="mt-0.5 shrink-0 text-emerald-500" />
                       {h}

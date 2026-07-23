@@ -1,26 +1,43 @@
 // Site (landing) localization dictionary.
 export type Locale = "en" | "ru" | "fr" | "es" | "de";
 
-export const LOCALES: { code: Locale; label: string }[] = [
-  { code: "en", label: "English" },
-  { code: "ru", label: "Русский" },
-  { code: "fr", label: "Français" },
-  { code: "es", label: "Español" },
-  { code: "de", label: "Deutsch" },
+export const LOCALES: { code: Locale; label: string; flag: string }[] = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "ru", label: "Русский", flag: "🇷🇺" },
+  { code: "fr", label: "Français", flag: "🇫🇷" },
+  { code: "es", label: "Español", flag: "🇪🇸" },
+  { code: "de", label: "Deutsch", flag: "🇩🇪" },
 ];
 
 export function isLocale(v: string | undefined | null): v is Locale {
   return !!v && LOCALES.some((l) => l.code === v);
 }
 
+interface PlanCopy {
+  tagline: string;
+  highlights: string[];
+}
+
 export interface Dict {
   nav: { how: string; features: string; pricing: string; signin: string; getStarted: string; dashboard: string };
-  hero: { badge: string; title: string; subtitle: string; cta: string; see: string; trustline: string };
+  hero: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    cta: string;
+    see: string;
+    trustline: string;
+    mockup: { title: string; welcome: string; q: string; a: string };
+  };
   trust: string[];
   how: { eyebrow: string; title: string; steps: { title: string; text: string }[] };
   features: { eyebrow: string; title: string; items: { title: string; text: string }[] };
   showcase: { eyebrow: string; title: string; qa: { q: string; a: string }[] };
-  pricing: { eyebrow: string; title: string; perMonth: string; current: string; popular: string; choose: string; getFree: string; upgrade: string; switchTo: string; downgrade: string };
+  pricing: {
+    eyebrow: string; title: string; perMonth: string; current: string; popular: string;
+    choose: string; getFree: string; upgrade: string; switchTo: string; downgrade: string;
+    plans: { free: PlanCopy; starter: PlanCopy; pro: PlanCopy };
+  };
   faq: { eyebrow: string; title: string; items: { q: string; a: string }[] };
   cta: { title: string; text: string; button: string };
   footer: string;
@@ -35,6 +52,7 @@ const en: Dict = {
     cta: "Get started free",
     see: "See how it works",
     trustline: "Free plan • No credit card required • Set up in 5 minutes",
+    mockup: { title: "Acme Store Support", welcome: "Hi! How can I help you with your order today?", q: "How long does shipping take?", a: "US orders arrive in 3–5 business days, and shipping is free over $50 🚚" },
   },
   trust: ["Answers only from your content", "No code required", "Works with PDF, URLs & text", "Live in minutes"],
   how: {
@@ -67,7 +85,16 @@ const en: Dict = {
       { q: "What payment methods do you take?", a: "Visa, Mastercard, Amex, Apple Pay and Google Pay — all processed securely via Stripe." },
     ],
   },
-  pricing: { eyebrow: "Pricing", title: "Start free. Upgrade when your store grows.", perMonth: "/month", current: "Current plan", popular: "Most popular", choose: "Choose", getFree: "Get started free", upgrade: "Upgrade to", switchTo: "Switch to", downgrade: "Downgrade" },
+  pricing: {
+    eyebrow: "Pricing", title: "Start free. Upgrade when your store grows.", perMonth: "/month",
+    current: "Current plan", popular: "Most popular", choose: "Choose", getFree: "Get started free",
+    upgrade: "Upgrade to", switchTo: "Switch to", downgrade: "Downgrade",
+    plans: {
+      free: { tagline: "Try it on one store", highlights: ["1 chatbot", "50 messages / month", "20 knowledge pages", "“Powered by Shopmate” badge"] },
+      starter: { tagline: "For a growing store", highlights: ["1 chatbot", "2,000 messages / month", "200 knowledge pages", "Remove Shopmate badge", "Custom widget color"] },
+      pro: { tagline: "For multiple stores & scale", highlights: ["3 chatbots", "10,000 messages / month", "1,000 knowledge pages", "Conversation analytics", "Everything in Starter"] },
+    },
+  },
   faq: {
     eyebrow: "FAQ",
     title: "Questions, answered",
@@ -86,11 +113,12 @@ const ru: Dict = {
   nav: { how: "Как это работает", features: "Возможности", pricing: "Цены", signin: "Войти", getStarted: "Начать бесплатно", dashboard: "В личный кабинет" },
   hero: {
     badge: "ИИ-поддержка для интернет-магазинов",
-    title: "Превратите справку магазина в поддержку, которая не спит",
+    title: "Превратите справочные материалы в поддержку, которая не спит",
     subtitle: "Shopmate превращает FAQ, правила и описания товаров в ИИ-ассистента, который мгновенно отвечает покупателям — в чат-виджете прямо на вашем сайте.",
     cta: "Начать бесплатно",
     see: "Как это работает",
     trustline: "Бесплатный тариф • Без карты • Настройка за 5 минут",
+    mockup: { title: "Поддержка Acme Store", welcome: "Здравствуйте! Чем помочь с вашим заказом?", q: "Сколько идёт доставка?", a: "Заказы по США приходят за 3–5 рабочих дней, доставка бесплатна от $50 🚚" },
   },
   trust: ["Отвечает только по вашим данным", "Без кода", "Текст, PDF и ссылки", "Запуск за минуты"],
   how: {
@@ -107,7 +135,7 @@ const ru: Dict = {
     title: "Всё, чтобы разгрузить поддержку",
     items: [
       { title: "По делу, без выдумок", text: "Отвечает только из вашей базы знаний. Не знает — честно скажет и направит в поддержку, ничего не сочиняя." },
-      { title: "Встройка одной строкой", text: "Один тег script добавляет аккуратный чат на любой магазин — Shopify, WooCommerce, кастом, что угодно." },
+      { title: "Встраивание одной строкой", text: "Один тег script добавляет аккуратный чат на любой магазин — Shopify, WooCommerce, кастом, что угодно." },
       { title: "Загрузите что угодно", text: "Текст, файлы или ссылка на страницы помощи. Обновляйте когда хотите — ассистент всегда актуален." },
       { title: "Мгновенные ответы", text: "Покупатели видят быстрые ответы слово за словом — как в современных чатах." },
       { title: "Под ваш бренд", text: "Задайте цвет виджета и приветствие — он смотрится как родная часть магазина." },
@@ -123,7 +151,16 @@ const ru: Dict = {
       { q: "Какие способы оплаты?", a: "Visa, Mastercard, Amex, Apple Pay и Google Pay — всё безопасно через Stripe." },
     ],
   },
-  pricing: { eyebrow: "Цены", title: "Начните бесплатно. Растёте — переходите на платный.", perMonth: "/мес", current: "Ваш тариф", popular: "Популярный", choose: "Выбрать", getFree: "Начать бесплатно", upgrade: "Перейти на", switchTo: "Сменить на", downgrade: "Понизить" },
+  pricing: {
+    eyebrow: "Цены", title: "Начните бесплатно. Растёте — переходите на платный.", perMonth: "/мес",
+    current: "Ваш тариф", popular: "Популярный", choose: "Выбрать", getFree: "Начать бесплатно",
+    upgrade: "Перейти на", switchTo: "Сменить на", downgrade: "Понизить",
+    plans: {
+      free: { tagline: "Попробуйте на одном магазине", highlights: ["1 бот", "50 сообщений / мес", "20 страниц знаний", "Бейдж «Powered by Shopmate»"] },
+      starter: { tagline: "Для растущего магазина", highlights: ["1 бот", "2 000 сообщений / мес", "200 страниц знаний", "Убрать бейдж Shopmate", "Свой цвет виджета"] },
+      pro: { tagline: "Для нескольких магазинов и масштаба", highlights: ["3 бота", "10 000 сообщений / мес", "1 000 страниц знаний", "Аналитика диалогов", "Всё из Starter"] },
+    },
+  },
   faq: {
     eyebrow: "Вопросы",
     title: "Отвечаем на вопросы",
@@ -147,6 +184,7 @@ const fr: Dict = {
     cta: "Commencer gratuitement",
     see: "Voir le fonctionnement",
     trustline: "Offre gratuite • Sans carte • Prêt en 5 minutes",
+    mockup: { title: "Support Acme Store", welcome: "Bonjour ! Comment puis-je vous aider avec votre commande ?", q: "Quels sont les délais de livraison ?", a: "Les commandes aux États-Unis arrivent en 3–5 jours ouvrés, et la livraison est gratuite dès 50 $ 🚚" },
   },
   trust: ["Répond uniquement selon vos contenus", "Sans code", "Texte, PDF et URL", "En ligne en quelques minutes"],
   how: {
@@ -179,7 +217,16 @@ const fr: Dict = {
       { q: "Quels moyens de paiement ?", a: "Visa, Mastercard, Amex, Apple Pay et Google Pay — le tout sécurisé via Stripe." },
     ],
   },
-  pricing: { eyebrow: "Tarifs", title: "Commencez gratuitement. Évoluez avec votre boutique.", perMonth: "/mois", current: "Votre offre", popular: "Le plus populaire", choose: "Choisir", getFree: "Commencer gratuitement", upgrade: "Passer à", switchTo: "Basculer vers", downgrade: "Rétrograder" },
+  pricing: {
+    eyebrow: "Tarifs", title: "Commencez gratuitement. Évoluez avec votre boutique.", perMonth: "/mois",
+    current: "Votre offre", popular: "Le plus populaire", choose: "Choisir", getFree: "Commencer gratuitement",
+    upgrade: "Passer à", switchTo: "Basculer vers", downgrade: "Rétrograder",
+    plans: {
+      free: { tagline: "Essayez sur une boutique", highlights: ["1 chatbot", "50 messages / mois", "20 pages de connaissances", "Badge « Powered by Shopmate »"] },
+      starter: { tagline: "Pour une boutique en croissance", highlights: ["1 chatbot", "2 000 messages / mois", "200 pages de connaissances", "Retirer le badge Shopmate", "Couleur du widget personnalisée"] },
+      pro: { tagline: "Pour plusieurs boutiques et l'échelle", highlights: ["3 chatbots", "10 000 messages / mois", "1 000 pages de connaissances", "Analyses des conversations", "Tout de Starter"] },
+    },
+  },
   faq: {
     eyebrow: "FAQ",
     title: "Vos questions, nos réponses",
@@ -203,6 +250,7 @@ const es: Dict = {
     cta: "Empezar gratis",
     see: "Ver cómo funciona",
     trustline: "Plan gratis • Sin tarjeta • Listo en 5 minutos",
+    mockup: { title: "Soporte de Acme Store", welcome: "¡Hola! ¿Cómo puedo ayudarte con tu pedido?", q: "¿Cuánto tarda el envío?", a: "Los pedidos en EE. UU. llegan en 3–5 días hábiles, y el envío es gratis desde $50 🚚" },
   },
   trust: ["Responde solo con tu contenido", "Sin código", "Texto, PDF y URLs", "En marcha en minutos"],
   how: {
@@ -235,7 +283,16 @@ const es: Dict = {
       { q: "¿Qué métodos de pago aceptan?", a: "Visa, Mastercard, Amex, Apple Pay y Google Pay — todo seguro con Stripe." },
     ],
   },
-  pricing: { eyebrow: "Precios", title: "Empieza gratis. Sube de plan cuando crezcas.", perMonth: "/mes", current: "Tu plan", popular: "Más popular", choose: "Elegir", getFree: "Empezar gratis", upgrade: "Subir a", switchTo: "Cambiar a", downgrade: "Bajar" },
+  pricing: {
+    eyebrow: "Precios", title: "Empieza gratis. Sube de plan cuando crezcas.", perMonth: "/mes",
+    current: "Tu plan", popular: "Más popular", choose: "Elegir", getFree: "Empezar gratis",
+    upgrade: "Subir a", switchTo: "Cambiar a", downgrade: "Bajar",
+    plans: {
+      free: { tagline: "Pruébalo en una tienda", highlights: ["1 chatbot", "50 mensajes / mes", "20 páginas de conocimiento", "Insignia «Powered by Shopmate»"] },
+      starter: { tagline: "Para una tienda en crecimiento", highlights: ["1 chatbot", "2.000 mensajes / mes", "200 páginas de conocimiento", "Quitar la insignia de Shopmate", "Color del widget personalizado"] },
+      pro: { tagline: "Para varias tiendas y escala", highlights: ["3 chatbots", "10.000 mensajes / mes", "1.000 páginas de conocimiento", "Analíticas de conversaciones", "Todo lo de Starter"] },
+    },
+  },
   faq: {
     eyebrow: "FAQ",
     title: "Preguntas, respondidas",
@@ -259,6 +316,7 @@ const de: Dict = {
     cta: "Kostenlos starten",
     see: "So funktioniert's",
     trustline: "Kostenloser Plan • Keine Karte • In 5 Minuten startklar",
+    mockup: { title: "Acme Store Support", welcome: "Hallo! Wie kann ich bei Ihrer Bestellung helfen?", q: "Wie lange dauert der Versand?", a: "US-Bestellungen kommen in 3–5 Werktagen, Versand ab 50 $ kostenlos 🚚" },
   },
   trust: ["Antwortet nur aus Ihren Inhalten", "Kein Code nötig", "Text, PDF & URLs", "In Minuten live"],
   how: {
@@ -291,7 +349,16 @@ const de: Dict = {
       { q: "Welche Zahlungsarten gibt es?", a: "Visa, Mastercard, Amex, Apple Pay und Google Pay — alles sicher über Stripe." },
     ],
   },
-  pricing: { eyebrow: "Preise", title: "Kostenlos starten. Upgraden, wenn Ihr Shop wächst.", perMonth: "/Monat", current: "Ihr Plan", popular: "Beliebt", choose: "Wählen", getFree: "Kostenlos starten", upgrade: "Upgrade auf", switchTo: "Wechseln zu", downgrade: "Herabstufen" },
+  pricing: {
+    eyebrow: "Preise", title: "Kostenlos starten. Upgraden, wenn Ihr Shop wächst.", perMonth: "/Monat",
+    current: "Ihr Plan", popular: "Beliebt", choose: "Wählen", getFree: "Kostenlos starten",
+    upgrade: "Upgrade auf", switchTo: "Wechseln zu", downgrade: "Herabstufen",
+    plans: {
+      free: { tagline: "Auf einem Shop ausprobieren", highlights: ["1 Chatbot", "50 Nachrichten / Monat", "20 Wissensseiten", "„Powered by Shopmate“-Badge"] },
+      starter: { tagline: "Für einen wachsenden Shop", highlights: ["1 Chatbot", "2.000 Nachrichten / Monat", "200 Wissensseiten", "Shopmate-Badge entfernen", "Eigene Widget-Farbe"] },
+      pro: { tagline: "Für mehrere Shops und Skalierung", highlights: ["3 Chatbots", "10.000 Nachrichten / Monat", "1.000 Wissensseiten", "Gesprächsanalysen", "Alles aus Starter"] },
+    },
+  },
   faq: {
     eyebrow: "FAQ",
     title: "Fragen, beantwortet",
