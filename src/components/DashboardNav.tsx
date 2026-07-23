@@ -5,10 +5,16 @@ import { usePathname } from "next/navigation";
 import { MessageSquare, BarChart3, CreditCard, Settings } from "lucide-react";
 import type { AppDict } from "@/lib/i18n/app";
 
-export function DashboardTabs({ nav }: { nav: AppDict["nav"] }) {
+export function DashboardNav({
+  nav,
+  variant,
+}: {
+  nav: AppDict["nav"];
+  variant: "sidebar" | "tabs";
+}) {
   const pathname = usePathname();
 
-  const tabs = [
+  const items = [
     {
       href: "/dashboard",
       label: nav.chatbots,
@@ -35,10 +41,35 @@ export function DashboardTabs({ nav }: { nav: AppDict["nav"] }) {
     },
   ];
 
+  if (variant === "sidebar") {
+    return (
+      <nav className="space-y-1 px-3">
+        {items.map((t) => {
+          const Icon = t.icon;
+          return (
+            <Link
+              key={t.href}
+              href={t.href}
+              className={
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition " +
+                (t.active
+                  ? "bg-indigo-50 text-brand"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900")
+              }
+            >
+              <Icon size={17} />
+              {t.label}
+            </Link>
+          );
+        })}
+      </nav>
+    );
+  }
+
   return (
     <div className="border-b border-slate-200 bg-white">
-      <nav className="mx-auto flex max-w-5xl gap-1 overflow-x-auto px-4">
-        {tabs.map((t) => {
+      <nav className="flex gap-1 overflow-x-auto px-4">
+        {items.map((t) => {
           const Icon = t.icon;
           return (
             <Link

@@ -7,7 +7,13 @@ import { LOCALES, type Locale } from "@/lib/i18n/site";
 
 // Animated language dropdown: sets a `locale` cookie and refreshes so server
 // components re-render in the chosen language.
-export function LanguageSwitcher({ current }: { current: Locale }) {
+export function LanguageSwitcher({
+  current,
+  up = false,
+}: {
+  current: Locale;
+  up?: boolean;
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -54,7 +60,12 @@ export function LanguageSwitcher({ current }: { current: Locale }) {
       {open && (
         <div
           role="listbox"
-          className="animate-dropdown absolute right-0 z-50 mt-2 w-44 origin-top-right rounded-xl border border-slate-200 bg-white p-1 shadow-xl"
+          className={
+            "absolute right-0 z-50 w-44 rounded-xl border border-slate-200 bg-white p-1 shadow-xl " +
+            (up
+              ? "bottom-full mb-2 origin-bottom-right animate-dropdown-up"
+              : "mt-2 origin-top-right animate-dropdown")
+          }
         >
           {LOCALES.map((l) => {
             const active = l.code === current;
