@@ -5,6 +5,8 @@ import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getPlan } from "@/lib/plans";
 import { getBaseUrl } from "@/lib/baseUrl";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { getAppDict } from "@/lib/i18n/app";
 import { updateChatbot } from "@/app/dashboard/actions";
 import { SubmitButton } from "@/components/SubmitButton";
 import { KnowledgeManager } from "./KnowledgeManager";
@@ -27,6 +29,8 @@ export default async function ChatbotDetailPage({
   const { userId, profile } = await requireUser();
   const plan = getPlan(profile.plan);
   const appUrl = await getBaseUrl();
+  const dict = getAppDict(await getLocale());
+  const t = dict.bot;
 
   const supabase = await createClient();
   const { data } = await supabase
@@ -53,22 +57,22 @@ export default async function ChatbotDetailPage({
           href="/dashboard"
           className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700"
         >
-          <ArrowLeft size={16} /> All chatbots
+          <ArrowLeft size={16} /> {t.allChatbots}
         </Link>
         <Link
           href={`/dashboard/chatbots/${bot.id}/analytics`}
           className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
         >
-          <BarChart3 size={15} /> Analytics
+          <BarChart3 size={15} /> {t.analytics}
         </Link>
       </div>
 
       <h1 className="text-2xl font-bold text-slate-900">{bot.name}</h1>
-      <p className="mt-1 text-sm text-slate-500">Configure your store assistant.</p>
+      <p className="mt-1 text-sm text-slate-500">{t.subtitle}</p>
 
       {sp.saved && (
         <p className="mt-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-          Settings saved.
+          {t.saved}
         </p>
       )}
 
@@ -79,6 +83,7 @@ export default async function ChatbotDetailPage({
           welcomeMessage={bot.welcome_message}
           accent={bot.widget_color}
           hasKnowledge={documents.length > 0}
+          strings={dict.chat}
         />
       </div>
 
@@ -89,6 +94,7 @@ export default async function ChatbotDetailPage({
           documents={documents}
           pagesUsed={documents.length}
           pagesLimit={plan.limits.pages}
+          strings={dict.kb}
         />
       </div>
 
@@ -101,42 +107,40 @@ export default async function ChatbotDetailPage({
 
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700">
-            Assistant name
+            {t.assistantName}
           </label>
           <input name="name" defaultValue={bot.name} className={inputClass} />
         </div>
 
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700">
-            Welcome message
+            {t.welcomeMessage}
           </label>
           <input
             name="welcome_message"
             defaultValue={bot.welcome_message}
             className={inputClass}
           />
-          <p className="mt-1 text-xs text-slate-400">
-            First message shown to customers when they open the chat.
-          </p>
+          <p className="mt-1 text-xs text-slate-400">{t.welcomeHint}</p>
         </div>
 
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700">
-            System instructions{" "}
-            <span className="font-normal text-slate-400">(optional)</span>
+            {t.systemInstr}{" "}
+            <span className="font-normal text-slate-400">{t.optional}</span>
           </label>
           <textarea
             name="system_prompt"
             rows={4}
             defaultValue={bot.system_prompt ?? ""}
-            placeholder="e.g. You are the support agent for Acme Store. Be friendly and concise. Only answer using the store's knowledge; if unsure, suggest emailing support@acme.com."
+            placeholder={t.systemPh}
             className={inputClass}
           />
         </div>
 
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700">
-            Widget color
+            {t.widgetColor}
           </label>
           <input
             name="widget_color"
@@ -147,7 +151,7 @@ export default async function ChatbotDetailPage({
         </div>
 
         <div className="flex justify-end">
-          <SubmitButton pendingText="Saving…">Save settings</SubmitButton>
+          <SubmitButton pendingText={t.saving}>{t.saveSettings}</SubmitButton>
         </div>
       </form>
 
@@ -159,6 +163,7 @@ export default async function ChatbotDetailPage({
           publicKey={bot.public_key}
           color={bot.widget_color}
           allowedDomains={bot.allowed_domains ?? []}
+          strings={dict.install}
         />
       </div>
     </div>

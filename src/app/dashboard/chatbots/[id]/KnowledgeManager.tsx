@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { FileText, Globe, Type, Trash2, Loader2 } from "lucide-react";
 import { SubmitButton } from "@/components/SubmitButton";
+import { tpl, type AppDict } from "@/lib/i18n/app";
 import { addKnowledge, deleteDocument, type KnowledgeState } from "./actions";
 import type { KnowledgeDocument } from "@/lib/types";
 
@@ -11,11 +12,11 @@ const inputClass =
 
 type Mode = "text" | "url" | "file";
 
-const TABS: { id: Mode; label: string; icon: React.ElementType }[] = [
-  { id: "text", label: "Paste text", icon: Type },
-  { id: "url", label: "From URL", icon: Globe },
-  { id: "file", label: "Upload file", icon: FileText },
-];
+const TAB_ICONS: Record<Mode, React.ElementType> = {
+  text: Type,
+  url: Globe,
+  file: FileText,
+};
 
 const sourceIcon: Record<string, React.ElementType> = {
   text: Type,
@@ -28,12 +29,18 @@ export function KnowledgeManager({
   documents,
   pagesUsed,
   pagesLimit,
+  strings,
 }: {
   chatbotId: string;
   documents: KnowledgeDocument[];
   pagesUsed: number;
   pagesLimit: number;
+  strings: AppDict["kb"];
 }) {
+  const s = strings;
+  const tabLabel: Record<Mode, string> = { text: s.tabText, url: s.tabUrl, file: s.tabFile };
+  const statusLabel = (st: string) =>
+    st === "error" ? s.statusFailed : st === "processing" ? s.statusProcessing : s.statusReady;
   const [mode, setMode] = useState<Mode>("text");
   const [state, formAction] = useActionState<KnowledgeState, FormData>(
     addKnowledge,
@@ -44,40 +51,37 @@ export function KnowledgeManager({
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-slate-700">Knowledge base</h2>
+        <h2 className="text-sm font-semibold text-slate-700">{s.title}</h2>
         <span className="text-xs text-slate-400">
-          {pagesUsed} / {pagesLimit} sources
+          {tpl(s.sourcesTpl, { used: pagesUsed, total: pagesLimit })}
         </span>
       </div>
-      <p className="mt-1 text-xs text-slate-400">
-        Everything your assistant is allowed to answer from — FAQs, shipping &
-        return policies, product info.
-      </p>
+      <p className="mt-1 text-xs text-slate-400">{s.subtitle}</p>
 
       {/* Add form */}
       {atLimit ? (
         <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
-          You&apos;ve reached your plan&apos;s knowledge limit.
+          {s.limitReached}
         </p>
       ) : (
         <>
           <div className="mt-4 flex gap-1 rounded-lg bg-slate-100 p-1">
-            {TABS.map((t) => {
-              const Icon = t.icon;
+            {(["text", "url", "file"] as Mode[]).map((id) => {
+              const Icon = TAB_ICONS[id];
               return (
                 <button
-                  key={t.id}
+                  key={id}
                   type="button"
-                  onClick={() => setMode(t.id)}
+                  onClick={() => setMode(id)}
                   className={
                     "flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition " +
-                    (mode === t.id
+                    (mode === id
                       ? "bg-white text-slate-900 shadow-sm"
                       : "text-slate-500 hover:text-slate-700")
                   }
                 >
                   <Icon size={15} />
-                  {t.label}
+                  {tabLabel[id]}
                 </button>
               );
             })}
@@ -89,15 +93,11 @@ export function KnowledgeManager({
 
             {mode === "text" && (
               <>
-                <input
-                  name="title"
-                  placeholder="Title (e.g. Shipping & Returns policy)"
-                  className={inputClass}
-                />
+                <input name="title" placeholder={s.titlePh} className={inputClass} />
                 <textarea
                   name="content"
                   rows={6}
-                  placeholder="Paste your FAQ, policies, or product details here…"
+                  placeholder={s.contentPh}
                   className={inputClass}
                 />
               </>
@@ -107,7 +107,7 @@ export function KnowledgeManager({
               <input
                 name="url"
                 type="url"
-                placeholder="https://yourstore.com/help/shipping"
+                placeholder={s.urlPh}
                 className={inputClass}
               />
             )}
@@ -133,7 +133,7 @@ export function KnowledgeManager({
             )}
 
             <div className="flex justify-end">
-              <SubmitButton pendingText="Processing…">Add to knowledge</SubmitButton>
+              <SubmitButton pendingText={s.processing}>{s.addBtn}</SubmitButton>
             </div>
           </form>
         </>
@@ -143,8 +143,7 @@ export function KnowledgeManager({
       <div className="mt-6 space-y-2">
         {documents.length === 0 ? (
           <p className="rounded-lg border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-slate-400">
-            No knowledge yet. Add your store&apos;s FAQ or policies above to train
-            your assistant.
+            {s.empty}
           </p>
         ) : (
           documents.map((doc) => {
@@ -166,11 +165,11 @@ export function KnowledgeManager({
                     {doc.title}
                   </p>
                   <p className="text-xs text-slate-400">
-                    {doc.char_count.toLocaleString()} chars ·{" "}
+                    {tpl(s.charsTpl, { n: doc.char_count.toLocaleString() })} ·{" "}
                     {doc.status === "error" ? (
-                      <span className="text-red-500">failed</span>
+                      <span className="text-red-500">{s.statusFailed}</span>
                     ) : (
-                      doc.status
+                      statusLabel(doc.status)
                     )}
                   </p>
                 </div>

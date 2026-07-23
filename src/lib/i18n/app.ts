@@ -24,6 +24,43 @@ export interface AppDict {
     createdTpl: string; // "Created {date}"
     deleteChatbot: string;
   };
+  bot: {
+    allChatbots: string; analytics: string; subtitle: string; saved: string;
+    assistantName: string; welcomeMessage: string; welcomeHint: string;
+    systemInstr: string; optional: string; systemPh: string;
+    widgetColor: string; saveSettings: string; saving: string;
+  };
+  chat: { title: string; addKnowledgeHint: string; placeholder: string; error: string };
+  kb: {
+    title: string; subtitle: string; sourcesTpl: string;
+    tabText: string; tabUrl: string; tabFile: string; limitReached: string;
+    titlePh: string; contentPh: string; urlPh: string;
+    addBtn: string; processing: string;
+    charsTpl: string; statusReady: string; statusProcessing: string; statusFailed: string;
+    empty: string;
+  };
+  install: {
+    title: string; subtitle: string; preview: string; platform: string;
+    copy: string; copied: string;
+    checkTitle: string; checkSubtitle: string; checkPh: string; checkBtn: string; checking: string;
+    security: string; allowedDomains: string; allowedHint: string; domainsPh: string;
+    domainsSaveHint: string; saveDomains: string; saving: string;
+    keyText: string; regenerate: string; regenConfirm: string;
+  };
+  billing: {
+    title: string; onPlanTpl: string; manage: string;
+    success: string; canceled: string; topup: string;
+    messagesThisMonth: string; usageTpl: string; includesTopupTpl: string;
+    buyTpl: string; hitLimit: string; plans: string;
+    current: string; yourPlan: string; downgradeVia: string; upgradeTo: string; switchTo: string;
+    testCardNote: string;
+  };
+  analytics: {
+    proFeature: string; proDesc: string; upgradePro: string;
+    title: string; subtitleTpl: string;
+    conversations: string; questionsMonth: string; planLimit: string;
+    last7days: string; recentQuestions: string; noQuestions: string;
+  };
 }
 
 const en: AppDict = {
@@ -48,6 +85,43 @@ const en: AppDict = {
     upgradeToCreate: "Upgrade your plan to create more.",
     createdTpl: "Created {date}",
     deleteChatbot: "Delete chatbot",
+  },
+  bot: {
+    allChatbots: "All chatbots", analytics: "Analytics", subtitle: "Configure your store assistant.", saved: "Settings saved.",
+    assistantName: "Assistant name", welcomeMessage: "Welcome message", welcomeHint: "First message shown to customers when they open the chat.",
+    systemInstr: "System instructions", optional: "(optional)", systemPh: "e.g. You are the support agent for Acme Store. Be friendly and concise. Only answer using the store's knowledge; if unsure, suggest emailing support@acme.com.",
+    widgetColor: "Widget color", saveSettings: "Save settings", saving: "Saving…",
+  },
+  chat: { title: "Test your assistant", addKnowledgeHint: "Add knowledge below for grounded answers", placeholder: "Ask something a customer would ask…", error: "Sorry — something went wrong. Please try again." },
+  kb: {
+    title: "Knowledge base", subtitle: "Everything your assistant is allowed to answer from — FAQs, shipping & return policies, product info.", sourcesTpl: "{used} / {total} sources",
+    tabText: "Paste text", tabUrl: "From URL", tabFile: "Upload file", limitReached: "You've reached your plan's knowledge limit.",
+    titlePh: "Title (e.g. Shipping & Returns policy)", contentPh: "Paste your FAQ, policies, or product details here…", urlPh: "https://yourstore.com/help/shipping",
+    addBtn: "Add to knowledge", processing: "Processing…",
+    charsTpl: "{n} chars", statusReady: "ready", statusProcessing: "processing", statusFailed: "failed",
+    empty: "No knowledge yet. Add your store's FAQ or policies above to train your assistant.",
+  },
+  install: {
+    title: "Install on your site", subtitle: "One line of code adds the chat bubble to your store. Pick your platform for exact steps.", preview: "Preview on a site", platform: "Platform",
+    copy: "Copy", copied: "Copied",
+    checkTitle: "Check your installation", checkSubtitle: "Added the snippet? Enter your site URL and we'll confirm the widget is live.", checkPh: "yourstore.com", checkBtn: "Check", checking: "Checking…",
+    security: "Security", allowedDomains: "Allowed domains", allowedHint: "(one per line — leave empty to allow any site)", domainsPh: "mystore.com",
+    domainsSaveHint: "The widget will only load on these domains — a stolen key is useless elsewhere.", saveDomains: "Save domains", saving: "Saving…",
+    keyText: "Compromised key? Rotate it and re-paste the snippet.", regenerate: "Regenerate key", regenConfirm: "Generate a new key? Your current embed snippet will stop working until you replace it on your site.",
+  },
+  billing: {
+    title: "Billing & plans", onPlanTpl: "You're on the {plan} plan.", manage: "Manage subscription",
+    success: "🎉 Payment successful — your plan is now active.", canceled: "Checkout canceled. No charge was made.", topup: "🎉 Messages added — your assistant is back to full speed.",
+    messagesThisMonth: "Messages this month", usageTpl: "{used} of {total} used", includesTopupTpl: " · includes {n} from top-ups",
+    buyTpl: "Buy {n} messages · ${price}", hitLimit: "You've hit your limit — buy a top-up above or upgrade your plan to keep answering customers.", plans: "Plans",
+    current: "Current", yourPlan: "Your current plan", downgradeVia: "Downgrade via “Manage subscription”", upgradeTo: "Upgrade to", switchTo: "Switch to",
+    testCardNote: "Test mode — use card 4242 4242 4242 4242, any future date, any CVC.",
+  },
+  analytics: {
+    proFeature: "Analytics is a Pro feature", proDesc: "See every question your customers ask, spot gaps in your help content, and track how much support your assistant handles.", upgradePro: "Upgrade to Pro",
+    title: "Analytics", subtitleTpl: "What customers are asking {name}.",
+    conversations: "Conversations", questionsMonth: "Questions this month", planLimit: "Plan limit",
+    last7days: "Questions · last 7 days", recentQuestions: "Recent questions", noQuestions: "No customer questions yet. Once people chat with your widget, their questions show up here.",
   },
 };
 
@@ -74,6 +148,43 @@ const ru: AppDict = {
     createdTpl: "Создан {date}",
     deleteChatbot: "Удалить бота",
   },
+  bot: {
+    allChatbots: "Все боты", analytics: "Аналитика", subtitle: "Настройте ассистента магазина.", saved: "Настройки сохранены.",
+    assistantName: "Имя ассистента", welcomeMessage: "Приветствие", welcomeHint: "Первое сообщение, которое видит покупатель при открытии чата.",
+    systemInstr: "Системные инструкции", optional: "(необязательно)", systemPh: "Напр.: Ты — агент поддержки магазина Acme. Отвечай дружелюбно и кратко. Используй только знания магазина; если не уверен — предложи написать на support@acme.com.",
+    widgetColor: "Цвет виджета", saveSettings: "Сохранить настройки", saving: "Сохраняем…",
+  },
+  chat: { title: "Протестируйте ассистента", addKnowledgeHint: "Добавьте знания ниже, чтобы ответы были по делу", placeholder: "Спросите то, что спросил бы покупатель…", error: "Извините, что-то пошло не так. Попробуйте ещё раз." },
+  kb: {
+    title: "База знаний", subtitle: "Всё, из чего ассистент может отвечать — FAQ, правила доставки и возврата, описания товаров.", sourcesTpl: "{used} / {total} источников",
+    tabText: "Вставить текст", tabUrl: "Из URL", tabFile: "Загрузить файл", limitReached: "Достигнут лимит знаний вашего тарифа.",
+    titlePh: "Заголовок (напр. Доставка и возврат)", contentPh: "Вставьте сюда FAQ, правила или описания товаров…", urlPh: "https://вашмагазин.ru/help/dostavka",
+    addBtn: "Добавить в знания", processing: "Обрабатываем…",
+    charsTpl: "{n} симв.", statusReady: "готово", statusProcessing: "обработка", statusFailed: "ошибка",
+    empty: "Знаний пока нет. Добавьте выше FAQ или правила магазина, чтобы обучить ассистента.",
+  },
+  install: {
+    title: "Установка на сайт", subtitle: "Одна строка кода добавляет чат-пузырь на ваш магазин. Выберите платформу для точных шагов.", preview: "Превью на сайте", platform: "Платформа",
+    copy: "Копировать", copied: "Скопировано",
+    checkTitle: "Проверьте установку", checkSubtitle: "Вставили сниппет? Укажите адрес сайта — подтвердим, что виджет работает.", checkPh: "вашмагазин.ru", checkBtn: "Проверить", checking: "Проверяем…",
+    security: "Безопасность", allowedDomains: "Разрешённые домены", allowedHint: "(по одному на строку — пусто = любой сайт)", domainsPh: "moymagazin.ru",
+    domainsSaveHint: "Виджет загрузится только на этих доменах — украденный ключ бесполезен где-то ещё.", saveDomains: "Сохранить домены", saving: "Сохраняем…",
+    keyText: "Ключ скомпрометирован? Смените его и вставьте сниппет заново.", regenerate: "Перегенерировать ключ", regenConfirm: "Сгенерировать новый ключ? Текущий сниппет перестанет работать, пока вы не замените его на сайте.",
+  },
+  billing: {
+    title: "Оплата и тарифы", onPlanTpl: "Вы на тарифе {plan}.", manage: "Управление подпиской",
+    success: "🎉 Оплата прошла — тариф активирован.", canceled: "Оплата отменена. Списаний не было.", topup: "🎉 Сообщения добавлены — ассистент снова в строю.",
+    messagesThisMonth: "Сообщения в этом месяце", usageTpl: "{used} из {total} использовано", includesTopupTpl: " · включая {n} из докупки",
+    buyTpl: "Купить {n} сообщений · ${price}", hitLimit: "Лимит исчерпан — докупите пакет выше или повысьте тариф, чтобы продолжать отвечать покупателям.", plans: "Тарифы",
+    current: "Текущий", yourPlan: "Ваш тариф", downgradeVia: "Понизить через «Управление подпиской»", upgradeTo: "Перейти на", switchTo: "Сменить на",
+    testCardNote: "Тестовый режим — карта 4242 4242 4242 4242, любая будущая дата, любой CVC.",
+  },
+  analytics: {
+    proFeature: "Аналитика — фича тарифа Pro", proDesc: "Смотрите каждый вопрос покупателей, находите пробелы в справке и отслеживайте нагрузку на ассистента.", upgradePro: "Перейти на Pro",
+    title: "Аналитика", subtitleTpl: "О чём покупатели спрашивают {name}.",
+    conversations: "Диалоги", questionsMonth: "Вопросов за месяц", planLimit: "Лимит тарифа",
+    last7days: "Вопросы · за 7 дней", recentQuestions: "Недавние вопросы", noQuestions: "Вопросов покупателей пока нет. Как только начнут писать в виджет, вопросы появятся здесь.",
+  },
 };
 
 const fr: AppDict = {
@@ -98,6 +209,43 @@ const fr: AppDict = {
     upgradeToCreate: "Améliorez votre offre pour en créer plus.",
     createdTpl: "Créé le {date}",
     deleteChatbot: "Supprimer le chatbot",
+  },
+  bot: {
+    allChatbots: "Tous les chatbots", analytics: "Statistiques", subtitle: "Configurez l'assistant de votre boutique.", saved: "Réglages enregistrés.",
+    assistantName: "Nom de l'assistant", welcomeMessage: "Message d'accueil", welcomeHint: "Premier message affiché aux clients à l'ouverture du chat.",
+    systemInstr: "Instructions système", optional: "(facultatif)", systemPh: "Ex. : Vous êtes l'agent de support d'Acme Store. Soyez amical et concis. Répondez uniquement à partir des connaissances de la boutique ; en cas de doute, proposez d'écrire à support@acme.com.",
+    widgetColor: "Couleur du widget", saveSettings: "Enregistrer", saving: "Enregistrement…",
+  },
+  chat: { title: "Testez votre assistant", addKnowledgeHint: "Ajoutez des connaissances ci-dessous pour des réponses fondées", placeholder: "Posez une question que poserait un client…", error: "Désolé, une erreur s'est produite. Veuillez réessayer." },
+  kb: {
+    title: "Base de connaissances", subtitle: "Tout ce à partir de quoi l'assistant peut répondre — FAQ, politiques d'expédition et de retour, infos produits.", sourcesTpl: "{used} / {total} sources",
+    tabText: "Coller du texte", tabUrl: "Depuis une URL", tabFile: "Importer un fichier", limitReached: "Vous avez atteint la limite de connaissances de votre offre.",
+    titlePh: "Titre (ex. Livraison et retours)", contentPh: "Collez ici votre FAQ, vos politiques ou vos fiches produits…", urlPh: "https://votreboutique.com/aide/livraison",
+    addBtn: "Ajouter aux connaissances", processing: "Traitement…",
+    charsTpl: "{n} caractères", statusReady: "prêt", statusProcessing: "traitement", statusFailed: "échec",
+    empty: "Aucune connaissance pour l'instant. Ajoutez la FAQ ou les politiques de votre boutique ci-dessus pour entraîner l'assistant.",
+  },
+  install: {
+    title: "Installer sur votre site", subtitle: "Une ligne de code ajoute la bulle de chat à votre boutique. Choisissez votre plateforme pour les étapes exactes.", preview: "Aperçu sur un site", platform: "Plateforme",
+    copy: "Copier", copied: "Copié",
+    checkTitle: "Vérifier l'installation", checkSubtitle: "Snippet ajouté ? Saisissez l'URL de votre site et nous confirmerons que le widget est actif.", checkPh: "votreboutique.com", checkBtn: "Vérifier", checking: "Vérification…",
+    security: "Sécurité", allowedDomains: "Domaines autorisés", allowedHint: "(un par ligne — vide = tout site)", domainsPh: "maboutique.com",
+    domainsSaveHint: "Le widget ne se chargera que sur ces domaines — une clé volée est inutile ailleurs.", saveDomains: "Enregistrer les domaines", saving: "Enregistrement…",
+    keyText: "Clé compromise ? Régénérez-la et recollez le snippet.", regenerate: "Régénérer la clé", regenConfirm: "Générer une nouvelle clé ? Votre snippet actuel cessera de fonctionner jusqu'à ce que vous le remplaciez sur votre site.",
+  },
+  billing: {
+    title: "Facturation et offres", onPlanTpl: "Vous êtes sur l'offre {plan}.", manage: "Gérer l'abonnement",
+    success: "🎉 Paiement réussi — votre offre est active.", canceled: "Paiement annulé. Aucun débit.", topup: "🎉 Messages ajoutés — votre assistant est de nouveau à pleine vitesse.",
+    messagesThisMonth: "Messages ce mois-ci", usageTpl: "{used} sur {total} utilisés", includesTopupTpl: " · dont {n} en recharge",
+    buyTpl: "Acheter {n} messages · ${price}", hitLimit: "Limite atteinte — achetez une recharge ci-dessus ou améliorez votre offre pour continuer à répondre.", plans: "Offres",
+    current: "Actuel", yourPlan: "Votre offre actuelle", downgradeVia: "Rétrograder via « Gérer l'abonnement »", upgradeTo: "Passer à", switchTo: "Basculer vers",
+    testCardNote: "Mode test — carte 4242 4242 4242 4242, date future, CVC au choix.",
+  },
+  analytics: {
+    proFeature: "Les statistiques sont une fonction Pro", proDesc: "Voyez chaque question de vos clients, repérez les lacunes de votre aide et suivez la charge gérée par l'assistant.", upgradePro: "Passer à Pro",
+    title: "Statistiques", subtitleTpl: "Ce que les clients demandent à {name}.",
+    conversations: "Conversations", questionsMonth: "Questions ce mois-ci", planLimit: "Limite de l'offre",
+    last7days: "Questions · 7 derniers jours", recentQuestions: "Questions récentes", noQuestions: "Pas encore de questions. Dès que des visiteurs utilisent votre widget, leurs questions apparaîtront ici.",
   },
 };
 
@@ -124,6 +272,43 @@ const es: AppDict = {
     createdTpl: "Creado el {date}",
     deleteChatbot: "Eliminar chatbot",
   },
+  bot: {
+    allChatbots: "Todos los chatbots", analytics: "Analíticas", subtitle: "Configura el asistente de tu tienda.", saved: "Ajustes guardados.",
+    assistantName: "Nombre del asistente", welcomeMessage: "Mensaje de bienvenida", welcomeHint: "Primer mensaje que ven los clientes al abrir el chat.",
+    systemInstr: "Instrucciones del sistema", optional: "(opcional)", systemPh: "Ej.: Eres el agente de soporte de Acme Store. Sé amable y conciso. Responde solo con el conocimiento de la tienda; si no estás seguro, sugiere escribir a support@acme.com.",
+    widgetColor: "Color del widget", saveSettings: "Guardar ajustes", saving: "Guardando…",
+  },
+  chat: { title: "Prueba tu asistente", addKnowledgeHint: "Añade conocimiento abajo para respuestas fundamentadas", placeholder: "Pregunta lo que preguntaría un cliente…", error: "Lo sentimos, algo salió mal. Inténtalo de nuevo." },
+  kb: {
+    title: "Base de conocimiento", subtitle: "Todo aquello con lo que tu asistente puede responder — FAQ, políticas de envío y devolución, info de productos.", sourcesTpl: "{used} / {total} fuentes",
+    tabText: "Pegar texto", tabUrl: "Desde URL", tabFile: "Subir archivo", limitReached: "Has alcanzado el límite de conocimiento de tu plan.",
+    titlePh: "Título (ej. Envíos y devoluciones)", contentPh: "Pega aquí tu FAQ, políticas o detalles de productos…", urlPh: "https://tutienda.com/ayuda/envios",
+    addBtn: "Añadir al conocimiento", processing: "Procesando…",
+    charsTpl: "{n} caracteres", statusReady: "listo", statusProcessing: "procesando", statusFailed: "error",
+    empty: "Aún no hay conocimiento. Añade arriba la FAQ o políticas de tu tienda para entrenar al asistente.",
+  },
+  install: {
+    title: "Instalar en tu sitio", subtitle: "Una línea de código añade la burbuja de chat a tu tienda. Elige tu plataforma para los pasos exactos.", preview: "Vista previa en un sitio", platform: "Plataforma",
+    copy: "Copiar", copied: "Copiado",
+    checkTitle: "Comprueba tu instalación", checkSubtitle: "¿Añadiste el snippet? Introduce la URL de tu sitio y confirmaremos que el widget está activo.", checkPh: "tutienda.com", checkBtn: "Comprobar", checking: "Comprobando…",
+    security: "Seguridad", allowedDomains: "Dominios permitidos", allowedHint: "(uno por línea — vacío = cualquier sitio)", domainsPh: "mitienda.com",
+    domainsSaveHint: "El widget solo se cargará en estos dominios — una clave robada es inútil en otro sitio.", saveDomains: "Guardar dominios", saving: "Guardando…",
+    keyText: "¿Clave comprometida? Rótala y vuelve a pegar el snippet.", regenerate: "Regenerar clave", regenConfirm: "¿Generar una clave nueva? Tu snippet actual dejará de funcionar hasta que lo reemplaces en tu sitio.",
+  },
+  billing: {
+    title: "Facturación y planes", onPlanTpl: "Estás en el plan {plan}.", manage: "Gestionar suscripción",
+    success: "🎉 Pago correcto — tu plan está activo.", canceled: "Pago cancelado. No se hizo ningún cargo.", topup: "🎉 Mensajes añadidos — tu asistente vuelve a plena marcha.",
+    messagesThisMonth: "Mensajes este mes", usageTpl: "{used} de {total} usados", includesTopupTpl: " · incluye {n} de recargas",
+    buyTpl: "Comprar {n} mensajes · ${price}", hitLimit: "Has llegado a tu límite — compra una recarga arriba o mejora tu plan para seguir atendiendo.", plans: "Planes",
+    current: "Actual", yourPlan: "Tu plan actual", downgradeVia: "Bajar vía «Gestionar suscripción»", upgradeTo: "Subir a", switchTo: "Cambiar a",
+    testCardNote: "Modo de prueba — tarjeta 4242 4242 4242 4242, cualquier fecha futura, cualquier CVC.",
+  },
+  analytics: {
+    proFeature: "Las analíticas son una función Pro", proDesc: "Ve cada pregunta de tus clientes, detecta huecos en tu ayuda y controla cuánto soporte gestiona tu asistente.", upgradePro: "Subir a Pro",
+    title: "Analíticas", subtitleTpl: "Qué preguntan los clientes a {name}.",
+    conversations: "Conversaciones", questionsMonth: "Preguntas este mes", planLimit: "Límite del plan",
+    last7days: "Preguntas · últimos 7 días", recentQuestions: "Preguntas recientes", noQuestions: "Aún no hay preguntas de clientes. Cuando usen tu widget, sus preguntas aparecerán aquí.",
+  },
 };
 
 const de: AppDict = {
@@ -148,6 +333,43 @@ const de: AppDict = {
     upgradeToCreate: "Upgraden Sie, um mehr zu erstellen.",
     createdTpl: "Erstellt am {date}",
     deleteChatbot: "Chatbot löschen",
+  },
+  bot: {
+    allChatbots: "Alle Chatbots", analytics: "Statistiken", subtitle: "Konfigurieren Sie Ihren Shop-Assistenten.", saved: "Einstellungen gespeichert.",
+    assistantName: "Name des Assistenten", welcomeMessage: "Begrüßung", welcomeHint: "Erste Nachricht, die Kunden beim Öffnen des Chats sehen.",
+    systemInstr: "System-Anweisungen", optional: "(optional)", systemPh: "z. B.: Sie sind der Support-Agent von Acme Store. Seien Sie freundlich und knapp. Antworten Sie nur aus dem Wissen des Shops; im Zweifel bitten Sie um eine E-Mail an support@acme.com.",
+    widgetColor: "Widget-Farbe", saveSettings: "Speichern", saving: "Wird gespeichert…",
+  },
+  chat: { title: "Assistenten testen", addKnowledgeHint: "Fügen Sie unten Wissen hinzu für fundierte Antworten", placeholder: "Fragen Sie etwas, das ein Kunde fragen würde…", error: "Entschuldigung, etwas ist schiefgelaufen. Bitte versuchen Sie es erneut." },
+  kb: {
+    title: "Wissensbasis", subtitle: "Alles, woraus Ihr Assistent antworten darf — FAQs, Versand- und Rückgaberichtlinien, Produktinfos.", sourcesTpl: "{used} / {total} Quellen",
+    tabText: "Text einfügen", tabUrl: "Von URL", tabFile: "Datei hochladen", limitReached: "Sie haben das Wissenslimit Ihres Plans erreicht.",
+    titlePh: "Titel (z. B. Versand & Rückgabe)", contentPh: "Fügen Sie hier Ihre FAQ, Richtlinien oder Produktdetails ein…", urlPh: "https://ihrshop.de/hilfe/versand",
+    addBtn: "Zum Wissen hinzufügen", processing: "Wird verarbeitet…",
+    charsTpl: "{n} Zeichen", statusReady: "bereit", statusProcessing: "Verarbeitung", statusFailed: "Fehler",
+    empty: "Noch kein Wissen. Fügen Sie oben die FAQ oder Richtlinien Ihres Shops hinzu, um den Assistenten zu trainieren.",
+  },
+  install: {
+    title: "Auf Ihrer Website installieren", subtitle: "Eine Zeile Code fügt die Chat-Blase zu Ihrem Shop hinzu. Wählen Sie Ihre Plattform für genaue Schritte.", preview: "Vorschau auf einer Website", platform: "Plattform",
+    copy: "Kopieren", copied: "Kopiert",
+    checkTitle: "Installation prüfen", checkSubtitle: "Snippet eingefügt? Geben Sie Ihre Website-URL ein und wir bestätigen, dass das Widget aktiv ist.", checkPh: "ihrshop.de", checkBtn: "Prüfen", checking: "Wird geprüft…",
+    security: "Sicherheit", allowedDomains: "Erlaubte Domains", allowedHint: "(eine pro Zeile — leer = jede Website)", domainsPh: "meinshop.de",
+    domainsSaveHint: "Das Widget lädt nur auf diesen Domains — ein gestohlener Schlüssel ist anderswo nutzlos.", saveDomains: "Domains speichern", saving: "Wird gespeichert…",
+    keyText: "Schlüssel kompromittiert? Erneuern Sie ihn und fügen Sie das Snippet neu ein.", regenerate: "Schlüssel neu erzeugen", regenConfirm: "Neuen Schlüssel erzeugen? Ihr aktuelles Snippet funktioniert nicht mehr, bis Sie es auf Ihrer Website ersetzen.",
+  },
+  billing: {
+    title: "Abrechnung & Pläne", onPlanTpl: "Sie nutzen den {plan}-Plan.", manage: "Abo verwalten",
+    success: "🎉 Zahlung erfolgreich — Ihr Plan ist aktiv.", canceled: "Bezahlung abgebrochen. Es wurde nichts berechnet.", topup: "🎉 Nachrichten hinzugefügt — Ihr Assistent ist wieder voll einsatzbereit.",
+    messagesThisMonth: "Nachrichten diesen Monat", usageTpl: "{used} von {total} genutzt", includesTopupTpl: " · inkl. {n} aus Aufladungen",
+    buyTpl: "{n} Nachrichten kaufen · ${price}", hitLimit: "Limit erreicht — kaufen Sie oben eine Aufladung oder upgraden Sie, um weiter zu antworten.", plans: "Pläne",
+    current: "Aktuell", yourPlan: "Ihr aktueller Plan", downgradeVia: "Herabstufen über „Abo verwalten“", upgradeTo: "Upgrade auf", switchTo: "Wechseln zu",
+    testCardNote: "Testmodus — Karte 4242 4242 4242 4242, beliebiges künftiges Datum, beliebiger CVC.",
+  },
+  analytics: {
+    proFeature: "Statistiken sind eine Pro-Funktion", proDesc: "Sehen Sie jede Kundenfrage, erkennen Sie Lücken in Ihrer Hilfe und verfolgen Sie, wie viel Support Ihr Assistent übernimmt.", upgradePro: "Auf Pro upgraden",
+    title: "Statistiken", subtitleTpl: "Was Kunden {name} fragen.",
+    conversations: "Unterhaltungen", questionsMonth: "Fragen diesen Monat", planLimit: "Plan-Limit",
+    last7days: "Fragen · letzte 7 Tage", recentQuestions: "Neueste Fragen", noQuestions: "Noch keine Kundenfragen. Sobald Besucher Ihr Widget nutzen, erscheinen ihre Fragen hier.",
   },
 };
 

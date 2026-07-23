@@ -11,6 +11,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import { useFormStatus } from "react-dom";
+import { type AppDict } from "@/lib/i18n/app";
 import {
   verifyInstallation,
   regenerateKey,
@@ -116,13 +117,16 @@ export function InstallWidget({
   publicKey,
   color,
   allowedDomains,
+  strings,
 }: {
   chatbotId: string;
   appUrl: string;
   publicKey: string;
   color: string;
   allowedDomains: string[];
+  strings: AppDict["install"];
 }) {
+  const s = strings;
   const snippet = `<script src="${appUrl}/widget.js" data-key="${publicKey}" data-color="${color}" async></script>`;
   const [platformId, setPlatformId] = useState("html");
   const [copied, setCopied] = useState(false);
@@ -146,24 +150,21 @@ export function InstallWidget({
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-slate-700">Install on your site</h2>
+        <h2 className="text-sm font-semibold text-slate-700">{s.title}</h2>
         <a
           href={`${appUrl}/preview/${publicKey}`}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:underline"
         >
-          Preview on a site <ExternalLink size={12} />
+          {s.preview} <ExternalLink size={12} />
         </a>
       </div>
-      <p className="mt-1 text-xs text-slate-400">
-        One line of code adds the chat bubble to your store. Pick your platform for
-        exact steps.
-      </p>
+      <p className="mt-1 text-xs text-slate-400">{s.subtitle}</p>
 
       {/* Platform picker */}
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <label className="text-sm font-medium text-slate-600">Platform</label>
+        <label className="text-sm font-medium text-slate-600">{s.platform}</label>
         <select
           value={platformId}
           onChange={(e) => setPlatformId(e.target.value)}
@@ -211,11 +212,11 @@ export function InstallWidget({
         >
           {copied ? (
             <>
-              <Check size={14} className="text-emerald-500" /> Copied
+              <Check size={14} className="text-emerald-500" /> {s.copied}
             </>
           ) : (
             <>
-              <Copy size={14} /> Copy
+              <Copy size={14} /> {s.copy}
             </>
           )}
         </button>
@@ -223,19 +224,16 @@ export function InstallWidget({
 
       {/* Installation checker */}
       <div className="mt-5 border-t border-slate-100 pt-5">
-        <h3 className="text-sm font-medium text-slate-700">Check your installation</h3>
-        <p className="mt-1 text-xs text-slate-400">
-          Added the snippet? Enter your site URL and we&apos;ll confirm the widget
-          is live.
-        </p>
+        <h3 className="text-sm font-medium text-slate-700">{s.checkTitle}</h3>
+        <p className="mt-1 text-xs text-slate-400">{s.checkSubtitle}</p>
         <form action={verifyAction} className="mt-3 flex flex-col gap-2 sm:flex-row">
           <input type="hidden" name="chatbot_id" value={chatbotId} />
           <input
             name="url"
-            placeholder="yourstore.com"
+            placeholder={s.checkPh}
             className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
           />
-          <VerifyButton />
+          <VerifyButton label={s.checkBtn} pending={s.checking} />
         </form>
         {verify.message && (
           <p
@@ -254,31 +252,26 @@ export function InstallWidget({
       {/* Security */}
       <div className="mt-5 border-t border-slate-100 pt-5">
         <h3 className="flex items-center gap-1.5 text-sm font-medium text-slate-700">
-          <ShieldCheck size={15} className="text-emerald-500" /> Security
+          <ShieldCheck size={15} className="text-emerald-500" /> {s.security}
         </h3>
 
         {/* Domain lock */}
         <form action={updateDomains} className="mt-3">
           <input type="hidden" name="chatbot_id" value={chatbotId} />
           <label className="text-xs font-medium text-slate-600">
-            Allowed domains{" "}
-            <span className="font-normal text-slate-400">
-              (one per line — leave empty to allow any site)
-            </span>
+            {s.allowedDomains}{" "}
+            <span className="font-normal text-slate-400">{s.allowedHint}</span>
           </label>
           <textarea
             name="domains"
             rows={2}
             defaultValue={allowedDomains.join("\n")}
-            placeholder={"mystore.com\nshop.mystore.com"}
+            placeholder={s.domainsPh}
             className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
           />
-          <p className="mt-1 text-xs text-slate-400">
-            The widget will only load on these domains — a stolen key is useless
-            elsewhere.
-          </p>
+          <p className="mt-1 text-xs text-slate-400">{s.domainsSaveHint}</p>
           <div className="mt-2 flex justify-end">
-            <SmallSubmit pending="Saving…">Save domains</SmallSubmit>
+            <SmallSubmit pending={s.saving}>{s.saveDomains}</SmallSubmit>
           </div>
         </form>
 
@@ -286,21 +279,14 @@ export function InstallWidget({
         <form
           action={regenerateKey}
           onSubmit={(e) => {
-            if (
-              !confirm(
-                "Generate a new key? Your current embed snippet will stop working until you replace it on your site.",
-              )
-            )
-              e.preventDefault();
+            if (!confirm(s.regenConfirm)) e.preventDefault();
           }}
           className="mt-3 flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2.5"
         >
           <input type="hidden" name="chatbot_id" value={chatbotId} />
-          <span className="text-xs text-slate-500">
-            Compromised key? Rotate it and re-paste the snippet.
-          </span>
+          <span className="text-xs text-slate-500">{s.keyText}</span>
           <button className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50">
-            <KeyRound size={13} /> Regenerate key
+            <KeyRound size={13} /> {s.regenerate}
           </button>
         </form>
       </div>
@@ -327,21 +313,21 @@ function SmallSubmit({
   );
 }
 
-function VerifyButton() {
-  const { pending } = useFormStatus();
+function VerifyButton({ label, pending }: { label: string; pending: string }) {
+  const { pending: isPending } = useFormStatus();
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={isPending}
       className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
     >
-      {pending ? (
+      {isPending ? (
         <>
-          <Loader2 size={15} className="animate-spin" /> Checking…
+          <Loader2 size={15} className="animate-spin" /> {pending}
         </>
       ) : (
         <>
-          <Search size={15} /> Check
+          <Search size={15} /> {label}
         </>
       )}
     </button>

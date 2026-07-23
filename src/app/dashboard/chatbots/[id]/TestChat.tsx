@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Send, Sparkles } from "lucide-react";
+import type { AppDict } from "@/lib/i18n/app";
 import type { ChatMessage } from "@/lib/types";
 
 export function TestChat({
@@ -10,11 +11,13 @@ export function TestChat({
   welcomeMessage,
   accent,
   hasKnowledge,
+  strings,
 }: {
   chatbotId: string;
   welcomeMessage: string;
   accent: string;
   hasKnowledge: boolean;
+  strings: AppDict["chat"];
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -63,7 +66,7 @@ export function TestChat({
         const copy = [...m];
         copy[copy.length - 1] = {
           role: "assistant",
-          content: "Sorry — something went wrong. Please try again.",
+          content: strings.error,
         };
         return copy;
       });
@@ -76,12 +79,10 @@ export function TestChat({
     <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center gap-2 border-b border-slate-100 px-5 py-3">
         <Sparkles size={16} style={{ color: accent }} />
-        <h2 className="text-sm font-semibold text-slate-700">
-          Test your assistant
-        </h2>
+        <h2 className="text-sm font-semibold text-slate-700">{strings.title}</h2>
         {!hasKnowledge && (
           <span className="ml-auto text-xs text-amber-600">
-            Add knowledge below for grounded answers
+            {strings.addKnowledgeHint}
           </span>
         )}
       </div>
@@ -119,7 +120,7 @@ export function TestChat({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}
-          placeholder="Ask something a customer would ask…"
+          placeholder={strings.placeholder}
           className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
         />
         <button

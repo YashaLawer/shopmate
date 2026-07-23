@@ -5,6 +5,8 @@ import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getPlan } from "@/lib/plans";
 import { startOfMonthISO } from "@/lib/cors";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { getAppDict, tpl } from "@/lib/i18n/app";
 import type { Chatbot } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +19,8 @@ export default async function AnalyticsPage({
   const { id } = await params;
   const { userId, profile } = await requireUser();
   const plan = getPlan(profile.plan);
+  const locale = await getLocale();
+  const an = getAppDict(locale).analytics;
 
   const supabase = await createClient();
   const { data: botData } = await supabase
@@ -47,17 +51,16 @@ export default async function AnalyticsPage({
             <Lock size={22} />
           </span>
           <h1 className="mt-4 text-xl font-bold text-slate-900">
-            Analytics is a Pro feature
+            {an.proFeature}
           </h1>
           <p className="mx-auto mt-2 max-w-md text-sm text-slate-500">
-            See every question your customers ask, spot gaps in your help
-            content, and track how much support your assistant handles.
+            {an.proDesc}
           </p>
           <Link
             href="/dashboard/billing"
             className="mt-6 inline-block rounded-lg bg-brand px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700"
           >
-            Upgrade to Pro
+            {an.upgradePro}
           </Link>
         </div>
       </div>
@@ -104,7 +107,7 @@ export default async function AnalyticsPage({
     const key = d.toISOString().slice(0, 10);
     const count = week.filter((m) => m.created_at.slice(0, 10) === key).length;
     days.push({
-      label: d.toLocaleDateString(undefined, { weekday: "short" }),
+      label: d.toLocaleDateString(locale, { weekday: "short" }),
       count,
     });
   }
@@ -113,27 +116,21 @@ export default async function AnalyticsPage({
   return (
     <div className="mx-auto max-w-3xl">
       {backLink}
-      <h1 className="text-2xl font-bold text-slate-900">Analytics</h1>
+      <h1 className="text-2xl font-bold text-slate-900">{an.title}</h1>
       <p className="mt-1 text-sm text-slate-500">
-        What customers are asking {bot.name}.
+        {tpl(an.subtitleTpl, { name: bot.name })}
       </p>
 
       {/* Stat tiles */}
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <Stat icon={Users} label="Conversations" value={convCount ?? 0} />
-        <Stat
-          icon={MessageSquare}
-          label="Questions this month"
-          value={msgMonth ?? 0}
-        />
-        <Stat icon={Sparkles} label="Plan limit" value={plan.limits.messagesPerMonth} />
+        <Stat icon={Users} label={an.conversations} value={convCount ?? 0} />
+        <Stat icon={MessageSquare} label={an.questionsMonth} value={msgMonth ?? 0} />
+        <Stat icon={Sparkles} label={an.planLimit} value={plan.limits.messagesPerMonth} />
       </div>
 
       {/* Last 7 days */}
       <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-sm font-semibold text-slate-700">
-          Questions · last 7 days
-        </h2>
+        <h2 className="text-sm font-semibold text-slate-700">{an.last7days}</h2>
         <div className="mt-5 flex h-32 items-end justify-between gap-2">
           {days.map((d, i) => (
             <div key={i} className="flex flex-1 flex-col items-center gap-2">
@@ -150,12 +147,9 @@ export default async function AnalyticsPage({
 
       {/* Recent questions */}
       <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-sm font-semibold text-slate-700">Recent questions</h2>
+        <h2 className="text-sm font-semibold text-slate-700">{an.recentQuestions}</h2>
         {recent.length === 0 ? (
-          <p className="mt-4 text-sm text-slate-400">
-            No customer questions yet. Once people chat with your widget, their
-            questions show up here.
-          </p>
+          <p className="mt-4 text-sm text-slate-400">{an.noQuestions}</p>
         ) : (
           <ul className="mt-3 divide-y divide-slate-100">
             {recent.map((m, i) => (

@@ -15,10 +15,24 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px; /* offset for the sticky header */
+}
+
 html,
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Language dropdown entrance */
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-dropdown {
+  animation: dropdownIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {

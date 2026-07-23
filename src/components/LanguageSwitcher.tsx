@@ -51,37 +51,34 @@ export function LanguageSwitcher({ current }: { current: Locale }) {
         />
       </button>
 
-      <div
-        role="listbox"
-        className={
-          "absolute right-0 z-50 mt-2 w-44 origin-top-right rounded-xl border border-slate-200 bg-white p-1 shadow-xl transition duration-150 ease-out " +
-          (open
-            ? "visible translate-y-0 scale-100 opacity-100"
-            : "invisible -translate-y-1 scale-95 opacity-0")
-        }
-      >
-        {LOCALES.map((l) => {
-          const active = l.code === current;
-          return (
-            <button
-              key={l.code}
-              onClick={() => pick(l.code)}
-              role="option"
-              aria-selected={active}
-              className={
-                "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition " +
-                (active
-                  ? "bg-indigo-50 font-semibold text-slate-900"
-                  : "text-slate-600 hover:bg-slate-50")
-              }
-            >
-              <span className="text-base leading-none">{l.flag}</span>
-              <span className="flex-1 text-left">{l.label}</span>
-              {active && <Check size={15} className="text-brand" />}
-            </button>
-          );
-        })}
-      </div>
+      {open && (
+        <div
+          role="listbox"
+          className="animate-dropdown absolute right-0 z-50 mt-2 w-44 origin-top-right rounded-xl border border-slate-200 bg-white p-1 shadow-xl"
+        >
+          {LOCALES.map((l) => {
+            const active = l.code === current;
+            return (
+              <button
+                key={l.code}
+                onClick={() => pick(l.code)}
+                role="option"
+                aria-selected={active}
+                className={
+                  "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors " +
+                  (active
+                    ? "bg-indigo-50 font-semibold text-slate-900"
+                    : "text-slate-600 hover:bg-slate-50")
+                }
+              >
+                <span className="text-base leading-none">{l.flag}</span>
+                <span className="flex-1 text-left">{l.label}</span>
+                {active && <Check size={15} className="text-brand" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
