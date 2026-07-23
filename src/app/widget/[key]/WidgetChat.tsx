@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Send } from "lucide-react";
+import { WIDGET_STRINGS, type Lang } from "@/lib/i18n/widget";
 import type { ChatMessage } from "@/lib/types";
 
 export function WidgetChat({
@@ -11,13 +12,16 @@ export function WidgetChat({
   welcome,
   accent,
   showBranding,
+  lang,
 }: {
   publicKey: string;
   name: string;
   welcome: string;
   accent: string;
   showBranding: boolean;
+  lang: Lang;
 }) {
+  const t = WIDGET_STRINGS[lang] ?? WIDGET_STRINGS.en;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -70,7 +74,7 @@ export function WidgetChat({
         const copy = [...m];
         copy[copy.length - 1] = {
           role: "assistant",
-          content: "Sorry — something went wrong. Please try again.",
+          content: t.error,
         };
         return copy;
       });
@@ -91,7 +95,7 @@ export function WidgetChat({
         </span>
         <div className="leading-tight">
           <p className="text-sm font-semibold">{name}</p>
-          <p className="text-xs text-white/80">We usually reply instantly</p>
+          <p className="text-xs text-white/80">{t.replyInstantly}</p>
         </div>
       </div>
 
@@ -126,7 +130,7 @@ export function WidgetChat({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}
-          placeholder="Type your message…"
+          placeholder={t.placeholder}
           className="flex-1 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400"
         />
         <button

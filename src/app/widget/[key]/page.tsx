@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getPlan } from "@/lib/plans";
 import { hostAllowed, normalizeHost } from "@/lib/security";
+import { pickLang } from "@/lib/i18n/widget";
 import { WidgetChat } from "./WidgetChat";
 import type { Chatbot } from "@/lib/types";
 
@@ -26,10 +27,12 @@ export default async function WidgetPage({
   if (!data) notFound();
   const bot = data as Chatbot;
 
+  const h = await headers();
+  const lang = pickLang(h.get("accept-language"));
+
   // Domain allow-list: block the widget from loading on unauthorized sites.
   const allowed = bot.allowed_domains ?? [];
   if (allowed.length > 0) {
-    const h = await headers();
     const referer = h.get("referer");
     const appHost = normalizeHost(h.get("x-forwarded-host") ?? h.get("host") ?? "");
     let refHost: string | null = null;
@@ -61,6 +64,7 @@ export default async function WidgetPage({
       welcome={bot.welcome_message}
       accent={bot.widget_color}
       showBranding={showBranding}
+      lang={lang}
     />
   );
 }
