@@ -59,6 +59,7 @@ export interface AppDict {
     messagesThisMonth: string; usageTpl: string; includesTopupTpl: string;
     topupTitle: string; buyTpl: string; hitLimit: string; plans: string;
     current: string; yourPlan: string; downgradeVia: string; upgradeTo: string; switchTo: string;
+    switchToAnnual: string; switchToMonthly: string;
     testCardNote: string;
   };
   analytics: {
@@ -128,6 +129,7 @@ const en: AppDict = {
     messagesThisMonth: "Messages this month", usageTpl: "{used} of {total} used", includesTopupTpl: " · includes {n} from top-ups",
     topupTitle: "Need more messages this month?", buyTpl: "Buy {n} messages · ${price}", hitLimit: "You've hit your limit — buy a top-up above or upgrade your plan to keep answering customers.", plans: "Plans",
     current: "Current", yourPlan: "Your current plan", downgradeVia: "Downgrade via “Manage subscription”", upgradeTo: "Upgrade to", switchTo: "Switch to",
+    switchToAnnual: "Switch to annual billing", switchToMonthly: "Switch to monthly billing",
     testCardNote: "Test mode — use card 4242 4242 4242 4242, any future date, any CVC.",
   },
   analytics: {
@@ -197,6 +199,7 @@ const ru: AppDict = {
     messagesThisMonth: "Сообщения в этом месяце", usageTpl: "{used} из {total} использовано", includesTopupTpl: " · включая {n} из докупки",
     topupTitle: "Нужно больше сообщений в этом месяце?", buyTpl: "Купить {n} сообщений · ${price}", hitLimit: "Лимит исчерпан — докупите пакет выше или повысьте тариф, чтобы продолжать отвечать покупателям.", plans: "Тарифы",
     current: "Текущий", yourPlan: "Ваш тариф", downgradeVia: "Понизить через «Управление подпиской»", upgradeTo: "Перейти на", switchTo: "Сменить на",
+    switchToAnnual: "Перейти на годовую оплату", switchToMonthly: "Перейти на помесячную оплату",
     testCardNote: "Тестовый режим — карта 4242 4242 4242 4242, любая будущая дата, любой CVC.",
   },
   analytics: {
@@ -266,6 +269,7 @@ const fr: AppDict = {
     messagesThisMonth: "Messages ce mois-ci", usageTpl: "{used} sur {total} utilisés", includesTopupTpl: " · dont {n} en recharge",
     topupTitle: "Besoin de plus de messages ce mois-ci ?", buyTpl: "Acheter {n} messages · ${price}", hitLimit: "Limite atteinte — achetez une recharge ci-dessus ou améliorez votre offre pour continuer à répondre.", plans: "Offres",
     current: "Actuel", yourPlan: "Votre offre actuelle", downgradeVia: "Rétrograder via « Gérer l'abonnement »", upgradeTo: "Passer à", switchTo: "Basculer vers",
+    switchToAnnual: "Passer à la facturation annuelle", switchToMonthly: "Passer à la facturation mensuelle",
     testCardNote: "Mode test — carte 4242 4242 4242 4242, date future, CVC au choix.",
   },
   analytics: {
@@ -335,6 +339,7 @@ const es: AppDict = {
     messagesThisMonth: "Mensajes este mes", usageTpl: "{used} de {total} usados", includesTopupTpl: " · incluye {n} de recargas",
     topupTitle: "¿Necesitas más mensajes este mes?", buyTpl: "Comprar {n} mensajes · ${price}", hitLimit: "Has llegado a tu límite — compra una recarga arriba o mejora tu plan para seguir atendiendo.", plans: "Planes",
     current: "Actual", yourPlan: "Tu plan actual", downgradeVia: "Bajar vía «Gestionar suscripción»", upgradeTo: "Subir a", switchTo: "Cambiar a",
+    switchToAnnual: "Cambiar a facturación anual", switchToMonthly: "Cambiar a facturación mensual",
     testCardNote: "Modo de prueba — tarjeta 4242 4242 4242 4242, cualquier fecha futura, cualquier CVC.",
   },
   analytics: {
@@ -404,6 +409,7 @@ const de: AppDict = {
     messagesThisMonth: "Nachrichten diesen Monat", usageTpl: "{used} von {total} genutzt", includesTopupTpl: " · inkl. {n} aus Aufladungen",
     topupTitle: "Diesen Monat mehr Nachrichten nötig?", buyTpl: "{n} Nachrichten kaufen · ${price}", hitLimit: "Limit erreicht — kaufen Sie oben eine Aufladung oder upgraden Sie, um weiter zu antworten.", plans: "Pläne",
     current: "Aktuell", yourPlan: "Ihr aktueller Plan", downgradeVia: "Herabstufen über „Abo verwalten“", upgradeTo: "Upgrade auf", switchTo: "Wechseln zu",
+    switchToAnnual: "Auf jährliche Abrechnung wechseln", switchToMonthly: "Auf monatliche Abrechnung wechseln",
     testCardNote: "Testmodus — Karte 4242 4242 4242 4242, beliebiges künftiges Datum, beliebiger CVC.",
   },
   analytics: {

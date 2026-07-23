@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, Zap } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { getPlan, PLANS, PLAN_ORDER } from "@/lib/plans";
+import { getStripe } from "@/lib/stripe";
 import { countMessagesThisMonth } from "@/lib/usage";
 import { activeTopup, TOPUPS } from "@/lib/limits";
 import { getLocale } from "@/lib/i18n/getLocale";
@@ -29,6 +30,21 @@ export default async function BillingPage({
   const locale = await getLocale();
   const b = getAppDict(locale).billing;
   const site = getDict(locale).pricing;
+
+  // Current billing cycle (month/year) — read from Stripe so the plan cards
+  // can tell "Pro monthly" apart from "Pro yearly".
+  let currentInterval: "month" | "year" | null = null;
+  if (profile.stripe_subscription_id && !isFree) {
+    try {
+      const sub = await getStripe().subscriptions.retrieve(
+        profile.stripe_subscription_id,
+      );
+      const iv = sub.items.data[0]?.price?.recurring?.interval;
+      currentInterval = iv === "year" ? "year" : iv === "month" ? "month" : null;
+    } catch {
+      // ignore — cards just fall back to plan-only matching
+    }
+  }
 
   const used = await countMessagesThisMonth(userId);
   const topup = activeTopup(profile);
@@ -136,6 +152,8 @@ export default async function BillingPage({
       <div className="mt-4">
         <BillingPlans
           isFreeUser={isFree}
+          currentPlanId={current.id}
+          currentInterval={currentInterval}
           changePlan={changePlan}
           labels={{
             monthly: site.monthly,
@@ -147,6 +165,8 @@ export default async function BillingPage({
             yourPlan: b.yourPlan,
             upgradeTo: b.upgradeTo,
             switchTo: b.switchTo,
+            switchToAnnual: b.switchToAnnual,
+            switchToMonthly: b.switchToMonthly,
             downgradeVia: b.downgradeVia,
           }}
           plans={PLAN_ORDER.map<BillingPlanView>((id) => {
@@ -157,7 +177,6 @@ export default async function BillingPage({
               priceMonth: plan.price,
               priceYear: plan.priceYear ?? null,
               highlights: site.plans[id].highlights,
-              isCurrent: id === current.id,
               featured: id === "starter",
               isPaid: plan.price > 0,
             };
