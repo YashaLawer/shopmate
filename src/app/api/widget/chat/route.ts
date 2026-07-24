@@ -66,10 +66,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Monthly message gating (based on the owner's plan).
+  // Monthly message gating (based on the owner's plan). Only core columns here
+  // so the chat never breaks — email-notification columns are fetched separately
+  // and are optional (see below).
   const { data: profile } = await admin
     .from("profiles")
-    .select("plan, topup_messages, topup_period, email, warned_period, locale")
+    .select("plan, topup_messages, topup_period, email")
     .eq("id", bot.user_id)
     .single();
   const plan = getPlan(profile?.plan);
@@ -98,27 +100,35 @@ export async function POST(req: NextRequest) {
   }
 
   // Warn the owner by email once they cross 80% of their monthly allowance.
-  // Gated by warned_period so it fires at most once per calendar month.
+  // Best-effort: warned_period/locale are optional columns (added by the email
+  // migration). If they aren't present yet, we simply skip the warning — the
+  // chat itself must never be affected.
   const projectedUsage = (count ?? 0) + 1;
   const period = currentPeriod();
   if (
-    effectiveLimit > 0 &&
-    projectedUsage >= Math.ceil(effectiveLimit * 0.8) &&
     profile?.email &&
-    profile?.warned_period !== period
+    effectiveLimit > 0 &&
+    projectedUsage >= Math.ceil(effectiveLimit * 0.8)
   ) {
-    // Claim the slot first, so concurrent requests don't double-send.
-    await admin
+    const { data: prefs, error: prefsErr } = await admin
       .from("profiles")
-      .update({ warned_period: period })
-      .eq("id", bot.user_id);
-    await sendUsageWarningEmail(
-      profile.email,
-      req.nextUrl.origin,
-      projectedUsage,
-      effectiveLimit,
-      profile.locale ?? undefined,
-    );
+      .select("warned_period, locale")
+      .eq("id", bot.user_id)
+      .single();
+    if (!prefsErr && prefs && prefs.warned_period !== period) {
+      // Claim the slot first, so concurrent requests don't double-send.
+      await admin
+        .from("profiles")
+        .update({ warned_period: period })
+        .eq("id", bot.user_id);
+      await sendUsageWarningEmail(
+        profile.email,
+        req.nextUrl.origin,
+        projectedUsage,
+        effectiveLimit,
+        prefs.locale ?? undefined,
+      );
+    }
   }
 
   // Resolve / create the conversation.
