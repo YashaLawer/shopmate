@@ -127,12 +127,15 @@ export function KnowledgeManager({
             )}
 
             {mode === "url" && (
-              <input
-                name="url"
-                type="url"
-                placeholder={s.urlPh}
-                className={inputClass}
-              />
+              <div>
+                <input
+                  name="url"
+                  type="url"
+                  placeholder={s.urlPh}
+                  className={inputClass}
+                />
+                <p className="mt-1.5 text-xs text-slate-400">{s.urlHint}</p>
+              </div>
             )}
 
             {mode === "file" && (

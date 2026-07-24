@@ -43,7 +43,7 @@ export interface AppDict {
   kb: {
     title: string; subtitle: string; sourcesTpl: string;
     tabText: string; tabUrl: string; tabFile: string; limitReached: string; fileHint: string; fileTooBig: string;
-    titlePh: string; contentPh: string; urlPh: string;
+    titlePh: string; contentPh: string; urlPh: string; urlHint: string;
     addBtn: string; processing: string;
     charsTpl: string; statusReady: string; statusProcessing: string; statusFailed: string;
     empty: string;
@@ -119,6 +119,7 @@ const en: AppDict = {
     title: "Knowledge base", subtitle: "Everything your assistant is allowed to answer from — FAQs, shipping & return policies, product info.", sourcesTpl: "{used} / {total} sources",
     tabText: "Paste text", tabUrl: "From URL", tabFile: "Upload file", limitReached: "You've reached your plan's knowledge limit.",
     titlePh: "Title (e.g. Shipping & Returns policy)", contentPh: "Paste your FAQ, policies, or product details here…", urlPh: "https://yourstore.com/help/shipping",
+    urlHint: "We read this one page only, not the whole site. Best: link a text page like your FAQ, shipping or returns policy. (JavaScript-heavy pages may not import.)",
     fileHint: "PDF, Word, image, TXT or MD — up to 4 MB.", fileTooBig: "That file is too big (max 4 MB). Try a smaller file or split it.", addBtn: "Add to knowledge", processing: "Processing…",
     charsTpl: "{n} chars", statusReady: "ready", statusProcessing: "processing", statusFailed: "failed",
     empty: "No knowledge yet. Add your store's FAQ or policies above to train your assistant.",
@@ -194,6 +195,7 @@ const ru: AppDict = {
     title: "База знаний", subtitle: "Всё, из чего ассистент может отвечать — FAQ, правила доставки и возврата, описания товаров.", sourcesTpl: "{used} / {total} источников",
     tabText: "Вставить текст", tabUrl: "Из URL", tabFile: "Загрузить файл", limitReached: "Достигнут лимит знаний вашего тарифа.",
     titlePh: "Заголовок (напр. Доставка и возврат)", contentPh: "Вставьте сюда FAQ, правила или описания товаров…", urlPh: "https://вашмагазин.ru/help/dostavka",
+    urlHint: "Берём только эту одну страницу, не весь сайт. Лучше всего — ссылка на страницу с текстом: FAQ, доставка или возврат. (Страницы, где всё грузится скриптами, могут не импортироваться.)",
     fileHint: "PDF, Word, изображение, TXT или MD — до 4 МБ.", fileTooBig: "Файл слишком большой (макс. 4 МБ). Возьмите поменьше или разделите.", addBtn: "Добавить в знания", processing: "Обрабатываем…",
     charsTpl: "{n} симв.", statusReady: "готово", statusProcessing: "обработка", statusFailed: "ошибка",
     empty: "Знаний пока нет. Добавьте выше FAQ или правила магазина, чтобы обучить ассистента.",
@@ -269,6 +271,7 @@ const fr: AppDict = {
     title: "Base de connaissances", subtitle: "Tout ce à partir de quoi l'assistant peut répondre — FAQ, politiques d'expédition et de retour, infos produits.", sourcesTpl: "{used} / {total} sources",
     tabText: "Coller du texte", tabUrl: "Depuis une URL", tabFile: "Importer un fichier", limitReached: "Vous avez atteint la limite de connaissances de votre offre.",
     titlePh: "Titre (ex. Livraison et retours)", contentPh: "Collez ici votre FAQ, vos politiques ou vos fiches produits…", urlPh: "https://votreboutique.com/aide/livraison",
+    urlHint: "Nous lisons uniquement cette page, pas tout le site. Idéal : une page de texte comme votre FAQ, vos conditions de livraison ou de retour. (Les pages très dépendantes du JavaScript peuvent ne pas s'importer.)",
     fileHint: "PDF, Word, image, TXT ou MD — jusqu'à 4 Mo.", fileTooBig: "Ce fichier est trop volumineux (max 4 Mo). Essayez plus petit.", addBtn: "Ajouter aux connaissances", processing: "Traitement…",
     charsTpl: "{n} caractères", statusReady: "prêt", statusProcessing: "traitement", statusFailed: "échec",
     empty: "Aucune connaissance pour l'instant. Ajoutez la FAQ ou les politiques de votre boutique ci-dessus pour entraîner l'assistant.",
@@ -344,6 +347,7 @@ const es: AppDict = {
     title: "Base de conocimiento", subtitle: "Todo aquello con lo que tu asistente puede responder — FAQ, políticas de envío y devolución, info de productos.", sourcesTpl: "{used} / {total} fuentes",
     tabText: "Pegar texto", tabUrl: "Desde URL", tabFile: "Subir archivo", limitReached: "Has alcanzado el límite de conocimiento de tu plan.",
     titlePh: "Título (ej. Envíos y devoluciones)", contentPh: "Pega aquí tu FAQ, políticas o detalles de productos…", urlPh: "https://tutienda.com/ayuda/envios",
+    urlHint: "Leemos solo esta página, no todo el sitio. Ideal: una página de texto como tu FAQ, envíos o devoluciones. (Las páginas muy dependientes de JavaScript pueden no importarse.)",
     fileHint: "PDF, Word, imagen, TXT o MD — hasta 4 MB.", fileTooBig: "Ese archivo es demasiado grande (máx. 4 MB). Prueba con uno más pequeño.", addBtn: "Añadir al conocimiento", processing: "Procesando…",
     charsTpl: "{n} caracteres", statusReady: "listo", statusProcessing: "procesando", statusFailed: "error",
     empty: "Aún no hay conocimiento. Añade arriba la FAQ o políticas de tu tienda para entrenar al asistente.",
@@ -419,6 +423,7 @@ const de: AppDict = {
     title: "Wissensbasis", subtitle: "Alles, woraus Ihr Assistent antworten darf — FAQs, Versand- und Rückgaberichtlinien, Produktinfos.", sourcesTpl: "{used} / {total} Quellen",
     tabText: "Text einfügen", tabUrl: "Von URL", tabFile: "Datei hochladen", limitReached: "Sie haben das Wissenslimit Ihres Plans erreicht.",
     titlePh: "Titel (z. B. Versand & Rückgabe)", contentPh: "Fügen Sie hier Ihre FAQ, Richtlinien oder Produktdetails ein…", urlPh: "https://ihrshop.de/hilfe/versand",
+    urlHint: "Wir lesen nur diese eine Seite, nicht die ganze Website. Am besten: eine Textseite wie Ihre FAQ, Versand- oder Rückgabebedingungen. (Stark JavaScript-abhängige Seiten lassen sich evtl. nicht importieren.)",
     fileHint: "PDF, Word, Bild, TXT oder MD — bis 4 MB.", fileTooBig: "Diese Datei ist zu groß (max. 4 MB). Versuchen Sie eine kleinere.", addBtn: "Zum Wissen hinzufügen", processing: "Wird verarbeitet…",
     charsTpl: "{n} Zeichen", statusReady: "bereit", statusProcessing: "Verarbeitung", statusFailed: "Fehler",
     empty: "Noch kein Wissen. Fügen Sie oben die FAQ oder Richtlinien Ihres Shops hinzu, um den Assistenten zu trainieren.",
