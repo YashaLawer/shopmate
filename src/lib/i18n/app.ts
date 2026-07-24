@@ -39,6 +39,7 @@ export interface AppDict {
     widgetColor: string; saveSettings: string; saving: string;
     handoffTitle: string; handoffHint: string; handoffValuePh: string;
     handoffNone: string; handoffPhone: string; handoffLink: string; handoffRoadmap: string;
+    rateLimitLabel: string; rateLimitHint: string;
   };
   chat: { title: string; addKnowledgeHint: string; placeholder: string; error: string };
   kb: {
@@ -116,6 +117,7 @@ const en: AppDict = {
     systemInstr: "System instructions", optional: "(optional)", systemPh: "e.g. You are the support agent for Acme Store. Be friendly and concise. Only answer using the store's knowledge; if unsure, suggest emailing support@acme.com.",
     widgetColor: "Widget color", saveSettings: "Save settings", saving: "Saving…",
     handoffTitle: "Contact support", handoffHint: "Shown as a button in the widget so customers can reach your support directly. Leave empty to hide.", handoffValuePh: "e.g. support@store.com, +1 555 000 1234, or a link", handoffNone: "Off", handoffPhone: "Phone", handoffLink: "Website link", handoffRoadmap: "Live chat with a real agent inside the widget is on our roadmap.",
+    rateLimitLabel: "Daily message limit per visitor", rateLimitHint: "Max messages one person (per IP) can send to this bot per day — protects against spam. Leave empty for the default (40).",
   },
   chat: { title: "Test your assistant", addKnowledgeHint: "Add knowledge below for grounded answers", placeholder: "Ask something a customer would ask…", error: "Sorry — something went wrong. Please try again." },
   kb: {
@@ -193,6 +195,7 @@ const ru: AppDict = {
     systemInstr: "Системные инструкции", optional: "(необязательно)", systemPh: "Напр.: Ты — агент поддержки магазина Acme. Отвечай дружелюбно и кратко. Используй только знания магазина; если не уверен — предложи написать на support@acme.com.",
     widgetColor: "Цвет виджета", saveSettings: "Сохранить настройки", saving: "Сохраняем…",
     handoffTitle: "Связаться с поддержкой", handoffHint: "Показывается кнопкой в виджете, чтобы покупатель мог написать вашей поддержке напрямую. Пусто — кнопки нет.", handoffValuePh: "напр. support@store.com, +7 900 000-00-00 или ссылка", handoffNone: "Выкл", handoffPhone: "Телефон", handoffLink: "Ссылка на сайт", handoffRoadmap: "Живой чат с оператором прямо в виджете — в наших планах.",
+    rateLimitLabel: "Дневной лимит сообщений с одного посетителя", rateLimitHint: "Сколько сообщений один человек (по IP) может отправить боту за сутки — защита от спама. Пусто — по умолчанию (40).",
   },
   chat: { title: "Протестируйте ассистента", addKnowledgeHint: "Добавьте знания ниже, чтобы ответы были по делу", placeholder: "Спросите то, что спросил бы покупатель…", error: "Извините, что-то пошло не так. Попробуйте ещё раз." },
   kb: {
@@ -270,6 +273,7 @@ const fr: AppDict = {
     systemInstr: "Instructions système", optional: "(facultatif)", systemPh: "Ex. : Vous êtes l'agent de support d'Acme Store. Soyez amical et concis. Répondez uniquement à partir des connaissances de la boutique ; en cas de doute, proposez d'écrire à support@acme.com.",
     widgetColor: "Couleur du widget", saveSettings: "Enregistrer", saving: "Enregistrement…",
     handoffTitle: "Contacter le support", handoffHint: "Affiché comme un bouton dans le widget pour que les clients contactent votre support directement. Laissez vide pour masquer.", handoffValuePh: "ex. support@store.com, +33 6 00 00 00 00 ou un lien", handoffNone: "Désactivé", handoffPhone: "Téléphone", handoffLink: "Lien du site", handoffRoadmap: "Le chat en direct avec un agent dans le widget est prévu dans notre feuille de route.",
+    rateLimitLabel: "Limite quotidienne de messages par visiteur", rateLimitHint: "Nombre maximum de messages qu'une personne (par IP) peut envoyer par jour — protège du spam. Vide = valeur par défaut (40).",
   },
   chat: { title: "Testez votre assistant", addKnowledgeHint: "Ajoutez des connaissances ci-dessous pour des réponses fondées", placeholder: "Posez une question que poserait un client…", error: "Désolé, une erreur s'est produite. Veuillez réessayer." },
   kb: {
@@ -347,6 +351,7 @@ const es: AppDict = {
     systemInstr: "Instrucciones del sistema", optional: "(opcional)", systemPh: "Ej.: Eres el agente de soporte de Acme Store. Sé amable y conciso. Responde solo con el conocimiento de la tienda; si no estás seguro, sugiere escribir a support@acme.com.",
     widgetColor: "Color del widget", saveSettings: "Guardar ajustes", saving: "Guardando…",
     handoffTitle: "Contactar con soporte", handoffHint: "Se muestra como un botón en el widget para que los clientes contacten con tu soporte directamente. Déjalo vacío para ocultarlo.", handoffValuePh: "p. ej. support@store.com, +34 600 000 000 o un enlace", handoffNone: "Desactivado", handoffPhone: "Teléfono", handoffLink: "Enlace del sitio", handoffRoadmap: "El chat en vivo con un agente dentro del widget está en nuestra hoja de ruta.",
+    rateLimitLabel: "Límite diario de mensajes por visitante", rateLimitHint: "Máximo de mensajes que una persona (por IP) puede enviar al día — protege del spam. Vacío = valor por defecto (40).",
   },
   chat: { title: "Prueba tu asistente", addKnowledgeHint: "Añade conocimiento abajo para respuestas fundamentadas", placeholder: "Pregunta lo que preguntaría un cliente…", error: "Lo sentimos, algo salió mal. Inténtalo de nuevo." },
   kb: {
@@ -424,6 +429,7 @@ const de: AppDict = {
     systemInstr: "System-Anweisungen", optional: "(optional)", systemPh: "z. B.: Sie sind der Support-Agent von Acme Store. Seien Sie freundlich und knapp. Antworten Sie nur aus dem Wissen des Shops; im Zweifel bitten Sie um eine E-Mail an support@acme.com.",
     widgetColor: "Widget-Farbe", saveSettings: "Speichern", saving: "Wird gespeichert…",
     handoffTitle: "Support kontaktieren", handoffHint: "Wird als Button im Widget angezeigt, damit Kunden Ihren Support direkt erreichen. Leer lassen, um ihn auszublenden.", handoffValuePh: "z. B. support@store.com, +49 170 0000000 oder ein Link", handoffNone: "Aus", handoffPhone: "Telefon", handoffLink: "Website-Link", handoffRoadmap: "Live-Chat mit einem echten Agenten im Widget ist auf unserer Roadmap.",
+    rateLimitLabel: "Tägliches Nachrichtenlimit pro Besucher", rateLimitHint: "Wie viele Nachrichten eine Person (pro IP) pro Tag senden darf — schützt vor Spam. Leer = Standard (40).",
   },
   chat: { title: "Assistenten testen", addKnowledgeHint: "Fügen Sie unten Wissen hinzu für fundierte Antworten", placeholder: "Fragen Sie etwas, das ein Kunde fragen würde…", error: "Entschuldigung, etwas ist schiefgelaufen. Bitte versuchen Sie es erneut." },
   kb: {

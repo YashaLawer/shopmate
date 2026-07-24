@@ -50,6 +50,14 @@ export async function updateChatbot(formData: FormData) {
   const handoffValue = String(formData.get("handoff_value") || "").trim();
   const handoffType = String(formData.get("handoff_type") || "email");
 
+  // Per-IP daily message cap (empty = system default). Clamp to a sane range.
+  const rawLimit = String(formData.get("daily_ip_limit") || "").trim();
+  let daily_ip_limit: number | null = null;
+  if (rawLimit) {
+    const n = parseInt(rawLimit, 10);
+    if (Number.isFinite(n)) daily_ip_limit = Math.min(2000, Math.max(5, n));
+  }
+
   const supabase = await createClient();
   await supabase
     .from("chatbots")
@@ -57,13 +65,14 @@ export async function updateChatbot(formData: FormData) {
     .eq("id", id)
     .eq("user_id", userId);
 
-  // Handoff columns are optional (added by a migration). Save them separately so
-  // core settings still persist even if that migration hasn't been run yet.
+  // These columns are optional (added by migrations). Save them separately so
+  // core settings still persist even if a migration hasn't been run yet.
   await supabase
     .from("chatbots")
     .update({
       handoff_type: handoffValue ? handoffType : null,
       handoff_value: handoffValue || null,
+      daily_ip_limit,
     })
     .eq("id", id)
     .eq("user_id", userId);

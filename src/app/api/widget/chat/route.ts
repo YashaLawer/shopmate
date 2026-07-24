@@ -111,14 +111,18 @@ export async function POST(req: NextRequest) {
   }
 
   // Per-IP daily cap: one visitor can't monopolize the bot or slowly eat the
-  // owner's monthly allowance. Uses the (chatbot_id, ip, created_at) index.
+  // owner's monthly allowance. The owner can override the default in settings.
+  const dailyCap =
+    bot.daily_ip_limit && bot.daily_ip_limit > 0
+      ? bot.daily_ip_limit
+      : RATE_LIMIT_PER_DAY;
   const { count: dayHits } = await admin
     .from("messages")
     .select("id", { count: "exact", head: true })
     .eq("chatbot_id", bot.id)
     .eq("ip", ipHash)
     .gte("created_at", new Date(Date.now() - 86_400_000).toISOString());
-  if ((dayHits ?? 0) >= RATE_LIMIT_PER_DAY) {
+  if ((dayHits ?? 0) >= dailyCap) {
     return new Response(
       "You've reached today's message limit for this assistant. Please try again tomorrow or contact the store directly.",
       {

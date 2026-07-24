@@ -177,6 +177,9 @@ alter table public.profiles add column if not exists locale text;        -- owne
 alter table public.chatbots add column if not exists handoff_type text;  -- email | whatsapp | telegram | phone | link
 alter table public.chatbots add column if not exists handoff_value text; -- the address / number / url
 
+-- === Owner-configurable per-IP daily message cap (null = system default) ===
+alter table public.chatbots add column if not exists daily_ip_limit int;
+
 -- === Payment idempotency (top-up credits applied exactly once per session) ===
 create table if not exists public.processed_payments (
   session_id text primary key,

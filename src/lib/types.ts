@@ -24,6 +24,7 @@ export interface Chatbot {
   allowed_domains?: string[];
   handoff_type?: string | null;
   handoff_value?: string | null;
+  daily_ip_limit?: number | null;
   created_at: string;
 }
 

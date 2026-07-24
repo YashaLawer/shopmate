@@ -166,6 +166,22 @@ export default async function ChatbotDetailPage({
           strings={t}
         />
 
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">
+            {t.rateLimitLabel}
+          </label>
+          <input
+            name="daily_ip_limit"
+            type="number"
+            min={5}
+            max={2000}
+            defaultValue={bot.daily_ip_limit ?? ""}
+            placeholder="40"
+            className={inputClass + " max-w-[10rem]"}
+          />
+          <p className="mt-1 text-xs text-slate-400">{t.rateLimitHint}</p>
+        </div>
+
         <div className="flex justify-end">
           <SubmitButton pendingText={t.saving}>{t.saveSettings}</SubmitButton>
         </div>
