@@ -73,6 +73,7 @@ export interface AppDict {
     title: string; subtitleTpl: string;
     conversations: string; questionsMonth: string; planLimit: string;
     last7days: string; recentQuestions: string; noQuestions: string;
+    topQuestions: string;
   };
 }
 
@@ -148,7 +149,7 @@ const en: AppDict = {
     proFeature: "Analytics is a Pro feature", proDesc: "See every question your customers ask, spot gaps in your help content, and track how much support your assistant handles.", upgradePro: "Upgrade to Pro",
     title: "Analytics", subtitleTpl: "What customers are asking {name}.",
     conversations: "Conversations", questionsMonth: "Questions this month", planLimit: "Plan limit",
-    last7days: "Questions · last 7 days", recentQuestions: "Recent questions", noQuestions: "No customer questions yet. Once people chat with your widget, their questions show up here.",
+    last7days: "Questions · last 7 days", recentQuestions: "Recent questions", noQuestions: "No customer questions yet. Once people chat with your widget, their questions show up here.", topQuestions: "Top questions",
   },
 };
 
@@ -224,7 +225,7 @@ const ru: AppDict = {
     proFeature: "Аналитика — фича тарифа Pro", proDesc: "Смотрите каждый вопрос покупателей, находите пробелы в справке и отслеживайте нагрузку на ассистента.", upgradePro: "Перейти на Pro",
     title: "Аналитика", subtitleTpl: "О чём покупатели спрашивают {name}.",
     conversations: "Диалоги", questionsMonth: "Вопросов за месяц", planLimit: "Лимит тарифа",
-    last7days: "Вопросы · за 7 дней", recentQuestions: "Недавние вопросы", noQuestions: "Вопросов покупателей пока нет. Как только начнут писать в виджет, вопросы появятся здесь.",
+    last7days: "Вопросы · за 7 дней", recentQuestions: "Недавние вопросы", noQuestions: "Вопросов покупателей пока нет. Как только начнут писать в виджет, вопросы появятся здесь.", topQuestions: "Частые вопросы",
   },
 };
 
@@ -300,7 +301,7 @@ const fr: AppDict = {
     proFeature: "Les statistiques sont une fonction Pro", proDesc: "Voyez chaque question de vos clients, repérez les lacunes de votre aide et suivez la charge gérée par l'assistant.", upgradePro: "Passer à Pro",
     title: "Statistiques", subtitleTpl: "Ce que les clients demandent à {name}.",
     conversations: "Conversations", questionsMonth: "Questions ce mois-ci", planLimit: "Limite de l'offre",
-    last7days: "Questions · 7 derniers jours", recentQuestions: "Questions récentes", noQuestions: "Pas encore de questions. Dès que des visiteurs utilisent votre widget, leurs questions apparaîtront ici.",
+    last7days: "Questions · 7 derniers jours", recentQuestions: "Questions récentes", noQuestions: "Pas encore de questions. Dès que des visiteurs utilisent votre widget, leurs questions apparaîtront ici.", topQuestions: "Questions fréquentes",
   },
 };
 
@@ -376,7 +377,7 @@ const es: AppDict = {
     proFeature: "Las analíticas son una función Pro", proDesc: "Ve cada pregunta de tus clientes, detecta huecos en tu ayuda y controla cuánto soporte gestiona tu asistente.", upgradePro: "Subir a Pro",
     title: "Analíticas", subtitleTpl: "Qué preguntan los clientes a {name}.",
     conversations: "Conversaciones", questionsMonth: "Preguntas este mes", planLimit: "Límite del plan",
-    last7days: "Preguntas · últimos 7 días", recentQuestions: "Preguntas recientes", noQuestions: "Aún no hay preguntas de clientes. Cuando usen tu widget, sus preguntas aparecerán aquí.",
+    last7days: "Preguntas · últimos 7 días", recentQuestions: "Preguntas recientes", noQuestions: "Aún no hay preguntas de clientes. Cuando usen tu widget, sus preguntas aparecerán aquí.", topQuestions: "Preguntas frecuentes",
   },
 };
 
@@ -452,7 +453,7 @@ const de: AppDict = {
     proFeature: "Statistiken sind eine Pro-Funktion", proDesc: "Sehen Sie jede Kundenfrage, erkennen Sie Lücken in Ihrer Hilfe und verfolgen Sie, wie viel Support Ihr Assistent übernimmt.", upgradePro: "Auf Pro upgraden",
     title: "Statistiken", subtitleTpl: "Was Kunden {name} fragen.",
     conversations: "Unterhaltungen", questionsMonth: "Fragen diesen Monat", planLimit: "Plan-Limit",
-    last7days: "Fragen · letzte 7 Tage", recentQuestions: "Neueste Fragen", noQuestions: "Noch keine Kundenfragen. Sobald Besucher Ihr Widget nutzen, erscheinen ihre Fragen hier.",
+    last7days: "Fragen · letzte 7 Tage", recentQuestions: "Neueste Fragen", noQuestions: "Noch keine Kundenfragen. Sobald Besucher Ihr Widget nutzen, erscheinen ihre Fragen hier.", topQuestions: "Häufige Fragen",
   },
 };
 

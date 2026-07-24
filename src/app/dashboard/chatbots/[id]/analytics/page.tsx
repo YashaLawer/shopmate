@@ -100,6 +100,26 @@ export default async function AnalyticsPage({
   const recent = (recentRes.data as { content: string; created_at: string }[]) ?? [];
   const week = (weekRes.data as { created_at: string }[]) ?? [];
 
+  // Most-asked questions this month (grouped by normalized text).
+  const { data: monthMsgs } = await supabase
+    .from("messages")
+    .select("content")
+    .eq("chatbot_id", id)
+    .eq("role", "user")
+    .gte("created_at", startOfMonthISO())
+    .limit(500);
+  const counts = new Map<string, { text: string; n: number }>();
+  for (const m of (monthMsgs as { content: string }[]) ?? []) {
+    const key = m.content.trim().toLowerCase().replace(/\s+/g, " ").replace(/[?!.…]+$/, "");
+    if (!key) continue;
+    const e = counts.get(key);
+    if (e) e.n++;
+    else counts.set(key, { text: m.content.trim(), n: 1 });
+  }
+  const topQuestions = [...counts.values()]
+    .sort((a, b) => b.n - a.n)
+    .slice(0, 6);
+
   // Build a last-7-days histogram.
   const days: { label: string; count: number }[] = [];
   for (let i = 6; i >= 0; i--) {
@@ -144,6 +164,26 @@ export default async function AnalyticsPage({
           ))}
         </div>
       </div>
+
+      {/* Top questions */}
+      {topQuestions.length > 0 && (
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-sm font-semibold text-slate-700">{an.topQuestions}</h2>
+          <ul className="mt-3 space-y-2.5">
+            {topQuestions.map((q, i) => (
+              <li key={i} className="flex items-center gap-3">
+                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-slate-100 text-xs font-semibold text-slate-500">
+                  {i + 1}
+                </span>
+                <span className="flex-1 text-sm text-slate-700">{q.text}</span>
+                <span className="shrink-0 rounded-full bg-brand/10 px-2 py-0.5 text-xs font-semibold text-brand">
+                  ×{q.n}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Recent questions */}
       <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
