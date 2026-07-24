@@ -6,11 +6,13 @@ import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import { getPlan } from "@/lib/plans";
 import { countChatbots } from "@/lib/usage";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { botDefaults } from "@/lib/botDefaults";
 
 export async function createChatbot(formData: FormData) {
   const { userId, profile } = await requireUser();
-  const name =
-    String(formData.get("name") || "").trim() || "My store assistant";
+  const defaults = botDefaults(await getLocale());
+  const name = String(formData.get("name") || "").trim() || defaults.name;
 
   const plan = getPlan(profile.plan);
   const count = await countChatbots(userId);
@@ -21,7 +23,7 @@ export async function createChatbot(formData: FormData) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("chatbots")
-    .insert({ user_id: userId, name })
+    .insert({ user_id: userId, name, welcome_message: defaults.welcome })
     .select("id")
     .single();
 
@@ -35,10 +37,10 @@ export async function createChatbot(formData: FormData) {
 export async function updateChatbot(formData: FormData) {
   const { userId } = await requireUser();
   const id = String(formData.get("id"));
-  const name = String(formData.get("name") || "").trim() || "My store assistant";
+  const defaults = botDefaults(await getLocale());
+  const name = String(formData.get("name") || "").trim() || defaults.name;
   const welcome_message =
-    String(formData.get("welcome_message") || "").trim() ||
-    "Hi! How can I help you with your order today?";
+    String(formData.get("welcome_message") || "").trim() || defaults.welcome;
   const widget_color = String(formData.get("widget_color") || "#4f46e5");
   const system_prompt =
     String(formData.get("system_prompt") || "").trim() || null;
