@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Globe } from "lucide-react";
 import { LOCALES, type Locale } from "@/lib/i18n/site";
 
 // Animated language dropdown: sets a `locale` cookie and refreshes so server
@@ -51,8 +51,8 @@ export function LanguageSwitcher({
         aria-label="Language"
         className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
       >
-        <span className="text-base leading-none">{cur.flag}</span>
-        <span className="hidden sm:inline">{cur.label}</span>
+        <Globe size={15} className="text-slate-400" />
+        <span>{cur.label}</span>
         <ChevronDown
           size={14}
           className={"text-slate-400 transition-transform duration-200 " + (open ? "rotate-180" : "")}
@@ -88,7 +88,6 @@ export function LanguageSwitcher({
                     : "text-slate-600 hover:bg-slate-50")
                 }
               >
-                <span className="text-base leading-none">{l.flag}</span>
                 <span className="flex-1 text-left">{l.label}</span>
                 {active && <Check size={15} className="text-brand" />}
               </button>
