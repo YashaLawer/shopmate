@@ -58,6 +58,9 @@ export function KnowledgeManager({
     null,
   );
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<{ id: string; title: string } | null>(
+    null,
+  );
 
   async function openDoc(id: string) {
     setLoadingId(id);
@@ -217,17 +220,15 @@ export function KnowledgeManager({
                     </p>
                   </div>
                 </button>
-                <form action={deleteDocument}>
-                  <input type="hidden" name="chatbot_id" value={chatbotId} />
-                  <input type="hidden" name="document_id" value={doc.id} />
-                  <button
-                    className="rounded-lg p-1.5 text-slate-300 transition hover:bg-red-50 hover:text-red-500"
-                    title="Remove"
-                    aria-label="Remove document"
-                  >
-                    <Trash2 size={15} />
-                  </button>
-                </form>
+                <button
+                  type="button"
+                  onClick={() => setDeleting({ id: doc.id, title: doc.title })}
+                  className="rounded-lg p-1.5 text-slate-300 transition hover:bg-red-50 hover:text-red-500"
+                  title={s.deleteYes}
+                  aria-label={s.deleteYes}
+                >
+                  <Trash2 size={15} />
+                </button>
               </div>
             );
           })
@@ -264,6 +265,42 @@ export function KnowledgeManager({
               ) : (
                 <p className="text-sm text-slate-400">{s.viewEmpty}</p>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deleting && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4"
+          onClick={() => setDeleting(null)}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-bold text-slate-900">{s.deleteTitle}</h3>
+            <p className="mt-3 text-sm text-slate-600">
+              {tpl(s.deleteBody, { title: deleting.title })}
+            </p>
+            <div className="mt-6 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setDeleting(null)}
+                className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                {s.deleteNo}
+              </button>
+              <form action={deleteDocument} onSubmit={() => setDeleting(null)}>
+                <input type="hidden" name="chatbot_id" value={chatbotId} />
+                <input type="hidden" name="document_id" value={deleting.id} />
+                <button
+                  type="submit"
+                  className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
+                >
+                  {s.deleteYes}
+                </button>
+              </form>
             </div>
           </div>
         </div>

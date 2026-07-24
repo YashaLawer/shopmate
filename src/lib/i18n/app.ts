@@ -45,6 +45,7 @@ export interface AppDict {
     charsTpl: string; statusReady: string; statusProcessing: string; statusFailed: string;
     empty: string;
     viewHint: string; viewLoading: string; viewEmpty: string; viewClose: string;
+    deleteTitle: string; deleteBody: string; deleteYes: string; deleteNo: string;
   };
   install: {
     title: string; subtitle: string; preview: string; platform: string;
@@ -117,6 +118,7 @@ const en: AppDict = {
     charsTpl: "{n} chars", statusReady: "ready", statusProcessing: "processing", statusFailed: "failed",
     empty: "No knowledge yet. Add your store's FAQ or policies above to train your assistant.",
     viewHint: "Click to view what's stored", viewLoading: "Loading…", viewEmpty: "No text stored for this source.", viewClose: "Close",
+    deleteTitle: "Delete this source?", deleteBody: "“{title}” will be removed from your assistant's knowledge. This can't be undone.", deleteYes: "Delete", deleteNo: "Cancel",
   },
   install: {
     title: "Install on your site", subtitle: "One line of code adds the chat bubble to your store. Pick your platform for exact steps.", preview: "Preview on a site", platform: "Platform",
@@ -189,6 +191,7 @@ const ru: AppDict = {
     charsTpl: "{n} симв.", statusReady: "готово", statusProcessing: "обработка", statusFailed: "ошибка",
     empty: "Знаний пока нет. Добавьте выше FAQ или правила магазина, чтобы обучить ассистента.",
     viewHint: "Нажмите, чтобы посмотреть содержимое", viewLoading: "Загрузка…", viewEmpty: "Для этого источника нет сохранённого текста.", viewClose: "Закрыть",
+    deleteTitle: "Удалить этот источник?", deleteBody: "«{title}» будет удалён из знаний ассистента. Это нельзя отменить.", deleteYes: "Удалить", deleteNo: "Отмена",
   },
   install: {
     title: "Установка на сайт", subtitle: "Одна строка кода добавляет чат-пузырь на ваш магазин. Выберите платформу для точных шагов.", preview: "Превью на сайте", platform: "Платформа",
@@ -261,6 +264,7 @@ const fr: AppDict = {
     charsTpl: "{n} caractères", statusReady: "prêt", statusProcessing: "traitement", statusFailed: "échec",
     empty: "Aucune connaissance pour l'instant. Ajoutez la FAQ ou les politiques de votre boutique ci-dessus pour entraîner l'assistant.",
     viewHint: "Cliquez pour voir le contenu", viewLoading: "Chargement…", viewEmpty: "Aucun texte enregistré pour cette source.", viewClose: "Fermer",
+    deleteTitle: "Supprimer cette source ?", deleteBody: "« {title} » sera retiré des connaissances de l'assistant. Action irréversible.", deleteYes: "Supprimer", deleteNo: "Annuler",
   },
   install: {
     title: "Installer sur votre site", subtitle: "Une ligne de code ajoute la bulle de chat à votre boutique. Choisissez votre plateforme pour les étapes exactes.", preview: "Aperçu sur un site", platform: "Plateforme",
@@ -333,6 +337,7 @@ const es: AppDict = {
     charsTpl: "{n} caracteres", statusReady: "listo", statusProcessing: "procesando", statusFailed: "error",
     empty: "Aún no hay conocimiento. Añade arriba la FAQ o políticas de tu tienda para entrenar al asistente.",
     viewHint: "Haz clic para ver el contenido", viewLoading: "Cargando…", viewEmpty: "No hay texto guardado para esta fuente.", viewClose: "Cerrar",
+    deleteTitle: "¿Eliminar esta fuente?", deleteBody: "«{title}» se eliminará del conocimiento del asistente. No se puede deshacer.", deleteYes: "Eliminar", deleteNo: "Cancelar",
   },
   install: {
     title: "Instalar en tu sitio", subtitle: "Una línea de código añade la burbuja de chat a tu tienda. Elige tu plataforma para los pasos exactos.", preview: "Vista previa en un sitio", platform: "Plataforma",
@@ -405,6 +410,7 @@ const de: AppDict = {
     charsTpl: "{n} Zeichen", statusReady: "bereit", statusProcessing: "Verarbeitung", statusFailed: "Fehler",
     empty: "Noch kein Wissen. Fügen Sie oben die FAQ oder Richtlinien Ihres Shops hinzu, um den Assistenten zu trainieren.",
     viewHint: "Zum Anzeigen des Inhalts klicken", viewLoading: "Wird geladen…", viewEmpty: "Für diese Quelle ist kein Text gespeichert.", viewClose: "Schließen",
+    deleteTitle: "Diese Quelle löschen?", deleteBody: "„{title}“ wird aus dem Wissen des Assistenten entfernt. Kann nicht rückgängig gemacht werden.", deleteYes: "Löschen", deleteNo: "Abbrechen",
   },
   install: {
     title: "Auf Ihrer Website installieren", subtitle: "Eine Zeile Code fügt die Chat-Blase zu Ihrem Shop hinzu. Wählen Sie Ihre Plattform für genaue Schritte.", preview: "Vorschau auf einer Website", platform: "Plattform",
