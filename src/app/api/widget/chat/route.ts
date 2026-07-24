@@ -3,7 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { retrieveContext, buildMessages, streamChat } from "@/lib/rag";
 import { getPlan } from "@/lib/plans";
 import { activeTopup, currentPeriod } from "@/lib/limits";
-import { hashIp, getClientIp } from "@/lib/security";
+import { hashIp, getClientIp, normalizeHost, hostAllowed } from "@/lib/security";
 import { sendUsageWarningEmail } from "@/lib/email";
 import { corsHeaders, startOfMonthISO } from "@/lib/cors";
 
@@ -43,6 +43,29 @@ export async function POST(req: NextRequest) {
     return new Response("Unknown chatbot", { status: 404, headers: corsHeaders });
   }
   const bot = botData as Chatbot;
+
+  // Domain allow-list: if the owner restricted the widget to specific domains,
+  // enforce it on the money-spending endpoint too (not just the iframe render),
+  // so a stolen public_key can't be embedded on another site to drain quota.
+  const allowed = bot.allowed_domains ?? [];
+  if (allowed.length > 0) {
+    const originHeader = req.headers.get("origin") ?? req.headers.get("referer");
+    const appHost = normalizeHost(
+      req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? "",
+    );
+    let reqHost: string | null = null;
+    try {
+      if (originHeader) reqHost = normalizeHost(new URL(originHeader).host);
+    } catch {
+      /* malformed origin */
+    }
+    if (reqHost && reqHost !== appHost && !hostAllowed(reqHost, allowed)) {
+      return new Response("This assistant isn't enabled for this domain.", {
+        status: 403,
+        headers: corsHeaders,
+      });
+    }
+  }
 
   // Per-IP rate limit: cap burst abuse before doing any expensive work.
   const ipHash = hashIp(getClientIp(req.headers));

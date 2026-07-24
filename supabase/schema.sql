@@ -177,5 +177,11 @@ alter table public.profiles add column if not exists locale text;        -- owne
 alter table public.chatbots add column if not exists handoff_type text;  -- email | whatsapp | telegram | phone | link
 alter table public.chatbots add column if not exists handoff_value text; -- the address / number / url
 
+-- === Payment idempotency (top-up credits applied exactly once per session) ===
+create table if not exists public.processed_payments (
+  session_id text primary key,
+  created_at timestamptz not null default now()
+);
+
 -- NOTE: all public/widget writes (chunks during ingestion, conversations & messages
 -- during chat) go through the server using the service-role key, which bypasses RLS.
