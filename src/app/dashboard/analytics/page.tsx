@@ -82,6 +82,17 @@ export default async function GlobalAnalyticsPage() {
   const maxBot = Math.max(1, ...perBot.map((b) => b.count));
   const recent = messages.slice(0, 12);
 
+  // Most-asked questions this month (grouped by normalized text).
+  const counts = new Map<string, { text: string; n: number }>();
+  for (const m of messages) {
+    const key = m.content.trim().toLowerCase().replace(/\s+/g, " ").replace(/[?!.…]+$/, "");
+    if (!key) continue;
+    const e = counts.get(key);
+    if (e) e.n++;
+    else counts.set(key, { text: m.content.trim(), n: 1 });
+  }
+  const topQuestions = [...counts.values()].sort((a, b) => b.n - a.n).slice(0, 6);
+
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="text-2xl font-bold text-slate-900">{g.title}</h1>
@@ -121,6 +132,26 @@ export default async function GlobalAnalyticsPage() {
           ))}
         </div>
       </div>
+
+      {/* Top questions across bots */}
+      {topQuestions.length > 0 && (
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-sm font-semibold text-slate-700">{an.topQuestions}</h2>
+          <ul className="mt-3 space-y-2.5">
+            {topQuestions.map((q, i) => (
+              <li key={i} className="flex items-center gap-3">
+                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-slate-100 text-xs font-semibold text-slate-500">
+                  {i + 1}
+                </span>
+                <span className="flex-1 text-sm text-slate-700">{q.text}</span>
+                <span className="shrink-0 rounded-full bg-brand/10 px-2 py-0.5 text-xs font-semibold text-brand">
+                  ×{q.n}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Recent questions across bots */}
       <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
