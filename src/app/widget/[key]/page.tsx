@@ -64,9 +64,34 @@ export default async function WidgetPage({
       welcome={bot.welcome_message}
       accent={bot.widget_color}
       showBranding={showBranding}
+      handoffUrl={handoffHref(bot.handoff_type, bot.handoff_value)}
       lang={lang}
     />
   );
+}
+
+// Turn the owner's chosen support channel into a clickable link.
+function handoffHref(
+  type: string | null | undefined,
+  value: string | null | undefined,
+): string | null {
+  const v = (value ?? "").trim();
+  if (!v) return null;
+  const isUrl = /^https?:\/\//i.test(v);
+  switch (type) {
+    case "email":
+      return `mailto:${v}`;
+    case "phone":
+      return `tel:${v}`;
+    case "whatsapp":
+      return isUrl ? v : `https://wa.me/${v.replace(/\D/g, "")}`;
+    case "telegram":
+      return isUrl ? v : `https://t.me/${v.replace(/^@/, "")}`;
+    case "link":
+      return isUrl ? v : `https://${v}`;
+    default:
+      return isUrl ? v : `mailto:${v}`;
+  }
 }
 
 function NotAuthorized({ allowed }: { allowed: string[] }) {

@@ -150,6 +150,33 @@ export default async function ChatbotDetailPage({
           />
         </div>
 
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">
+            {t.handoffTitle}
+          </label>
+          <div className="flex gap-2">
+            <select
+              name="handoff_type"
+              defaultValue={bot.handoff_type ?? "email"}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            >
+              <option value="email">Email</option>
+              <option value="whatsapp">WhatsApp</option>
+              <option value="telegram">Telegram</option>
+              <option value="phone">{t.handoffPhone}</option>
+              <option value="link">{t.handoffLink}</option>
+            </select>
+            <input
+              name="handoff_value"
+              defaultValue={bot.handoff_value ?? ""}
+              placeholder={t.handoffValuePh}
+              className={inputClass + " flex-1"}
+            />
+          </div>
+          <p className="mt-1 text-xs text-slate-400">{t.handoffHint}</p>
+          <p className="mt-1 text-xs text-slate-400">🚧 {t.handoffRoadmap}</p>
+        </div>
+
         <div className="flex justify-end">
           <SubmitButton pendingText={t.saving}>{t.saveSettings}</SubmitButton>
         </div>

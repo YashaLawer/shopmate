@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Send } from "lucide-react";
+import { Send, UserRound } from "lucide-react";
 import { WIDGET_STRINGS, type Lang } from "@/lib/i18n/widget";
 import type { ChatMessage } from "@/lib/types";
 
@@ -12,6 +12,7 @@ export function WidgetChat({
   welcome,
   accent,
   showBranding,
+  handoffUrl,
   lang,
 }: {
   publicKey: string;
@@ -19,6 +20,7 @@ export function WidgetChat({
   welcome: string;
   accent: string;
   showBranding: boolean;
+  handoffUrl?: string | null;
   lang: Lang;
 }) {
   const t = WIDGET_STRINGS[lang] ?? WIDGET_STRINGS.en;
@@ -97,6 +99,17 @@ export function WidgetChat({
           <p className="text-sm font-semibold">{name}</p>
           <p className="text-xs text-white/80">{t.replyInstantly}</p>
         </div>
+        {handoffUrl && (
+          <a
+            href={handoffUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="ml-auto flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-white transition hover:bg-white/30"
+          >
+            <UserRound size={13} />
+            {t.talkToHuman}
+          </a>
+        )}
       </div>
 
       {/* Messages */}

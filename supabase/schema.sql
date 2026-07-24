@@ -173,5 +173,9 @@ create index if not exists messages_chatbot_ip_created_idx on public.messages(ch
 alter table public.profiles add column if not exists warned_period text; -- 'YYYY-MM' we sent the 80%-usage email for
 alter table public.profiles add column if not exists locale text;        -- owner UI language, for localized emails
 
+-- === Human handoff (widget "Talk to a human" button) ===
+alter table public.chatbots add column if not exists handoff_type text;  -- email | whatsapp | telegram | phone | link
+alter table public.chatbots add column if not exists handoff_value text; -- the address / number / url
+
 -- NOTE: all public/widget writes (chunks during ingestion, conversations & messages
 -- during chat) go through the server using the service-role key, which bypasses RLS.

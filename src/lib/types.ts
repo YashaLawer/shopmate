@@ -22,6 +22,8 @@ export interface Chatbot {
   widget_color: string;
   show_branding: boolean;
   allowed_domains?: string[];
+  handoff_type?: string | null;
+  handoff_value?: string | null;
   created_at: string;
 }
 
