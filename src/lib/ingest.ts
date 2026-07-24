@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { embed, chunkText, openai, CHAT_MODEL } from "@/lib/openai";
+import { assertPublicUrl } from "@/lib/security";
 
 // Strip HTML down to readable plain text (good enough for store help pages).
 export function extractTextFromHtml(html: string): string {
@@ -29,13 +30,21 @@ export function extractTextFromHtml(html: string): string {
 export async function fetchUrlText(
   url: string,
 ): Promise<{ title: string; text: string }> {
-  const res = await fetch(url, {
+  const safe = await assertPublicUrl(url); // SSRF guard (blocks localhost/private)
+  const res = await fetch(safe, {
     headers: { "User-Agent": "Mozilla/5.0 (compatible; ShopmateBot/1.0)" },
     redirect: "follow",
   });
   if (!res.ok) throw new Error(`Failed to fetch page (HTTP ${res.status}).`);
 
-  const html = await res.text();
+  const ctype = res.headers.get("content-type") ?? "";
+  if (ctype && !/(text\/html|text\/plain|application\/xhtml)/i.test(ctype)) {
+    throw new Error("That link isn't a readable web page.");
+  }
+  const len = Number(res.headers.get("content-length") ?? "0");
+  if (len && len > 5_000_000) throw new Error("That page is too large to import.");
+
+  const html = (await res.text()).slice(0, 5_000_000);
   const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
   const title = titleMatch
     ? extractTextFromHtml(titleMatch[1]).slice(0, 120)

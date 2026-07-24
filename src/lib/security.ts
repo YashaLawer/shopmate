@@ -1,4 +1,6 @@
 import crypto from "node:crypto";
+import net from "node:net";
+import { lookup } from "node:dns/promises";
 
 // Hash an IP so we can rate-limit without storing raw IPs.
 export function hashIp(ip: string): string {
@@ -32,6 +34,65 @@ export function parseDomains(text: string): string[] {
         .filter((d) => d && d.includes(".")),
     ),
   ).slice(0, 20);
+}
+
+// Is an IP address private / loopback / link-local (SSRF targets)?
+function isPrivateIp(ip: string): boolean {
+  if (net.isIPv4(ip)) {
+    const [a, b] = ip.split(".").map(Number);
+    return (
+      a === 0 ||
+      a === 10 ||
+      a === 127 ||
+      (a === 169 && b === 254) || // link-local (cloud metadata)
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 168)
+    );
+  }
+  const low = ip.toLowerCase();
+  return (
+    low === "::1" ||
+    low === "::" ||
+    low.startsWith("fe80") || // link-local
+    low.startsWith("fc") || // unique-local
+    low.startsWith("fd")
+  );
+}
+
+// Validate a user-supplied URL before the server fetches it, to block SSRF to
+// localhost / cloud metadata / private networks. Resolves the host and rejects
+// private IPs. Returns the parsed URL or throws.
+export async function assertPublicUrl(urlStr: string): Promise<URL> {
+  let u: URL;
+  try {
+    u = new URL(urlStr);
+  } catch {
+    throw new Error("Enter a valid URL.");
+  }
+  if (u.protocol !== "http:" && u.protocol !== "https:") {
+    throw new Error("Only http and https URLs are supported.");
+  }
+  const host = u.hostname.toLowerCase();
+  if (
+    host === "localhost" ||
+    host.endsWith(".local") ||
+    host.endsWith(".internal") ||
+    (net.isIP(host) && isPrivateIp(host))
+  ) {
+    throw new Error("That address isn't allowed.");
+  }
+  if (!net.isIP(host)) {
+    try {
+      const records = await lookup(host, { all: true });
+      if (records.some((r) => isPrivateIp(r.address))) {
+        throw new Error("That address isn't allowed.");
+      }
+    } catch (e) {
+      if (e instanceof Error && e.message.includes("isn't allowed")) throw e;
+      throw new Error("Couldn't resolve that address.");
+    }
+  }
+  return u;
 }
 
 // Does `host` match any allowed domain (exact or subdomain)?

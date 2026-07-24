@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${appUrl}/dashboard/billing`);
   }
 
+  let updated = false;
   try {
     const stripe = getStripe();
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
@@ -78,10 +79,14 @@ export async function GET(req: NextRequest) {
           subscription_status: "active",
         })
         .eq("id", userId);
+      updated = true;
     }
   } catch {
     // Ignore — the webhook will reconcile if this fails.
   }
 
-  return NextResponse.redirect(`${appUrl}/dashboard/billing?success=1`);
+  // Only claim success when a payment actually completed and applied.
+  return NextResponse.redirect(
+    `${appUrl}/dashboard/billing${updated ? "?success=1" : ""}`,
+  );
 }

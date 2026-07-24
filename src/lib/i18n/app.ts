@@ -132,7 +132,7 @@ const en: AppDict = {
     copy: "Copy", copied: "Copied",
     checkTitle: "Check your installation", checkSubtitle: "Added the snippet? Enter your site URL and we'll confirm the widget is live.", checkPh: "yourstore.com", checkBtn: "Check", checking: "Checking…",
     security: "Security", allowedDomains: "Allowed domains", allowedHint: "(one per line — leave empty to allow any site)", domainsPh: "mystore.com",
-    domainsSaveHint: "The widget will only load on these domains — a stolen key is useless elsewhere.", saveDomains: "Save domains", saving: "Saving…",
+    domainsSaveHint: "Restrict where your widget can be embedded. Leave empty to allow any site.", saveDomains: "Save domains", saving: "Saving…",
     keyText: "Compromised key? Rotate it and re-paste the snippet.", regenerate: "Regenerate key", regenConfirm: "Generate a new key? Your current embed snippet will stop working until you replace it on your site.",
   },
   billing: {
@@ -208,7 +208,7 @@ const ru: AppDict = {
     copy: "Копировать", copied: "Скопировано",
     checkTitle: "Проверьте установку", checkSubtitle: "Вставили сниппет? Укажите адрес сайта — подтвердим, что виджет работает.", checkPh: "вашмагазин.ru", checkBtn: "Проверить", checking: "Проверяем…",
     security: "Безопасность", allowedDomains: "Разрешённые домены", allowedHint: "(по одному на строку — пусто = любой сайт)", domainsPh: "moymagazin.ru",
-    domainsSaveHint: "Виджет загрузится только на этих доменах — украденный ключ бесполезен где-то ещё.", saveDomains: "Сохранить домены", saving: "Сохраняем…",
+    domainsSaveHint: "Ограничьте, на каких доменах работает виджет. Пусто — разрешены любые сайты.", saveDomains: "Сохранить домены", saving: "Сохраняем…",
     keyText: "Ключ скомпрометирован? Смените его и вставьте сниппет заново.", regenerate: "Перегенерировать ключ", regenConfirm: "Сгенерировать новый ключ? Текущий сниппет перестанет работать, пока вы не замените его на сайте.",
   },
   billing: {
@@ -284,7 +284,7 @@ const fr: AppDict = {
     copy: "Copier", copied: "Copié",
     checkTitle: "Vérifier l'installation", checkSubtitle: "Snippet ajouté ? Saisissez l'URL de votre site et nous confirmerons que le widget est actif.", checkPh: "votreboutique.com", checkBtn: "Vérifier", checking: "Vérification…",
     security: "Sécurité", allowedDomains: "Domaines autorisés", allowedHint: "(un par ligne — vide = tout site)", domainsPh: "maboutique.com",
-    domainsSaveHint: "Le widget ne se chargera que sur ces domaines — une clé volée est inutile ailleurs.", saveDomains: "Enregistrer les domaines", saving: "Enregistrement…",
+    domainsSaveHint: "Limitez les domaines où votre widget peut être intégré. Vide = tous les sites.", saveDomains: "Enregistrer les domaines", saving: "Enregistrement…",
     keyText: "Clé compromise ? Régénérez-la et recollez le snippet.", regenerate: "Régénérer la clé", regenConfirm: "Générer une nouvelle clé ? Votre snippet actuel cessera de fonctionner jusqu'à ce que vous le remplaciez sur votre site.",
   },
   billing: {
@@ -360,7 +360,7 @@ const es: AppDict = {
     copy: "Copiar", copied: "Copiado",
     checkTitle: "Comprueba tu instalación", checkSubtitle: "¿Añadiste el snippet? Introduce la URL de tu sitio y confirmaremos que el widget está activo.", checkPh: "tutienda.com", checkBtn: "Comprobar", checking: "Comprobando…",
     security: "Seguridad", allowedDomains: "Dominios permitidos", allowedHint: "(uno por línea — vacío = cualquier sitio)", domainsPh: "mitienda.com",
-    domainsSaveHint: "El widget solo se cargará en estos dominios — una clave robada es inútil en otro sitio.", saveDomains: "Guardar dominios", saving: "Guardando…",
+    domainsSaveHint: "Restringe en qué dominios se puede insertar tu widget. Vacío = cualquier sitio.", saveDomains: "Guardar dominios", saving: "Guardando…",
     keyText: "¿Clave comprometida? Rótala y vuelve a pegar el snippet.", regenerate: "Regenerar clave", regenConfirm: "¿Generar una clave nueva? Tu snippet actual dejará de funcionar hasta que lo reemplaces en tu sitio.",
   },
   billing: {
@@ -436,7 +436,7 @@ const de: AppDict = {
     copy: "Kopieren", copied: "Kopiert",
     checkTitle: "Installation prüfen", checkSubtitle: "Snippet eingefügt? Geben Sie Ihre Website-URL ein und wir bestätigen, dass das Widget aktiv ist.", checkPh: "ihrshop.de", checkBtn: "Prüfen", checking: "Wird geprüft…",
     security: "Sicherheit", allowedDomains: "Erlaubte Domains", allowedHint: "(eine pro Zeile — leer = jede Website)", domainsPh: "meinshop.de",
-    domainsSaveHint: "Das Widget lädt nur auf diesen Domains — ein gestohlener Schlüssel ist anderswo nutzlos.", saveDomains: "Domains speichern", saving: "Wird gespeichert…",
+    domainsSaveHint: "Beschränken Sie, wo Ihr Widget eingebettet werden darf. Leer = alle Seiten.", saveDomains: "Domains speichern", saving: "Wird gespeichert…",
     keyText: "Schlüssel kompromittiert? Erneuern Sie ihn und fügen Sie das Snippet neu ein.", regenerate: "Schlüssel neu erzeugen", regenConfirm: "Neuen Schlüssel erzeugen? Ihr aktuelles Snippet funktioniert nicht mehr, bis Sie es auf Ihrer Website ersetzen.",
   },
   billing: {

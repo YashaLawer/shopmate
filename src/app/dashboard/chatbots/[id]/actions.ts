@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getPlan } from "@/lib/plans";
 import { countPages } from "@/lib/usage";
 import { ingestDocument, fetchUrlText, extractFileText } from "@/lib/ingest";
-import { parseDomains } from "@/lib/security";
+import { parseDomains, assertPublicUrl } from "@/lib/security";
 
 export type KnowledgeState = { error?: string; ok?: string };
 
@@ -43,7 +43,7 @@ export async function addKnowledge(
         return { error: "Enter a valid URL starting with http:// or https://" };
       }
       const { title, text } = await fetchUrlText(url);
-      if (text.length < 20) {
+      if (text.trim().length < 20) {
         return { error: "Couldn't extract readable text from that page." };
       }
       const { chunks } = await ingestDocument({
@@ -131,17 +131,15 @@ export async function verifyInstallation(
   if (!bot) return { ok: false, message: "Chatbot not found." };
 
   if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+  let safeUrl: URL;
   try {
-    const u = new URL(url);
-    if (u.protocol !== "http:" && u.protocol !== "https:") {
-      return { ok: false, message: "Enter a valid website URL." };
-    }
+    safeUrl = await assertPublicUrl(url); // validates + blocks SSRF targets
   } catch {
     return { ok: false, message: "Enter a valid website URL." };
   }
 
   try {
-    const res = await fetch(url, {
+    const res = await fetch(safeUrl, {
       headers: { "User-Agent": "Mozilla/5.0 (compatible; ShopmateInstallCheck/1.0)" },
       redirect: "follow",
     });

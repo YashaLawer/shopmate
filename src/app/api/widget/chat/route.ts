@@ -34,6 +34,24 @@ export async function POST(req: NextRequest) {
     return new Response("Bad request", { status: 400, headers: corsHeaders });
   }
 
+  // Never trust client-supplied roles/history: keep only user/assistant turns,
+  // cap length and count. Stops a caller injecting a fake "system" prompt or an
+  // oversized payload into the model.
+  const safeMessages: ChatMessage[] = (
+    messages as { role?: unknown; content?: unknown }[]
+  )
+    .filter(
+      (m) =>
+        m &&
+        (m.role === "user" || m.role === "assistant") &&
+        typeof m.content === "string",
+    )
+    .map((m) => ({
+      role: m.role as "user" | "assistant",
+      content: (m.content as string).slice(0, 4000),
+    }))
+    .slice(-10);
+
   const { data: botData } = await admin
     .from("chatbots")
     .select("*")
@@ -175,7 +193,7 @@ export async function POST(req: NextRequest) {
     convoId = c?.id ?? null;
   }
 
-  const lastUser = [...messages].reverse().find((m) => m.role === "user");
+  const lastUser = [...safeMessages].reverse().find((m) => m.role === "user");
 
   // Persist the incoming customer message (this is what counts toward usage).
   if (convoId && lastUser) {
@@ -190,7 +208,7 @@ export async function POST(req: NextRequest) {
   }
 
   const context = await retrieveContext(bot.id, lastUser?.content ?? "");
-  const chatMessages = buildMessages(bot, context, messages);
+  const chatMessages = buildMessages(bot, context, safeMessages);
   const completion = await streamChat(chatMessages);
 
   const encoder = new TextEncoder();
