@@ -6,37 +6,37 @@ export type Lang = "en" | "ru" | "fr" | "es" | "de";
 
 export const WIDGET_STRINGS: Record<
   Lang,
-  { replyInstantly: string; placeholder: string; error: string; talkToHuman: string }
+  { replyInstantly: string; placeholder: string; error: string; contactSupport: string }
 > = {
   en: {
     replyInstantly: "We usually reply instantly",
     placeholder: "Type your message…",
     error: "Sorry — something went wrong. Please try again.",
-    talkToHuman: "Talk to a human",
+    contactSupport: "Contact support",
   },
   ru: {
     replyInstantly: "Обычно отвечаем сразу",
     placeholder: "Напишите сообщение…",
     error: "Извините, что-то пошло не так. Попробуйте ещё раз.",
-    talkToHuman: "Связаться с человеком",
+    contactSupport: "Связаться с поддержкой",
   },
   fr: {
     replyInstantly: "Nous répondons généralement tout de suite",
     placeholder: "Écrivez votre message…",
     error: "Désolé, une erreur s'est produite. Veuillez réessayer.",
-    talkToHuman: "Parler à un humain",
+    contactSupport: "Contacter le support",
   },
   es: {
     replyInstantly: "Solemos responder al instante",
     placeholder: "Escribe tu mensaje…",
     error: "Lo sentimos, algo salió mal. Inténtalo de nuevo.",
-    talkToHuman: "Hablar con una persona",
+    contactSupport: "Contactar con soporte",
   },
   de: {
     replyInstantly: "Wir antworten meist sofort",
     placeholder: "Ihre Nachricht…",
     error: "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
-    talkToHuman: "Mit einem Menschen sprechen",
+    contactSupport: "Support kontaktieren",
   },
 };
 

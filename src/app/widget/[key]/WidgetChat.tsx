@@ -107,7 +107,7 @@ export function WidgetChat({
             className="ml-auto flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-white transition hover:bg-white/30"
           >
             <UserRound size={13} />
-            {t.talkToHuman}
+            {t.contactSupport}
           </a>
         )}
       </div>
