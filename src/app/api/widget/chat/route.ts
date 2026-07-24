@@ -8,6 +8,9 @@ import { sendUsageWarningEmail } from "@/lib/email";
 import { corsHeaders, startOfMonthISO } from "@/lib/cors";
 
 const RATE_LIMIT_PER_MINUTE = 15;
+// Per-visitor daily cap: stops one person from slowly draining the owner's
+// monthly quota over hours. Generous for a real customer, low for a spammer.
+const RATE_LIMIT_PER_DAY = 40;
 import type { Chatbot, ChatMessage } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -96,6 +99,28 @@ export async function POST(req: NextRequest) {
   if ((recentHits ?? 0) >= RATE_LIMIT_PER_MINUTE) {
     return new Response(
       "You're sending messages too quickly. Please wait a moment and try again.",
+      {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "text/plain; charset=utf-8",
+          "X-Rate-Limited": "1",
+        },
+      },
+    );
+  }
+
+  // Per-IP daily cap: one visitor can't monopolize the bot or slowly eat the
+  // owner's monthly allowance. Uses the (chatbot_id, ip, created_at) index.
+  const { count: dayHits } = await admin
+    .from("messages")
+    .select("id", { count: "exact", head: true })
+    .eq("chatbot_id", bot.id)
+    .eq("ip", ipHash)
+    .gte("created_at", new Date(Date.now() - 86_400_000).toISOString());
+  if ((dayHits ?? 0) >= RATE_LIMIT_PER_DAY) {
+    return new Response(
+      "You've reached today's message limit for this assistant. Please try again tomorrow or contact the store directly.",
       {
         status: 200,
         headers: {
