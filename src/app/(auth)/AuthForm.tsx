@@ -64,6 +64,16 @@ export function AuthForm({
             placeholder="••••••••"
             className={inputClass}
           />
+          {isLogin && (
+            <div className="mt-1.5 text-right">
+              <Link
+                href="/forgot-password"
+                className="text-xs font-medium text-slate-500 hover:text-brand"
+              >
+                {a.forgot}
+              </Link>
+            </div>
+          )}
         </div>
 
         {state.error && (

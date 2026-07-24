@@ -196,7 +196,7 @@ export default async function AnalyticsPage({
               <li key={i} className="flex items-start justify-between gap-4 py-2.5">
                 <span className="text-sm text-slate-700">{m.content}</span>
                 <span className="shrink-0 text-xs text-slate-400">
-                  {new Date(m.created_at).toLocaleDateString()}
+                  {new Date(m.created_at).toLocaleDateString(locale)}
                 </span>
               </li>
             ))}

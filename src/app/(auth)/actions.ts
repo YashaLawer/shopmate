@@ -58,6 +58,24 @@ export async function signup(
   redirect("/dashboard");
 }
 
+export async function requestPasswordReset(
+  _prev: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
+  const email = String(formData.get("email") || "").trim();
+  if (!email) return { error: "Email is required." };
+
+  const supabase = await createClient();
+  const base = await getBaseUrl();
+  // Recovery link lands on /auth/callback (verifies the OTP) → settings, where
+  // the user sets a new password. Errors are swallowed so we never reveal
+  // whether an email is registered.
+  await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${base}/auth/callback?next=/dashboard/settings`,
+  });
+  redirect("/forgot-password?sent=1");
+}
+
 export async function signout(): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();

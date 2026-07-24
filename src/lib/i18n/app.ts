@@ -16,6 +16,7 @@ export interface AppDict {
     signIn: string; signUp: string; pleaseWait: string;
     noAccount: string; haveAccount: string;
     checkEmail: string; linkExpired: string;
+    forgot: string; resetTitle: string; resetSubtitle: string; resetBtn: string; resetSent: string;
     emailPh: string;
   };
   dash: {
@@ -93,6 +94,7 @@ const en: AppDict = {
     noAccount: "No account yet?", haveAccount: "Already have an account?",
     checkEmail: "Check your email to confirm your account, then sign in.",
     linkExpired: "That confirmation link has expired. Please sign in, or sign up again.",
+    forgot: "Forgot password?", resetTitle: "Reset your password", resetSubtitle: "Enter your email and we'll send a reset link.", resetBtn: "Send reset link", resetSent: "If that email is registered, a reset link is on its way. Check your inbox.",
     emailPh: "you@store.com",
   },
   dash: {
@@ -169,6 +171,7 @@ const ru: AppDict = {
     noAccount: "Ещё нет аккаунта?", haveAccount: "Уже есть аккаунт?",
     checkEmail: "Подтвердите аккаунт по письму на почте, затем войдите.",
     linkExpired: "Ссылка подтверждения истекла. Войдите или зарегистрируйтесь снова.",
+    forgot: "Забыли пароль?", resetTitle: "Сброс пароля", resetSubtitle: "Введите email — пришлём ссылку для сброса.", resetBtn: "Отправить ссылку", resetSent: "Если такой email зарегистрирован, ссылка для сброса уже летит. Проверьте почту.",
     emailPh: "you@store.com",
   },
   dash: {
@@ -245,6 +248,7 @@ const fr: AppDict = {
     noAccount: "Pas encore de compte ?", haveAccount: "Vous avez déjà un compte ?",
     checkEmail: "Confirmez votre compte via l'e-mail reçu, puis connectez-vous.",
     linkExpired: "Ce lien de confirmation a expiré. Connectez-vous ou réinscrivez-vous.",
+    forgot: "Mot de passe oublié ?", resetTitle: "Réinitialiser le mot de passe", resetSubtitle: "Saisissez votre e-mail, nous enverrons un lien de réinitialisation.", resetBtn: "Envoyer le lien", resetSent: "Si cet e-mail est enregistré, un lien de réinitialisation arrive. Vérifiez votre boîte.",
     emailPh: "vous@boutique.com",
   },
   dash: {
@@ -321,6 +325,7 @@ const es: AppDict = {
     noAccount: "¿Aún no tienes cuenta?", haveAccount: "¿Ya tienes cuenta?",
     checkEmail: "Confirma tu cuenta con el email recibido y luego inicia sesión.",
     linkExpired: "Ese enlace de confirmación ha caducado. Inicia sesión o regístrate de nuevo.",
+    forgot: "¿Olvidaste tu contraseña?", resetTitle: "Restablecer contraseña", resetSubtitle: "Introduce tu email y te enviaremos un enlace.", resetBtn: "Enviar enlace", resetSent: "Si ese email está registrado, te enviamos un enlace. Revisa tu bandeja.",
     emailPh: "tu@tienda.com",
   },
   dash: {
@@ -397,6 +402,7 @@ const de: AppDict = {
     noAccount: "Noch kein Konto?", haveAccount: "Schon ein Konto?",
     checkEmail: "Bestätigen Sie Ihr Konto über die E-Mail und melden Sie sich an.",
     linkExpired: "Dieser Bestätigungslink ist abgelaufen. Melden Sie sich an oder registrieren Sie sich erneut.",
+    forgot: "Passwort vergessen?", resetTitle: "Passwort zurücksetzen", resetSubtitle: "Geben Sie Ihre E-Mail ein, wir senden einen Link.", resetBtn: "Link senden", resetSent: "Falls diese E-Mail registriert ist, ist ein Link unterwegs. Prüfen Sie Ihr Postfach.",
     emailPh: "sie@shop.com",
   },
   dash: {

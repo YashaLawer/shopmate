@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getPlan } from "@/lib/plans";
 import { hostAllowed, normalizeHost } from "@/lib/security";
-import { pickLang } from "@/lib/i18n/widget";
+import { pickLang, WIDGET_STRINGS } from "@/lib/i18n/widget";
 import { WidgetChat } from "./WidgetChat";
 import type { Chatbot } from "@/lib/types";
 
@@ -43,7 +43,7 @@ export default async function WidgetPage({
     }
     // Allow our own domain (preview / direct open); block a mismatching host.
     if (refHost && refHost !== appHost && !hostAllowed(refHost, allowed)) {
-      return <NotAuthorized allowed={allowed} />;
+      return <NotAuthorized allowed={allowed} lang={lang} />;
     }
   }
 
@@ -94,15 +94,18 @@ function handoffHref(
   }
 }
 
-function NotAuthorized({ allowed }: { allowed: string[] }) {
+function NotAuthorized({
+  allowed,
+  lang,
+}: {
+  allowed: string[];
+  lang: ReturnType<typeof pickLang>;
+}) {
+  const t = WIDGET_STRINGS[lang] ?? WIDGET_STRINGS.en;
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-slate-50 px-6 text-center">
-      <p className="text-sm font-medium text-slate-700">
-        This assistant isn&apos;t enabled for this domain.
-      </p>
-      <p className="mt-2 max-w-xs text-xs text-slate-400">
-        The store owner restricted it to: {allowed.join(", ")}.
-      </p>
+      <p className="text-sm font-medium text-slate-700">{t.notAllowed}</p>
+      <p className="mt-2 max-w-xs text-xs text-slate-400">{allowed.join(", ")}</p>
     </div>
   );
 }
