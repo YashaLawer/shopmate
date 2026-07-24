@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { MessageSquare, Plus, Trash2 } from "lucide-react";
+import { MessageSquare, Plus } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getPlan } from "@/lib/plans";
 import { getLocale } from "@/lib/i18n/getLocale";
 import { getAppDict, tpl } from "@/lib/i18n/app";
 import { SubmitButton } from "@/components/SubmitButton";
+import { DeleteChatbotButton } from "@/components/DeleteChatbotButton";
 import { createChatbot, deleteChatbot } from "./actions";
 import type { Chatbot } from "@/lib/types";
 
@@ -83,16 +84,20 @@ export default async function DashboardPage({
                 </div>
               </div>
             </Link>
-            <form action={deleteChatbot} className="absolute right-3 top-3">
-              <input type="hidden" name="id" value={bot.id} />
-              <button
-                className="rounded-lg p-1.5 text-slate-300 opacity-0 transition hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
-                title={t.deleteChatbot}
-                aria-label={t.deleteChatbot}
-              >
-                <Trash2 size={16} />
-              </button>
-            </form>
+            <div className="absolute right-3 top-3">
+              <DeleteChatbotButton
+                botId={bot.id}
+                botName={bot.name}
+                deleteChatbot={deleteChatbot}
+                labels={{
+                  deleteChatbot: t.deleteChatbot,
+                  delTitle: t.delTitle,
+                  delBody: t.delBody,
+                  delYes: t.delYes,
+                  delNo: t.delNo,
+                }}
+              />
+            </div>
           </div>
         ))}
       </div>

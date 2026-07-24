@@ -29,6 +29,7 @@ export interface AppDict {
     upgradeToCreate: string;
     createdTpl: string; // "Created {date}"
     deleteChatbot: string;
+    delTitle: string; delBody: string; delYes: string; delNo: string;
   };
   bot: {
     allChatbots: string; analytics: string; subtitle: string; saved: string;
@@ -104,6 +105,7 @@ const en: AppDict = {
     upgradeToCreate: "Upgrade your plan to create more.",
     createdTpl: "Created {date}",
     deleteChatbot: "Delete chatbot",
+    delTitle: "Delete this chatbot?", delBody: "“{name}” — with all its knowledge and chat history — will be permanently deleted. This can't be undone.", delYes: "Delete chatbot", delNo: "Cancel",
   },
   bot: {
     allChatbots: "All chatbots", analytics: "Analytics", subtitle: "Configure your store assistant.", saved: "Settings saved.",
@@ -178,6 +180,7 @@ const ru: AppDict = {
     upgradeToCreate: "Повысьте тариф, чтобы создать больше.",
     createdTpl: "Создан {date}",
     deleteChatbot: "Удалить бота",
+    delTitle: "Удалить этого бота?", delBody: "«{name}» — со всеми знаниями и историей чатов — будет удалён безвозвратно. Это нельзя отменить.", delYes: "Удалить бота", delNo: "Отмена",
   },
   bot: {
     allChatbots: "Все боты", analytics: "Аналитика", subtitle: "Настройте ассистента магазина.", saved: "Настройки сохранены.",
@@ -252,6 +255,7 @@ const fr: AppDict = {
     upgradeToCreate: "Améliorez votre offre pour en créer plus.",
     createdTpl: "Créé le {date}",
     deleteChatbot: "Supprimer le chatbot",
+    delTitle: "Supprimer ce chatbot ?", delBody: "« {name} » — avec toutes ses connaissances et son historique de chat — sera supprimé définitivement. Action irréversible.", delYes: "Supprimer le chatbot", delNo: "Annuler",
   },
   bot: {
     allChatbots: "Tous les chatbots", analytics: "Statistiques", subtitle: "Configurez l'assistant de votre boutique.", saved: "Réglages enregistrés.",
@@ -326,6 +330,7 @@ const es: AppDict = {
     upgradeToCreate: "Mejora tu plan para crear más.",
     createdTpl: "Creado el {date}",
     deleteChatbot: "Eliminar chatbot",
+    delTitle: "¿Eliminar este chatbot?", delBody: "«{name}» —con todo su conocimiento e historial de chat— se eliminará permanentemente. No se puede deshacer.", delYes: "Eliminar chatbot", delNo: "Cancelar",
   },
   bot: {
     allChatbots: "Todos los chatbots", analytics: "Analíticas", subtitle: "Configura el asistente de tu tienda.", saved: "Ajustes guardados.",
@@ -400,6 +405,7 @@ const de: AppDict = {
     upgradeToCreate: "Upgraden Sie, um mehr zu erstellen.",
     createdTpl: "Erstellt am {date}",
     deleteChatbot: "Chatbot löschen",
+    delTitle: "Diesen Chatbot löschen?", delBody: "„{name}“ — mit allem Wissen und Chatverlauf — wird dauerhaft gelöscht. Kann nicht rückgängig gemacht werden.", delYes: "Chatbot löschen", delNo: "Abbrechen",
   },
   bot: {
     allChatbots: "Alle Chatbots", analytics: "Statistiken", subtitle: "Konfigurieren Sie Ihren Shop-Assistenten.", saved: "Einstellungen gespeichert.",
