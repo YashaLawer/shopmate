@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getPlan } from "@/lib/plans";
 import { hostAllowed, normalizeHost } from "@/lib/security";
 import { pickLang, WIDGET_STRINGS } from "@/lib/i18n/widget";
+import { botDefaults } from "@/lib/botDefaults";
 import { WidgetChat } from "./WidgetChat";
 import type { Chatbot } from "@/lib/types";
 
@@ -61,7 +62,11 @@ export default async function WidgetPage({
     <WidgetChat
       publicKey={bot.public_key}
       name={bot.name}
-      welcome={bot.welcome_message}
+      welcome={
+        bot.welcome_message?.trim()
+          ? bot.welcome_message
+          : botDefaults(lang).welcome
+      }
       accent={bot.widget_color}
       showBranding={showBranding}
       handoffUrl={handoffHref(bot.handoff_type, bot.handoff_value)}

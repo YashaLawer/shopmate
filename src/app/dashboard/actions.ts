@@ -21,9 +21,11 @@ export async function createChatbot(formData: FormData) {
   }
 
   const supabase = await createClient();
+  // Leave welcome_message empty = "use the localized default", so the greeting
+  // follows the dashboard/visitor language until the owner writes their own.
   const { data, error } = await supabase
     .from("chatbots")
-    .insert({ user_id: userId, name, welcome_message: defaults.welcome })
+    .insert({ user_id: userId, name, welcome_message: "" })
     .select("id")
     .single();
 
@@ -39,8 +41,9 @@ export async function updateChatbot(formData: FormData) {
   const id = String(formData.get("id"));
   const defaults = botDefaults(await getLocale());
   const name = String(formData.get("name") || "").trim() || defaults.name;
-  const welcome_message =
-    String(formData.get("welcome_message") || "").trim() || defaults.welcome;
+  // Empty = "use the localized default" (greeting follows the language).
+  // A non-empty value is the owner's custom greeting and is kept as-is.
+  const welcome_message = String(formData.get("welcome_message") || "").trim();
   const widget_color = String(formData.get("widget_color") || "#4f46e5");
   const system_prompt =
     String(formData.get("system_prompt") || "").trim() || null;

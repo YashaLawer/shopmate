@@ -7,6 +7,7 @@ import { getPlan } from "@/lib/plans";
 import { getBaseUrl } from "@/lib/baseUrl";
 import { getLocale } from "@/lib/i18n/getLocale";
 import { getAppDict } from "@/lib/i18n/app";
+import { botDefaults } from "@/lib/botDefaults";
 import { updateChatbot } from "@/app/dashboard/actions";
 import { SubmitButton } from "@/components/SubmitButton";
 import { KnowledgeManager } from "./KnowledgeManager";
@@ -30,8 +31,10 @@ export default async function ChatbotDetailPage({
   const { userId, profile } = await requireUser();
   const plan = getPlan(profile.plan);
   const appUrl = await getBaseUrl();
-  const dict = getAppDict(await getLocale());
+  const locale = await getLocale();
+  const dict = getAppDict(locale);
   const t = dict.bot;
+  const defaultWelcome = botDefaults(locale).welcome;
 
   const supabase = await createClient();
   const { data } = await supabase
@@ -43,6 +46,10 @@ export default async function ChatbotDetailPage({
 
   if (!data) notFound();
   const bot = data as Chatbot;
+  // Empty greeting = show the localized default (it follows the language).
+  const effectiveWelcome = bot.welcome_message?.trim()
+    ? bot.welcome_message
+    : defaultWelcome;
 
   const { data: docsData } = await supabase
     .from("documents")
@@ -81,7 +88,7 @@ export default async function ChatbotDetailPage({
       <div className="mt-6">
         <TestChat
           chatbotId={bot.id}
-          welcomeMessage={bot.welcome_message}
+          welcomeMessage={effectiveWelcome}
           accent={bot.widget_color}
           hasKnowledge={documents.length > 0}
           strings={dict.chat}
@@ -120,7 +127,8 @@ export default async function ChatbotDetailPage({
           </label>
           <input
             name="welcome_message"
-            defaultValue={bot.welcome_message}
+            defaultValue={bot.welcome_message ?? ""}
+            placeholder={defaultWelcome}
             className={inputClass}
           />
           <p className="mt-1 text-xs text-slate-400">{t.welcomeHint}</p>
