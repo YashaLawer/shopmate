@@ -111,6 +111,7 @@ export default async function ChatbotDetailPage({
             {t.assistantName}
           </label>
           <input name="name" defaultValue={bot.name} className={inputClass} />
+          <p className="mt-1 text-xs text-slate-400">{t.assistantNameHint}</p>
         </div>
 
         <div>

@@ -33,7 +33,7 @@ export interface AppDict {
   };
   bot: {
     allChatbots: string; analytics: string; subtitle: string; saved: string;
-    assistantName: string; welcomeMessage: string; welcomeHint: string;
+    assistantName: string; assistantNameHint: string; welcomeMessage: string; welcomeHint: string;
     systemInstr: string; optional: string; systemPh: string;
     widgetColor: string; saveSettings: string; saving: string;
     handoffTitle: string; handoffHint: string; handoffValuePh: string;
@@ -109,7 +109,7 @@ const en: AppDict = {
   },
   bot: {
     allChatbots: "All chatbots", analytics: "Analytics", subtitle: "Configure your store assistant.", saved: "Settings saved.",
-    assistantName: "Assistant name", welcomeMessage: "Welcome message", welcomeHint: "First message shown to customers when they open the chat.",
+    assistantName: "Assistant name", assistantNameHint: "This is your bot's name — shown here, in your chatbots list, and to customers. Edit it and click Save settings.", welcomeMessage: "Welcome message", welcomeHint: "First message shown to customers when they open the chat.",
     systemInstr: "System instructions", optional: "(optional)", systemPh: "e.g. You are the support agent for Acme Store. Be friendly and concise. Only answer using the store's knowledge; if unsure, suggest emailing support@acme.com.",
     widgetColor: "Widget color", saveSettings: "Save settings", saving: "Saving…",
     handoffTitle: "Contact support", handoffHint: "Shown as a button in the widget so customers can reach your support directly. Leave empty to hide.", handoffValuePh: "e.g. support@store.com, +1 555 000 1234, or a link", handoffNone: "Off", handoffPhone: "Phone", handoffLink: "Website link", handoffRoadmap: "Live chat with a real agent inside the widget is on our roadmap.",
@@ -185,7 +185,7 @@ const ru: AppDict = {
   },
   bot: {
     allChatbots: "Все боты", analytics: "Аналитика", subtitle: "Настройте ассистента магазина.", saved: "Настройки сохранены.",
-    assistantName: "Имя ассистента", welcomeMessage: "Приветствие", welcomeHint: "Первое сообщение, которое видит покупатель при открытии чата.",
+    assistantName: "Имя ассистента", assistantNameHint: "Это название бота — показывается здесь, в списке ботов и покупателям. Измените и нажмите «Сохранить настройки».", welcomeMessage: "Приветствие", welcomeHint: "Первое сообщение, которое видит покупатель при открытии чата.",
     systemInstr: "Системные инструкции", optional: "(необязательно)", systemPh: "Напр.: Ты — агент поддержки магазина Acme. Отвечай дружелюбно и кратко. Используй только знания магазина; если не уверен — предложи написать на support@acme.com.",
     widgetColor: "Цвет виджета", saveSettings: "Сохранить настройки", saving: "Сохраняем…",
     handoffTitle: "Связаться с поддержкой", handoffHint: "Показывается кнопкой в виджете, чтобы покупатель мог написать вашей поддержке напрямую. Пусто — кнопки нет.", handoffValuePh: "напр. support@store.com, +7 900 000-00-00 или ссылка", handoffNone: "Выкл", handoffPhone: "Телефон", handoffLink: "Ссылка на сайт", handoffRoadmap: "Живой чат с оператором прямо в виджете — в наших планах.",
@@ -261,7 +261,7 @@ const fr: AppDict = {
   },
   bot: {
     allChatbots: "Tous les chatbots", analytics: "Statistiques", subtitle: "Configurez l'assistant de votre boutique.", saved: "Réglages enregistrés.",
-    assistantName: "Nom de l'assistant", welcomeMessage: "Message d'accueil", welcomeHint: "Premier message affiché aux clients à l'ouverture du chat.",
+    assistantName: "Nom de l'assistant", assistantNameHint: "C'est le nom de votre bot — affiché ici, dans votre liste de chatbots et aux clients. Modifiez-le puis cliquez sur Enregistrer.", welcomeMessage: "Message d'accueil", welcomeHint: "Premier message affiché aux clients à l'ouverture du chat.",
     systemInstr: "Instructions système", optional: "(facultatif)", systemPh: "Ex. : Vous êtes l'agent de support d'Acme Store. Soyez amical et concis. Répondez uniquement à partir des connaissances de la boutique ; en cas de doute, proposez d'écrire à support@acme.com.",
     widgetColor: "Couleur du widget", saveSettings: "Enregistrer", saving: "Enregistrement…",
     handoffTitle: "Contacter le support", handoffHint: "Affiché comme un bouton dans le widget pour que les clients contactent votre support directement. Laissez vide pour masquer.", handoffValuePh: "ex. support@store.com, +33 6 00 00 00 00 ou un lien", handoffNone: "Désactivé", handoffPhone: "Téléphone", handoffLink: "Lien du site", handoffRoadmap: "Le chat en direct avec un agent dans le widget est prévu dans notre feuille de route.",
@@ -337,7 +337,7 @@ const es: AppDict = {
   },
   bot: {
     allChatbots: "Todos los chatbots", analytics: "Analíticas", subtitle: "Configura el asistente de tu tienda.", saved: "Ajustes guardados.",
-    assistantName: "Nombre del asistente", welcomeMessage: "Mensaje de bienvenida", welcomeHint: "Primer mensaje que ven los clientes al abrir el chat.",
+    assistantName: "Nombre del asistente", assistantNameHint: "Es el nombre de tu bot — se muestra aquí, en tu lista de chatbots y a los clientes. Edítalo y pulsa Guardar ajustes.", welcomeMessage: "Mensaje de bienvenida", welcomeHint: "Primer mensaje que ven los clientes al abrir el chat.",
     systemInstr: "Instrucciones del sistema", optional: "(opcional)", systemPh: "Ej.: Eres el agente de soporte de Acme Store. Sé amable y conciso. Responde solo con el conocimiento de la tienda; si no estás seguro, sugiere escribir a support@acme.com.",
     widgetColor: "Color del widget", saveSettings: "Guardar ajustes", saving: "Guardando…",
     handoffTitle: "Contactar con soporte", handoffHint: "Se muestra como un botón en el widget para que los clientes contacten con tu soporte directamente. Déjalo vacío para ocultarlo.", handoffValuePh: "p. ej. support@store.com, +34 600 000 000 o un enlace", handoffNone: "Desactivado", handoffPhone: "Teléfono", handoffLink: "Enlace del sitio", handoffRoadmap: "El chat en vivo con un agente dentro del widget está en nuestra hoja de ruta.",
@@ -413,7 +413,7 @@ const de: AppDict = {
   },
   bot: {
     allChatbots: "Alle Chatbots", analytics: "Statistiken", subtitle: "Konfigurieren Sie Ihren Shop-Assistenten.", saved: "Einstellungen gespeichert.",
-    assistantName: "Name des Assistenten", welcomeMessage: "Begrüßung", welcomeHint: "Erste Nachricht, die Kunden beim Öffnen des Chats sehen.",
+    assistantName: "Name des Assistenten", assistantNameHint: "Das ist der Name Ihres Bots — hier, in Ihrer Chatbot-Liste und für Kunden sichtbar. Ändern Sie ihn und klicken Sie auf Speichern.", welcomeMessage: "Begrüßung", welcomeHint: "Erste Nachricht, die Kunden beim Öffnen des Chats sehen.",
     systemInstr: "System-Anweisungen", optional: "(optional)", systemPh: "z. B.: Sie sind der Support-Agent von Acme Store. Seien Sie freundlich und knapp. Antworten Sie nur aus dem Wissen des Shops; im Zweifel bitten Sie um eine E-Mail an support@acme.com.",
     widgetColor: "Widget-Farbe", saveSettings: "Speichern", saving: "Wird gespeichert…",
     handoffTitle: "Support kontaktieren", handoffHint: "Wird als Button im Widget angezeigt, damit Kunden Ihren Support direkt erreichen. Leer lassen, um ihn auszublenden.", handoffValuePh: "z. B. support@store.com, +49 170 0000000 oder ein Link", handoffNone: "Aus", handoffPhone: "Telefon", handoffLink: "Website-Link", handoffRoadmap: "Live-Chat mit einem echten Agenten im Widget ist auf unserer Roadmap.",
