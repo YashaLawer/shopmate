@@ -1,10 +1,15 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { FileText, Globe, Type, Trash2, Loader2 } from "lucide-react";
+import { FileText, Globe, Type, Trash2, Loader2, X } from "lucide-react";
 import { SubmitButton } from "@/components/SubmitButton";
 import { tpl, type AppDict } from "@/lib/i18n/app";
-import { addKnowledge, deleteDocument, type KnowledgeState } from "./actions";
+import {
+  addKnowledge,
+  deleteDocument,
+  getDocumentText,
+  type KnowledgeState,
+} from "./actions";
 import type { KnowledgeDocument } from "@/lib/types";
 
 const inputClass =
@@ -48,6 +53,20 @@ export function KnowledgeManager({
     {},
   );
   const atLimit = pagesUsed >= pagesLimit;
+
+  const [viewing, setViewing] = useState<{ title: string; content: string } | null>(
+    null,
+  );
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+
+  async function openDoc(id: string) {
+    setLoadingId(id);
+    const res = await getDocumentText(id);
+    setLoadingId(null);
+    if (!res.error) {
+      setViewing({ title: res.title ?? "", content: res.content ?? "" });
+    }
+  }
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -165,31 +184,39 @@ export function KnowledgeManager({
         ) : (
           documents.map((doc) => {
             const Icon = sourceIcon[doc.source_type] ?? FileText;
+            const busy = doc.status === "processing" || loadingId === doc.id;
             return (
               <div
                 key={doc.id}
-                className="flex items-center gap-3 rounded-lg border border-slate-200 px-3 py-2.5"
+                className="flex items-center gap-1 rounded-lg border border-slate-200 pr-2 transition hover:border-slate-300"
               >
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-slate-100 text-slate-500">
-                  {doc.status === "processing" ? (
-                    <Loader2 size={15} className="animate-spin" />
-                  ) : (
-                    <Icon size={15} />
-                  )}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-slate-800">
-                    {doc.title}
-                  </p>
-                  <p className="text-xs text-slate-400">
-                    {tpl(s.charsTpl, { n: doc.char_count.toLocaleString() })} ·{" "}
-                    {doc.status === "error" ? (
-                      <span className="text-red-500">{s.statusFailed}</span>
+                <button
+                  type="button"
+                  onClick={() => openDoc(doc.id)}
+                  title={s.viewHint}
+                  className="flex min-w-0 flex-1 items-center gap-3 rounded-l-lg px-3 py-2.5 text-left hover:bg-slate-50"
+                >
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-slate-100 text-slate-500">
+                    {busy ? (
+                      <Loader2 size={15} className="animate-spin" />
                     ) : (
-                      statusLabel(doc.status)
+                      <Icon size={15} />
                     )}
-                  </p>
-                </div>
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-slate-800">
+                      {doc.title}
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      {tpl(s.charsTpl, { n: doc.char_count.toLocaleString() })} ·{" "}
+                      {doc.status === "error" ? (
+                        <span className="text-red-500">{s.statusFailed}</span>
+                      ) : (
+                        statusLabel(doc.status)
+                      )}
+                    </p>
+                  </div>
+                </button>
                 <form action={deleteDocument}>
                   <input type="hidden" name="chatbot_id" value={chatbotId} />
                   <input type="hidden" name="document_id" value={doc.id} />
@@ -206,6 +233,41 @@ export function KnowledgeManager({
           })
         )}
       </div>
+
+      {viewing && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4"
+          onClick={() => setViewing(null)}
+        >
+          <div
+            className="flex max-h-[80vh] w-full max-w-2xl flex-col rounded-2xl bg-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
+              <h3 className="min-w-0 truncate pr-3 text-sm font-semibold text-slate-800">
+                {viewing.title}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setViewing(null)}
+                aria-label={s.viewClose}
+                className="shrink-0 rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="overflow-y-auto px-5 py-4">
+              {viewing.content ? (
+                <pre className="whitespace-pre-wrap break-words font-sans text-sm leading-relaxed text-slate-700">
+                  {viewing.content}
+                </pre>
+              ) : (
+                <p className="text-sm text-slate-400">{s.viewEmpty}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

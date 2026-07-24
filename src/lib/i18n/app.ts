@@ -44,6 +44,7 @@ export interface AppDict {
     addBtn: string; processing: string;
     charsTpl: string; statusReady: string; statusProcessing: string; statusFailed: string;
     empty: string;
+    viewHint: string; viewLoading: string; viewEmpty: string; viewClose: string;
   };
   install: {
     title: string; subtitle: string; preview: string; platform: string;
@@ -115,6 +116,7 @@ const en: AppDict = {
     fileHint: "PDF, Word, image, TXT or MD — up to 4 MB.", fileTooBig: "That file is too big (max 4 MB). Try a smaller file or split it.", addBtn: "Add to knowledge", processing: "Processing…",
     charsTpl: "{n} chars", statusReady: "ready", statusProcessing: "processing", statusFailed: "failed",
     empty: "No knowledge yet. Add your store's FAQ or policies above to train your assistant.",
+    viewHint: "Click to view what's stored", viewLoading: "Loading…", viewEmpty: "No text stored for this source.", viewClose: "Close",
   },
   install: {
     title: "Install on your site", subtitle: "One line of code adds the chat bubble to your store. Pick your platform for exact steps.", preview: "Preview on a site", platform: "Platform",
@@ -186,6 +188,7 @@ const ru: AppDict = {
     fileHint: "PDF, Word, изображение, TXT или MD — до 4 МБ.", fileTooBig: "Файл слишком большой (макс. 4 МБ). Возьмите поменьше или разделите.", addBtn: "Добавить в знания", processing: "Обрабатываем…",
     charsTpl: "{n} симв.", statusReady: "готово", statusProcessing: "обработка", statusFailed: "ошибка",
     empty: "Знаний пока нет. Добавьте выше FAQ или правила магазина, чтобы обучить ассистента.",
+    viewHint: "Нажмите, чтобы посмотреть содержимое", viewLoading: "Загрузка…", viewEmpty: "Для этого источника нет сохранённого текста.", viewClose: "Закрыть",
   },
   install: {
     title: "Установка на сайт", subtitle: "Одна строка кода добавляет чат-пузырь на ваш магазин. Выберите платформу для точных шагов.", preview: "Превью на сайте", platform: "Платформа",
@@ -257,6 +260,7 @@ const fr: AppDict = {
     fileHint: "PDF, Word, image, TXT ou MD — jusqu'à 4 Mo.", fileTooBig: "Ce fichier est trop volumineux (max 4 Mo). Essayez plus petit.", addBtn: "Ajouter aux connaissances", processing: "Traitement…",
     charsTpl: "{n} caractères", statusReady: "prêt", statusProcessing: "traitement", statusFailed: "échec",
     empty: "Aucune connaissance pour l'instant. Ajoutez la FAQ ou les politiques de votre boutique ci-dessus pour entraîner l'assistant.",
+    viewHint: "Cliquez pour voir le contenu", viewLoading: "Chargement…", viewEmpty: "Aucun texte enregistré pour cette source.", viewClose: "Fermer",
   },
   install: {
     title: "Installer sur votre site", subtitle: "Une ligne de code ajoute la bulle de chat à votre boutique. Choisissez votre plateforme pour les étapes exactes.", preview: "Aperçu sur un site", platform: "Plateforme",
@@ -328,6 +332,7 @@ const es: AppDict = {
     fileHint: "PDF, Word, imagen, TXT o MD — hasta 4 MB.", fileTooBig: "Ese archivo es demasiado grande (máx. 4 MB). Prueba con uno más pequeño.", addBtn: "Añadir al conocimiento", processing: "Procesando…",
     charsTpl: "{n} caracteres", statusReady: "listo", statusProcessing: "procesando", statusFailed: "error",
     empty: "Aún no hay conocimiento. Añade arriba la FAQ o políticas de tu tienda para entrenar al asistente.",
+    viewHint: "Haz clic para ver el contenido", viewLoading: "Cargando…", viewEmpty: "No hay texto guardado para esta fuente.", viewClose: "Cerrar",
   },
   install: {
     title: "Instalar en tu sitio", subtitle: "Una línea de código añade la burbuja de chat a tu tienda. Elige tu plataforma para los pasos exactos.", preview: "Vista previa en un sitio", platform: "Plataforma",
@@ -399,6 +404,7 @@ const de: AppDict = {
     fileHint: "PDF, Word, Bild, TXT oder MD — bis 4 MB.", fileTooBig: "Diese Datei ist zu groß (max. 4 MB). Versuchen Sie eine kleinere.", addBtn: "Zum Wissen hinzufügen", processing: "Wird verarbeitet…",
     charsTpl: "{n} Zeichen", statusReady: "bereit", statusProcessing: "Verarbeitung", statusFailed: "Fehler",
     empty: "Noch kein Wissen. Fügen Sie oben die FAQ oder Richtlinien Ihres Shops hinzu, um den Assistenten zu trainieren.",
+    viewHint: "Zum Anzeigen des Inhalts klicken", viewLoading: "Wird geladen…", viewEmpty: "Für diese Quelle ist kein Text gespeichert.", viewClose: "Schließen",
   },
   install: {
     title: "Auf Ihrer Website installieren", subtitle: "Eine Zeile Code fügt die Chat-Blase zu Ihrem Shop hinzu. Wählen Sie Ihre Plattform für genaue Schritte.", preview: "Vorschau auf einer Website", platform: "Plattform",

@@ -205,6 +205,36 @@ export async function updateDomains(formData: FormData) {
   revalidatePath(`/dashboard/chatbots/${chatbotId}?saved_domains=1`);
 }
 
+export type DocContent =
+  | { title: string; content: string; error?: undefined }
+  | { error: string; title?: undefined; content?: undefined };
+
+// Returns the exact text that was indexed for a document (its chunks joined),
+// so the owner can see what the assistant actually reads from this source.
+export async function getDocumentText(
+  documentId: string,
+): Promise<DocContent> {
+  const { userId } = await requireUser();
+  const supabase = await createClient();
+
+  const { data: doc } = await supabase
+    .from("documents")
+    .select("title")
+    .eq("id", documentId)
+    .eq("user_id", userId)
+    .single();
+  if (!doc) return { error: "Not found." };
+
+  const { data: chunks } = await supabase
+    .from("chunks")
+    .select("content, created_at")
+    .eq("document_id", documentId)
+    .order("created_at", { ascending: true });
+
+  const content = (chunks ?? []).map((c) => c.content).join("\n\n");
+  return { title: doc.title, content };
+}
+
 export async function deleteDocument(formData: FormData) {
   const { userId } = await requireUser();
   const chatbotId = String(formData.get("chatbot_id"));
